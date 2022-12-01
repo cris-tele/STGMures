@@ -1,0 +1,124 @@
+﻿@page "/patienttreatment"
+@inject IAuthService AuthService
+@inject IToastService ToastService
+@inject NavigationManager NavigationManager
+
+
+<h3>Tratament Pacient</h3>
+
+<EditForm Model="patienttreatment" OnValidSubmit="HandlePatientTreatment">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+ 
+    <div class="form-group">
+        <label for="treatmenttype">Tip Tratament</label>
+        <InputSelect id="treatmenttype" @bind-Value="patienttreatment.TreatmentType " class="form-control">
+            <option>Tratament aferent diagnosticului Cardiologic Principal</option>
+            <option>Tratament aferent diagnosticului Cardiologic Secundar</option>
+            <option>Tratament aferent CEC</option>
+            <option>Tratament aferent Anestezie</option>
+            <option>Tratament Ambulator ?</option>
+            <option>Alte tratamente (de definit)</option>
+        </InputSelect>
+        <ValidationMessage For="@(() => patienttreatment.TreatmentType)" />
+    </div>
+    <div class="form-group">
+        <label for="diagnosticid">Tratament pentru diagnosticul:</label>
+        <InputSelect id ="diagnosticid" @bind-Value="patienttreatment.PatientDiagnosticId" class="form-control">
+            <option>Sedare/Fentanil</option>
+            <option>Alte diagnotice (se incarca din baza)</option>
+        </InputSelect>
+        <ValidationMessage For="@(() => patienttreatment.PatientDiagnosticId)" />
+    </div>
+
+    <div class="form-group">
+        <label for="noofdays">Nr. zile Tratament</label>
+        <InputNumber id="noofdays" @bind-Value="patienttreatment.NoOfDays" class="form-control"></InputNumber>
+        <ValidationMessage For="@(() => patienttreatment.NoOfDays)" />
+    </div>
+    <div class="form-group">
+        <label for="weekschema">Schema de tratament pe zile</label>
+        <InputText id="weekschema" @bind-Value="patienttreatment.WeekSchema" class="form-control"></InputText>
+        <ValidationMessage For="@(() => patienttreatment.WeekSchema)" />
+    </div>
+    <div class="form-group">
+        <label for="dosage">Dozaj zilnic</label>
+        <InputNumber id="dosage" @bind-Value="patienttreatment.Dosage" class="form-control"></InputNumber>
+        <ValidationMessage For="@(() => patienttreatment.Dosage)" />
+    </div>
+    <div class="form-group">
+        <label for="dosageqtty">Dozaj cantitate</label>
+        <InputNumber id="dosageqtty" @bind-Value="patienttreatment.DosageQtty" class="form-control"></InputNumber>
+        <ValidationMessage For="@(() => patienttreatment.DosageQtty)" />
+    </div>
+    <div class="form-group">
+        <label for="dosagetotal">Dozaj total</label>
+        <InputNumber id="dosagetotal" @bind-Value="patienttreatment.DosageTotal" class="form-control"></InputNumber>
+        <ValidationMessage For="@(() => patienttreatment.DosageTotal)" />
+
+    </div>
+    <div class="form-group">
+        <label for="administration">Mod Administrare</label>
+        <InputText id="administration" @bind-Value="patienttreatment.Administration" class="form-control"></InputText>
+        <ValidationMessage For="@(() => patienttreatment.Administration)" />
+    </div>
+
+    <div class="form-group">
+        <label for="dosagenote">Descriere/adnotari privind administrarea/dosajul</label>
+        <InputTextArea id="dosagenote" @bind-Value="patienttreatment.DosageNote" class="form-control"> </InputTextArea>
+        <ValidationMessage For="@(() => patienttreatment.DosageNote)" />
+    </div>
+
+</EditForm>
+
+
+
+@code {
+    /*<button type="submit" class="btn btn-info "> Inregistreaza</button> */
+
+    StgMures.Shared.DbModels.PatientTreatment patienttreatment = new StgMures.Shared.DbModels.PatientTreatment();
+
+    async void HandlePatientTreatment()
+    {
+        // NavigationManager.NavigateTo("patientfile");
+
+        /*
+        var result = await AuthService.RegisterPatient(user);
+
+            if (result.Success)
+            {
+            ToastService.ShowSuccess(result.Message);
+            NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+            ToastService.ShowError(result.Message);
+    }
+    */
+    }
+
+    void HandleInvalidDiagnostic()
+    {
+        ToastService.ShowError("Internal ERROR");
+    }
+
+    void HandleTreatment(MouseEventArgs e)
+    {
+        NavigationManager.NavigateTo("patienttreatment");
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        string[] sextype = { "Masculin", "Feminin" };
+
+
+        // await DiagnosticService.LoadDiagnosticsAsync();
+        // await DiagnosticService.LoadDiagnosticCategoriesAsync();
+
+        await base.OnInitializedAsync();
+    }
+
+}
+
+
+

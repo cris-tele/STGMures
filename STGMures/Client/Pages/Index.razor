@@ -1,0 +1,11 @@
+﻿@page "/"
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Ziua buna @context.User.Identity.Name. </h1>
+    </Authorized>
+    <NotAuthorized>
+        <h1>Va rugam sa va logati in aplicatie!</h1>
+        <Login></Login>
+    </NotAuthorized>
+</AuthorizeView>

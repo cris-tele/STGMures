@@ -1,0 +1,74 @@
+﻿@page "/register"
+@inject IAuthService AuthService
+@inject IToastService ToastService
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+
+<h3>Register</h3>
+
+
+
+<body>
+
+    <div class="form-group">
+        <label> Email</label>
+        <InputText id="email" class="form-control"></InputText>
+   </div>
+
+    <div class="form-group">
+        <label>Nume</label>
+        <InputText id="name" class="form-control"></InputText>
+    </div>
+
+    <div class="form-group">
+        <label> Password</label>
+        <InputText id="password" class="form-control" type="password"></InputText>
+    </div>
+
+    <div class="form-group">
+        <label> Confirm Password</label>
+        <InputText id="confirmPassword" class="form-control" type="password"></InputText>
+    </div>
+
+    <div class="form-group">
+        <label for="bio">Bio</label>
+        <InputTextArea id="bio" @bind-Value="user.Bio" class="form-control"></InputTextArea>
+    </div>
+    <div class="form-check">
+        <InputCheckbox id="confirmed" @bind-Value="user.IsConfirmed" class="form-check-input"></InputCheckbox>
+        <label for="confirmed" class="form-check-label">Confirmed</label>
+        <ValidationMessage For="@(() => user.IsConfirmed)" />
+    </div>
+  
+    <button type="submit" class="btn btn-primary">Register</button>
+</>
+
+</EditForm>
+
+
+@code {
+    UserRegister user = new UserRegister();
+
+    async void HandleRegistration()
+    {
+        var result = await AuthService.Register(user); 
+
+        if (result.Success)
+        {
+            ToastService.ShowSuccess(result.Message);
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            ToastService.ShowError(result.Message);
+        }
+        
+    }
+    
+    void HandleInvalidRegistration()
+    {
+            ToastService.ShowError("Internal ERROR");
+    }
+    
+   
+}

@@ -1,0 +1,116 @@
+﻿@page "/diagnostic"
+@inject IAuthService AuthService
+@inject IToastService ToastService
+@inject NavigationManager NavigationManager
+
+
+<h3>Diagnostic</h3>
+
+<EditForm Model="diag" OnValidSubmit="HandleDiagnostic">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <div class="form-group">
+        <label for="name">Denumire diagnostic</label>
+        <InputText id="name" @bind-Value="diag.Name" class="form-control"></InputText>
+        <ValidationMessage For="@(() => diag.Name)" />
+    </div>
+
+    <!-- categorie, trebuie selectata (sa existe cel putin o categorie-->
+    <div class="form-group">
+        <label for="categoryid">Categorie</label>
+        <InputSelect id="categoryid" @bind-Value="diag.DiagnosticCategoryId" class="form-control">
+            <option>Dg.Cardiologic Principal</option>
+            <option>Dg.Cardiologic Secundar</option>
+            <option>Dg.Ati neurologic</option>
+            <option>... se incarca din baza de date...</option>
+        </InputSelect>
+        <ValidationMessage For="@(() => diag.DiagnosticCategoryId)" />
+    </div>
+
+    <div class="form-group">
+        <label for="parentid">Este detaliu pentru diagnosticul:</label>
+        <InputSelect id="parentid" @bind-Value="diag.ParentId" class="form-control">
+            <option>Diagnostic neurologic</option>
+            <option>Fontanela</option>
+            <option>Investigatii neurologice</option>
+            <option>... se incarca din baza de date...</option>
+        </InputSelect>
+        <ValidationMessage For="@(() => diag.ParentId)" />
+    </div>
+
+    <div class="form-group">
+        <label for="valueformat">Format</label> <!-- coded -->
+        <InputSelect id="valueformat" @bind-Value="diag.ValueFormat" class="form-control">
+            <option>Neformatat(text liber)</option>
+            <option>Numar intreg</option>
+            <option>Numar zecimal</option>
+            <option>Da/Nu</option>
+            <option>Data/Timp</option>
+        </InputSelect>
+        <ValidationMessage For="@(() => diag.ValueFormat)" />
+    </div>
+
+    <div class="form-group">
+        <label for="measureunit">Unitate masura </label> <!-- coded -->
+        <InputText id="measureunit" @bind-Value="diag.MeasureUnit" class="form-control"></InputText>
+        <ValidationMessage For="@(() => diag.MeasureUnit)" />
+    </div>
+
+    <div class="form-group">
+        <label for="minalertvalue">Valoare minima de alerta</label> <!-- coded -->
+        <InputText id="minalertvalue" @bind-Value="diag.MinAlertValue" class="form-control"></InputText>
+        <ValidationMessage For="@(() => diag.MinAlertValue)" />
+    </div>
+
+    <div class="form-group">
+        <label for="maxalertvalue">Valoare maxima de alerta</label> <!-- coded -->
+        <InputText id="maxalertvalue" @bind-Value="diag.MaxAlertValue" class="form-control"></InputText>
+        <ValidationMessage For="@(() => diag.MaxAlertValue)" />
+    </div>
+
+    <div class="form-group">
+        <label for="note">Valoare maxima de alerta</label> <!-- coded -->
+        <InputText id="note" @bind-Value="diag.Note" class="form-control"></InputText>
+        <ValidationMessage For="@(() => diag.Note)" />
+    </div>
+    <button type="submit" class="btn btn-primary">Inregistreaza</button>
+
+</EditForm>
+
+
+
+@code {
+    StgMures.Shared.DbModels.Diagnostic diag = new StgMures.Shared.DbModels.Diagnostic();
+
+    async void HandleDiagnostic()
+    {
+/*
+        var result = await AuthService.Register(user);
+
+        if (result.Success)
+        {
+            ToastService.ShowSuccess(result.Message);
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            ToastService.ShowError(result.Message);
+        }
+
+  */
+     }
+
+    void HandleInvalidDiagnostic()
+    {
+        ToastService.ShowError("Internal ERROR");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        // await DiagnosticService.LoadDiagnosticsAsync();
+        // await DiagnosticService.LoadDiagnosticCategoriesAsync();
+
+        await base.OnInitializedAsync();
+    }
+
+}

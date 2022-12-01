@@ -1,0 +1,125 @@
+﻿{
+   "CodeGenerationMode": 3,
+   "ContextClassName": "StgMuresContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": "Data",
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "StgMures.Server",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "[dbo].[AnesthesiaConsumable]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[AsociatedDiseases]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CEC]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CECConsumable]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Consumable]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ConsumableCategory]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Diagnostic]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DiagnosticCategory]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Medic]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[MedicPatient]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Patient]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PatientAssocDiseases]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PatientDailyTreatment]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PatientDiagnostic]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PatientFile]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PatientSurgery]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PatientTreatment]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Surgery]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SurgeryAnesthesia]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SurgicalProcedure]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Treatment]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TreatmentCategory]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "cris55\\localdb#a9113816.StgMures.dbo",
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoConstructor": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false,
+   "UseT4": false
+}

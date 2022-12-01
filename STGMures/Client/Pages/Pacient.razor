@@ -1,0 +1,126 @@
+﻿@page "/patient"
+@inject IAuthService AuthService
+@inject IToastService ToastService
+@inject NavigationManager NavigationManager
+
+<h3>Pacient</h3>
+
+
+<EditForm Model="patient" OnValidSubmit="HandlePatient">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <button type="submit" class="btn btn-primary">Fisa Pacient</button>
+    <button @onclick="HandlePatientTreatment">Tratament Pacient</button>
+    <div class="form-group">
+        <label for="firstname">Prenume</label>
+        <InputText id="firstname" @bind-Value="patient.FirstName" class="form-control"></InputText>
+        <ValidationMessage For="@(() => patient.FirstName)" />
+    </div>
+    <div class="form-group">
+        <label for="lastname">Nume</label>
+        <InputText id="lastname" @bind-Value="patient.LastName" class="form-control"></InputText>
+        <ValidationMessage For="@(() => patient.LastName)" />
+    </div>
+
+    <div class="form-group">
+        <label for="cnp">C.N.P.</label> <!-- coded -->
+        <InputText id="cnp" @bind-Value="patient.Cnp" class="form-control"></InputText>
+        <ValidationMessage For="@(() => patient.Cnp)" />
+    </div>
+
+    <div class="form-group">
+        <label for="cnascode">Codul C.N.A.S</label> <!-- coded -->
+        <InputText id="cnascode" @bind-Value="patient.Cnascode" class="form-control"></InputText>
+        <ValidationMessage For="@(() => patient.Cnascode)" />
+    </div>
+
+    <div class="form-group">
+        <label for="birthdate">DataNasterii</label>
+        <InputDate id="birthdate" @bind-Value="patient.BirthDate" class="form-control"></InputDate>
+        <ValidationMessage For="@(() => patient.BirthDate)" />
+    </div>
+
+    <div class="form-group">
+        <label for="sex">Sex</label>
+        <InputSelect id="sex" @bind-Value="patient.Sex" class="form-control">
+            <option>Feminin</option> 
+            <option>Masculin</option> 
+        </InputSelect>
+        <ValidationMessage For="@(() => patient.Sex)" />
+    </div>
+
+    <div class="form-group">
+        <label for="bloodgroup">Grupa Sangvina</label> <!-- coded -->
+        <InputText id="bloodgroup" @bind-Value="patient.BloodGroup" class="form-control"></InputText>
+        <ValidationMessage For="@(() => patient.BloodGroup)" />
+    </div>
+
+    Alte precizari
+
+    <div class="form-group">
+        <label for="parentname">NUme parinti</label> <!-- coded -->
+        <InputText id="parentname" @bind-Value="patient.ParentName" class="form-control"></InputText>
+        <ValidationMessage For="@(() => patient.ParentName)" />
+    </div>
+
+    <div class="form-group">
+        <label for="note">Observatii, adnotari</label> <!-- coded -->
+        <InputText id="note" @bind-Value="patient.Note" class="form-control"></InputText>
+        <ValidationMessage For="@(() => patient.Note)" />
+    </div>
+        
+
+</EditForm>
+
+
+
+@code {
+    /*<button type="submit" class="btn btn-info "> Inregistreaza</button> */
+
+    Patient patient = new Patient();
+
+    async void HandlePatient()
+    {
+        NavigationManager.NavigateTo("patientfile");
+
+        /*
+        var result = await AuthService.RegisterPatient(user);
+
+            if (result.Success)
+            {
+            ToastService.ShowSuccess(result.Message);
+            NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+            ToastService.ShowError(result.Message);
+    }
+    */
+    }
+
+
+    void HandleInvalidDiagnostic()
+    {
+        ToastService.ShowError("Internal ERROR");
+    }
+
+    void HandlePatientTreatment(MouseEventArgs e)
+    {
+        NavigationManager.NavigateTo("patienttreatment");
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        string[] sextype = { "Masculin", "Feminin" };
+
+
+        // await DiagnosticService.LoadDiagnosticsAsync();
+        // await DiagnosticService.LoadDiagnosticCategoriesAsync();
+
+        await base.OnInitializedAsync();
+    }
+
+}
+
+
+

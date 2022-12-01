@@ -1,0 +1,127 @@
+﻿@page "/patientfile"
+@inject IAuthService AuthService
+@inject IToastService ToastService
+@inject NavigationManager NavigationManager
+
+<h3>Fisa Pacient</h3>
+
+
+
+<EditForm Model="localpatientfile" OnValidSubmit="HandlePatientFile">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <button type="submit" class="btn btn-primary">Diagnostic</button>
+    <button type="button" onclick="HandlePatientSurgery" class="btn btn-secondary">Operatie</button>
+
+    <div class="form-group">
+        <label for="filenumber">Numar fisa</label>
+        <InputText id="filenumber" @bind-Value="localpatientfile.FileNumber" class="form-control"></InputText>
+        <ValidationMessage For="@(() => localpatientfile.FileNumber)" />
+    </div>
+    <div class="form-group">
+        <label for="filedate">Data fisei</label>
+        <InputDate id="filedate" @bind-Value="localpatientfile.FileDate" class="form-control"></InputDate>
+        <ValidationMessage For="@(() => localpatientfile.FileDate)" />
+    </div>
+    <div class="form-group">
+        <label for="weight">Greutate</label>
+        <InputNumber id="weight" @bind-Value="localpatientfile.Weight" class="form-control"></InputNumber>
+        <ValidationMessage For="@(() => localpatientfile.Weight)" />
+    </div>
+    <div class="form-group">
+        <label for="height">Inaltime</label>
+        <InputNumber id="height" @bind-Value="localpatientfile.Height" class="form-control"></InputNumber>
+        <ValidationMessage For="@(() => localpatientfile.Height)" />
+    </div>
+    <div class="form-group">
+        <label for="bmi">Body Mass Index</label>
+        <InputNumber id="bmi" @bind-Value="localpatientfile.Bmi" class="form-control"></InputNumber>
+        <ValidationMessage For="@(() => localpatientfile.Bmi)" />
+    </div>
+    <div class="form-group">
+        <label for="bsa">Body Surface Area</label>
+        <InputNumber id="bsa" @bind-Value="localpatientfile.Bsa" class="form-control"></InputNumber>
+        <ValidationMessage For="@(() => localpatientfile.Bsa)" />
+    </div>
+
+    <div class="form-group">
+        <label for="hospitaladmisiondate">Data internarii</label>
+        <InputDate id="hospitaladmisiondate" @bind-Value="localpatientfile.HospitalAdmissionDate" class="form-control"></InputDate>
+        <ValidationMessage For="@(() => localpatientfile.HospitalAdmissionDate)" />
+    </div>
+    <div class="form-group">
+        <label for="atitakeoverdate">Data internarii pe sectia ATI</label>
+        <InputDate id="atitakeoverdate" @bind-Value="localpatientfile.AtitakeOverDate" class="form-control"></InputDate>
+        <ValidationMessage For="@(() => localpatientfile.AtitakeOverDate)" />
+    </div>
+    <div class="form-group">
+        <label for="atiretakeoverdate">Data internarii pe sectia ATI</label>
+        <InputDate id="atiretakeoverdate" @bind-Value="localpatientfile.AtiretakeoverDate" class="form-control"></InputDate>
+        <ValidationMessage For="@(() => localpatientfile.AtiretakeoverDate)" />
+    </div>
+    <div class="form-group">
+        <label for="wardtransferdate">Data transferului pe sectie</label>
+        <InputDate id="wardtransferdate" @bind-Value="localpatientfile.WardTransferDate" class="form-control"></InputDate>
+        <ValidationMessage For="@(() => localpatientfile.WardTransferDate)" />
+    </div>
+    <div class="form-group">
+        <label for="dischargedate">Data externarii</label>
+        <InputDate id="dischargedate" @bind-Value="localpatientfile.DischargeDate" class="form-control"></InputDate>
+        <ValidationMessage For="@(() => localpatientfile.DischargeDate)" />
+    </div>
+    <div class="form-group">
+        <label for="warddays">Nr zile pe sectie</label>
+        <InputNumber id="warddays" @bind-Value="localpatientfile.WardDays" class="form-control"></InputNumber>
+        <ValidationMessage For="@(() => localpatientfile.WardDays)" />
+    </div>
+    <div class="form-group">
+        <label for="atidays">Nr zile ATI</label>
+        <InputNumber id="atidays" @bind-Value="localpatientfile.Atidays" class="form-control"></InputNumber>
+        <ValidationMessage For="@(() => localpatientfile.Atidays)" />
+    </div>
+
+</EditForm>
+
+
+
+@code {
+    StgMures.Shared.DbModels.PatientFile localpatientfile = new StgMures.Shared.DbModels.PatientFile();
+
+    async void HandlePatientFile()
+    {
+        NavigationManager.NavigateTo("patientdiagnostic");
+
+        /*
+        var result = await AuthService.RegisterPatient(user);
+
+            if (result.Success)
+            {
+            ToastService.ShowSuccess(result.Message);
+            NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+            ToastService.ShowError(result.Message);
+    }
+    */
+    }
+
+    void HandlePatientSurgery(MouseEventArgs e)
+    {
+            NavigationManager.NavigateTo("patientsurgery");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        string[] sextype = { "Masculin", "Feminin" };
+
+
+        // await DiagnosticService.LoadDiagnosticsAsync();
+        // await DiagnosticService.LoadDiagnosticCategoriesAsync();
+
+        await base.OnInitializedAsync();
+    }
+
+}
+
+
+
