@@ -19,9 +19,9 @@ The project must be web based: one specific requirement from the medical staff, 
   
 It has to be responsive, because the majority of the pages are for the anesthesia and intensive care department from this hospital. I supose the server will not be a very "big" one, so seems a good idea to put the clients at work.
   
-Tt has to use Microsoft core libraries, free nugets (it's a public institute that means they have to initiate a public acquisition procedure… a nightmare);
+It has to use Microsoft core libraries, free nugets (it's a public institute that means they have to initiate a public acquisition procedure… a nightmare);
   
-API web assemblies, MAYBE some API' will be exploted by other apps / devices (Blood pressure, cardiac rhythm, automatic dosage of substances… probably could be received and not entered manually; for now, it’s manually 😊;
+API web assemblies, MAYBE some API' will be exploted by other apps / devices (info like blood pressure, cardiac rhythm, automatic dosage of substances… probably could be received automatically and not entered manually; for now, it’s manually 😊;
   
 I've chosen MS SQL Express  (it is free an easier for the development phase & Integrated in Visual Studio Community Edition; for production… will see).
 
