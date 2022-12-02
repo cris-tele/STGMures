@@ -10,7 +10,7 @@ Yes, this is one of the few Romanian hospitals where newborns can be treated for
 
 So, if you want to contribute to this pro-bono project, well, I am asking for help in finalizing this endeavor. Just work & ideas.
 
-I am not an expert in .NET C# developer, nor a very good designer. Any peace of code, advice or even recomandations (docs, tools...)  will be highly appreciated.
+I am not an expert in .NET C# developer, nor a very good designer. Any piece of code, advice or recomandations (docs, tools...)  will be highly appreciated.
 I am a mechanical engineer, the medical terms in this project are also very confusing. Again, any help/note to understand how the medical world work will be apreciated.
 
 I've choose Visual Studio 2022, .NET7, C#, blazor webassembly. Only free/default nuget staff & libraries. Postman is the only useful tool I am also using.
