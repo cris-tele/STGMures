@@ -3,71 +3,146 @@
 @inject IToastService ToastService
 @inject NavigationManager NavigationManager
 
-<h3>Pacient</h3>
-
-
-<EditForm Model="patient" OnValidSubmit="HandlePatient">
+<EditForm Model="patient" OnValidSubmit="HandlePatient" class="bg-light">
     <DataAnnotationsValidator></DataAnnotationsValidator>
-    <button type="submit" class="btn btn-primary">Fisa Pacient</button>
-    <button @onclick="HandlePatientTreatment">Tratament Pacient</button>
-    <div class="form-group">
-        <label for="firstname">Prenume</label>
-        <InputText id="firstname" @bind-Value="patient.FirstName" class="form-control"></InputText>
-        <ValidationMessage For="@(() => patient.FirstName)" />
-    </div>
-    <div class="form-group">
-        <label for="lastname">Nume</label>
-        <InputText id="lastname" @bind-Value="patient.LastName" class="form-control"></InputText>
-        <ValidationMessage For="@(() => patient.LastName)" />
-    </div>
-
-    <div class="form-group">
-        <label for="cnp">C.N.P.</label> <!-- coded -->
-        <InputText id="cnp" @bind-Value="patient.Cnp" class="form-control"></InputText>
-        <ValidationMessage For="@(() => patient.Cnp)" />
-    </div>
-
-    <div class="form-group">
-        <label for="cnascode">Codul C.N.A.S</label> <!-- coded -->
-        <InputText id="cnascode" @bind-Value="patient.Cnascode" class="form-control"></InputText>
-        <ValidationMessage For="@(() => patient.Cnascode)" />
-    </div>
-
-    <div class="form-group">
-        <label for="birthdate">DataNasterii</label>
-        <InputDate id="birthdate" @bind-Value="patient.BirthDate" class="form-control"></InputDate>
-        <ValidationMessage For="@(() => patient.BirthDate)" />
-    </div>
-
-    <div class="form-group">
-        <label for="sex">Sex</label>
-        <InputSelect id="sex" @bind-Value="patient.Sex" class="form-control">
-            <option>Feminin</option> 
-            <option>Masculin</option> 
-        </InputSelect>
-        <ValidationMessage For="@(() => patient.Sex)" />
-    </div>
-
-    <div class="form-group">
-        <label for="bloodgroup">Grupa Sangvina</label> <!-- coded -->
-        <InputText id="bloodgroup" @bind-Value="patient.BloodGroup" class="form-control"></InputText>
-        <ValidationMessage For="@(() => patient.BloodGroup)" />
-    </div>
-
-    Alte precizari
-
-    <div class="form-group">
-        <label for="parentname">NUme parinti</label> <!-- coded -->
-        <InputText id="parentname" @bind-Value="patient.ParentName" class="form-control"></InputText>
-        <ValidationMessage For="@(() => patient.ParentName)" />
-    </div>
-
-    <div class="form-group">
-        <label for="note">Observatii, adnotari</label> <!-- coded -->
-        <InputText id="note" @bind-Value="patient.Note" class="form-control"></InputText>
-        <ValidationMessage For="@(() => patient.Note)" />
-    </div>
         
+    <div class="row border-bottom">
+        <div class="col"><h4 class="text-primary">Pacient</h4></div>
+        <div class="col-1 align-content-center"><button type="button" class="btn btn-sm btn-success" @onclick="HandlePatientTreatment">  Tratament  </button></div>
+        <div class="col-1 align-content-center"><button type="button" class="btn btn-sm btn-success" @onclick="HandlePatientTreatment">Boli asociate</button></div>
+        <div class="col-1 align-content-center"><button type="button" class="btn btn-sm btn-danger " @onclick="HandlePatientTreatment">  Operatie   </button></div>
+        <div class="col-1 align-content-center"><button type="submit" class="btn btn-sm btn-primary"                                  >    Fisa     </button></div>
+    </div>
+    <div class="row"> <!--Pacient-->
+        <div class="form-group col-2">
+            <label for="lastname">Nume</label>
+            <InputText id="lastname" @bind-Value="patient.LastName" class="form-control" placeholder="Nume pacient"></InputText>
+            <ValidationMessage For="@(() => patient.LastName)" />
+        </div>
+        <div class="form-group col-2">
+            <label for="firstname">Prenume</label>
+            <InputText id="firstname" @bind-Value="patient.FirstName" class="form-control" placeholder="Prenume pacient"></InputText>
+            <ValidationMessage For="@(() => patient.FirstName)" />
+        </div>
+        <div class="form-group col-1" >
+            <label for="birthdate">Data Nastere</label>
+            <InputDate id="birthdate" @bind-Value="patient.BirthDate" class="form-control" placeholder="Data"></InputDate>
+            <ValidationMessage For="@(() => patient.BirthDate)" />
+        </div>
+        <div class="form-group col-1" >
+            <label for="sex">Sex</label>
+            <InputSelect id="sex" @bind-Value="patient.Sex" class="form-control" placeholder="Sex">
+                <option>Feminin</option>
+                <option>Masculin</option>
+            </InputSelect>
+            <ValidationMessage For="@(() => patient.Sex)" />
+        </div>
+        <div class="form-group col-1">
+            <label for="bloodgroup">Gr Sang.</label> <!-- coded -->
+            <InputSelect id="bloodgroup" @bind-Value="patient.BloodGroup" class="form-control">
+                <option>Nedeterminata</option>
+                <option>OI - Rh pozitiv</option>
+                <option>OI - Rh negativ</option>
+                <option>AII - Rh pozitiv</option>
+                <option>AII - Rh negativ</option>
+                <option>BIII - Rh pozitiv</option>
+                <option>BIII - Rh negativ</option>
+                <option>ABIV - Rh pozitiv</option>
+                <option>ABIV - Rh negativ</option>
+            </InputSelect>
+            <ValidationMessage For="@(() => patient.BloodGroup)" />
+        </div>
+
+        <div class="form-group col-1">
+            <label for="cnp">C.N.P.</label> <!-- coded -->
+            <InputText id="cnp" @bind-Value="patient.Cnp" class="form-control"></InputText>
+            <ValidationMessage For="@(() => patient.Cnp)" />
+        </div>
+
+        <div class="form-group col-1">
+            <label for="cnascode">Cod CNAS</label> <!-- coded -->
+            <InputText id="cnascode" @bind-Value="patient.Cnascode" class="form-control"></InputText>
+            <ValidationMessage For="@(() => patient.Cnascode)" />
+        </div>
+        <div class="form-group col-3">
+            <label for="note">Observatii, adnotari</label> <!-- coded -->
+            <InputText id="note" @bind-Value="patient.Note" class="form-control"></InputText>
+            <ValidationMessage For="@(() => patient.Note)" />
+        </div>
+        <p></p>
+</div> <!--Pacient-->       
+</EditForm>
+
+<EditForm Model="localpatientfile" OnValidSubmit="HandlePatientFile" class="bg-light">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <div class="row border-bottom">
+        <!--Fisa Pacient-->
+        <div class="form-inline col-2 ">
+            <label for="filenumber">Numar fisa:</label>
+            <InputText id="filenumber" @bind-Value="localpatientfile.FileNumber" class="form-control"></InputText>
+            <ValidationMessage For="@(() => localpatientfile.FileNumber)" />
+         </div>
+        <div class="col"></div>
+
+        <div class="row">
+            <div class="form-group col-1">
+                <label for="weight">Greutate</label>
+                <InputNumber id="weight" @bind-Value="localpatientfile.Weight" class="form-control"></InputNumber>
+                <ValidationMessage For="@(() => localpatientfile.Weight)" />
+            </div>
+            <div class="form-group col-1" >
+                <label for="height">Inaltime</label>
+                <InputNumber id="height" @bind-Value="localpatientfile.Height" class="form-control"></InputNumber>
+                <ValidationMessage For="@(() => localpatientfile.Height)" />
+            </div>
+            <div class="form-group col-1" >
+                <label for="bmi">B.M.I.</label>
+                <InputNumber id="bmi" @bind-Value="localpatientfile.Bmi" class="form-control"></InputNumber>
+                <ValidationMessage For="@(() => localpatientfile.Bmi)" />
+            </div>
+            <div class="form-group col-1">
+                <label for="bsa">B.S.A.</label>
+                <InputNumber id="bsa" @bind-Value="localpatientfile.Bsa" class="form-control"></InputNumber>
+                <ValidationMessage For="@(() => localpatientfile.Bsa)" />
+            </div>
+
+            <div class="form-group col-1">
+                <label for="hospitaladmisiondate" title="Data Internarii in spital">Internare</label>
+                <InputDate id="hospitaladmisiondate" @bind-Value="localpatientfile.HospitalAdmissionDate" class="form-control"></InputDate>
+                <ValidationMessage For="@(() => localpatientfile.HospitalAdmissionDate)" />
+            </div>
+            <div class="form-group col-1">
+                <label for="atitakeoverdate" title="Data Internare A.T.I.">Internare.ATI</label>
+                <InputDate id="atitakeoverdate" @bind-Value="localpatientfile.AtitakeOverDate" class="form-control"></InputDate>
+                <ValidationMessage For="@(() => localpatientfile.AtitakeOverDate)" />
+            </div>
+            <div class="form-group col-1">
+                <label for="atiretakeoverdate" title="Data Reinternare A.T.I.">Reinternare.ATI</label>
+                <InputDate id="atiretakeoverdate" @bind-Value="localpatientfile.AtiretakeoverDate" class="form-control"></InputDate>
+                <ValidationMessage For="@(() => localpatientfile.AtiretakeoverDate)" />
+            </div>
+            <div class="form-group col-1">
+                <label for="wardtransferdate" title="Data Transferului pe sectie">D.T.S.</label>
+                <InputDate id="wardtransferdate" @bind-Value="localpatientfile.WardTransferDate" class="form-control"></InputDate>
+                <ValidationMessage For="@(() => localpatientfile.WardTransferDate)" />
+            </div>
+            <div class="form-group col-1">
+                <label for="dischargedate" title="Data Externarii">Data externarii</label>
+                <InputDate id="dischargedate" @bind-Value="localpatientfile.DischargeDate" class="form-control"></InputDate>
+                <ValidationMessage For="@(() => localpatientfile.DischargeDate)" />
+            </div>
+            <div class="form-group col-1" >
+                <label for="warddays">Zile sectie</label>
+                <InputNumber id="warddays" @bind-Value="localpatientfile.WardDays" class="form-control"></InputNumber>
+                <ValidationMessage For="@(() => localpatientfile.WardDays)" />
+            </div>
+            <div class="form-group col-1">
+                <label for="atidays">Zile ATI</label>
+                <InputNumber id="atidays" @bind-Value="localpatientfile.Atidays" class="form-control"></InputNumber>
+                <ValidationMessage For="@(() => localpatientfile.Atidays)" />
+            </div>
+        </div>
+    </div> <!--Fisa pacient-->
 
 </EditForm>
 
@@ -119,6 +194,44 @@
 
         await base.OnInitializedAsync();
     }
+
+    StgMures.Shared.DbModels.PatientFile localpatientfile = new StgMures.Shared.DbModels.PatientFile();
+
+    async void HandlePatientFile()
+    {
+        NavigationManager.NavigateTo("patientdiagnostic");
+
+        /*
+        var result = await AuthService.RegisterPatient(user);
+
+            if (result.Success)
+            {
+            ToastService.ShowSuccess(result.Message);
+            NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+            ToastService.ShowError(result.Message);
+    }
+    */
+    }
+
+    void HandlePatientSurgery(MouseEventArgs e)
+    {
+        NavigationManager.NavigateTo("patientsurgery");
+    }
+    /*
+    protected override async Task OnInitializedAsync()
+    {
+        string[] sextype = { "Masculin", "Feminin" };
+
+
+        // await DiagnosticService.LoadDiagnosticsAsync();
+        // await DiagnosticService.LoadDiagnosticCategoriesAsync();
+
+        await base.OnInitializedAsync();
+    }
+    */
 
 }
 

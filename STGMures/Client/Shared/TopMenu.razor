@@ -1,40 +1,20 @@
-﻿@implements IDisposable
-
-<!--
+﻿
     <AuthorizeView>
         <Authorized>
             <div class="top-menu">
-                <img src="icons/banana.png" />
                 <span class="popover-header">
-
+                    top-menu
                 </span>
-                <AddBananas />
             </div>
         </Authorized>
         <NotAuthorized>
             <div>
                 <NavLink href="">Login</NavLink> |
-                <NavLink href="register">Register</NavLink>
+                <NavLink href="register">Inregistrare</NavLink>
             </div>
         </NotAuthorized>
     </AuthorizeView>
--->
 
-            <div class="top-menu">
-                <!-- <img src="icons/banana.png" />
-                <span class="popover-header">
-                Login personal medical; 
-                </span>
-                </div>
-
+    
     @code {
-        protected override void OnInitialized()
-        {
-           ; //  BananaService.OnChange += StateHasChanged;
-        }
-
-        public void Dispose()
-        {
-            ; // BananaService.OnChange -= StateHasChanged;
-        }
     }

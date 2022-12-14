@@ -3,70 +3,53 @@
 @inject NavigationManager NavigationManager
 
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Statistica</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<nav class="navbar navbar-light sticky-top my-0 py-0 navbar-expand-sm">
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="colapse navbar-collapse @NavMenuCssClass">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="oi oi-home text-success" title="Acasa"></span>
+                </NavLink>
+            </li>
+
+           <AuthorizeView>
+                <Authorized>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="diagnostic">
+                            <span class="oi oi-key" aria-hidden="true"></span> Diagnotice
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="patient">
+                            <span class="oi oi-pencil" aria-hidden="true"></span> Pacienti
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="patienttreatment">
+                            <span class="oi oi-pencil" aria-hidden="true"></span> Tratament pacient
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" @onclick="Logout" style="cursor: pointer;">
+                            <span class="oi oi-account-logout" aria-hidden="true" title="Log out"></span> 
+                        </a>
+                    </li>
+                </Authorized>
+               <NotAuthorized>
+                    <li class="nav-item">
+                        <NavLink class="nav-link text-primary" href="register" title="Inregistrare utilizator">
+                            <span class="oi oi-pencil" aria-hidden="true"></span> 
+                        </NavLink>
+                    </li>
+                </NotAuthorized>
+            </AuthorizeView>
+        </ul>
     </div>
-</div>
-
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-
-       <AuthorizeView>
-            <Authorized>
-                <!-- exemplele generate -->
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="counter">
-                        <span class="oi oi-plus" aria-hidden="true"></span> Counter
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="fetchdata">
-                        <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-                    </NavLink>
-                </div>
-                <!-- end exemple generate -->
-
-            </Authorized>
-           <NotAuthorized>
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="register">
-                        <span class="oi oi-pencil" aria-hidden="true"></span> Register
-                    </NavLink>
-                </li>
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="diagnostic">
-                        <span class="oi oi-pencil" aria-hidden="true"></span> Tip diagnostic
-                    </NavLink>
-                </li>
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="patient">
-                        <span class="oi oi-pencil" aria-hidden="true"></span> Pacienti
-                    </NavLink>
-                </li>
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="patientfile">
-                        <span class="oi oi-pencil" aria-hidden="true"></span> Fisa Pacient
-                    </NavLink>
-                </li>
-                <li class="nav-item px-3">
-                    <NavLink class="nav-link" href="patienttreatment">
-                        <span class="oi oi-pencil" aria-hidden="true"></span> Tratament pacient
-                    </NavLink>
-                </li>
-            </NotAuthorized>
-        </AuthorizeView>
-
-    </nav>
-</div>
+</nav>
 
 @code {
     private bool collapseNavMenu = true;
@@ -84,5 +67,5 @@
         await AuthStateProvider.GetAuthenticationStateAsync();
         NavigationManager.NavigateTo("/");
     }
-
+   
 }

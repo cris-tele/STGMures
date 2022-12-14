@@ -3,19 +3,30 @@
 @inject IAuthService AuthService
 @inject IToastService ToastService
 
-Va rugam sa va logati sau sa va <a href="register">inregistrati</a> in aplicatie.
 
-<EditForm Model="user" OnValidSubmit="HandleLogin">
+<EditForm Model="user" OnValidSubmit="HandleLogin" class="bg-light">
     <DataAnnotationsValidator></DataAnnotationsValidator>
-    <div class="form-group">
-        <label for="email">Email</label>
-        <InputText id="email" @bind-Value="user.Email" class="form-control"></InputText>
-    </div>
-    <div class="form-group">
-        <label for="password">Password</label>
-        <InputText id="password" @bind-Value="user.Password" class="form-control" type="password"></InputText>
-    </div>
-    <button type="submit" class="btn btn-primary">Login</button>
+        <div class="row" >
+            <div class="col-3 .d-md-none"> </div>
+            <div class="col-6">
+                <div class="row border-bottom">
+                    <h4 class="text-primary">Login</h4>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <InputText id="email" @bind-Value="user.Email"  class="form-control" placeholder="exemplu@exemplu.com" alt="adresa de email"></InputText>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Parola:</label>
+                    <InputText id="password" @bind-Value="user.Password" class="form-control" type="password" placeholder="Parola (minim 6 caractere)"></InputText>
+                </div>
+                <p></p>
+                <button type="submit" class="btn btn-primary"> Login </button>
+            </div>
+            <div class="col-3 .d-md-none"> </div>
+        </div>
     <ValidationSummary />
 </EditForm>
 

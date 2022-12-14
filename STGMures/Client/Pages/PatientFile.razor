@@ -10,7 +10,7 @@
 <EditForm Model="localpatientfile" OnValidSubmit="HandlePatientFile">
     <DataAnnotationsValidator></DataAnnotationsValidator>
     <button type="submit" class="btn btn-primary">Diagnostic</button>
-    <button type="button" onclick="HandlePatientSurgery" class="btn btn-secondary">Operatie</button>
+    <button type="button" @onclick="HandlePatientSurgery" class="btn btn-secondary">Operatie</button>
 
     <div class="form-group">
         <label for="filenumber">Numar fisa</label>
