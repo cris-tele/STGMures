@@ -1,11 +1,10 @@
-﻿using Blazored.Toast.Services;
-using StgMures.Shared.DbModels;
+﻿using StgMures.Shared.DbModels;
 
 namespace StgMures.Client.Services
 {
-    public interface IPatientService
+    public interface IPatientListService
     {
-        IList<Patient> GetPatients { get; set; }
+        IList<Patient> Patients { get; set; }
         IList<Medic>    GetMyMedics { get; set; }
 
         Task AddPatient(int id, Patient patient);

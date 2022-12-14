@@ -1,12 +1,4 @@
-﻿using StgMures.Shared;
-using StgMures.Shared.SesionModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using StgMures.Shared.DbModels;
-
-namespace StgMures.Server.Data
+﻿namespace StgMures.Server.Data
 {
     public interface IAuthRepository
     {

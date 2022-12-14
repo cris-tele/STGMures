@@ -1,7 +1,7 @@
 ﻿#nullable disable
 using System.ComponentModel.DataAnnotations;
 
-namespace StgMures.Shared.SesionModels
+namespace StgMures.Shared.Dto
 {
     public class UserRegister
     {

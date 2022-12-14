@@ -11,11 +11,13 @@
     display: block;
 }
 
-.dropdown-submenu {
-    position: relative;
+.dropdown-menu {
+    background-color:azure;
+    position:absolute;
+    right:1%;
 }
 
-@media (min-width: sm) {
+@media (min-width:md ) {
     .navbar-toggler {
         display: none;
     }

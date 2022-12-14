@@ -1,14 +1,5 @@
 ﻿using StgMures.Server.Data;
-using StgMures.Shared.SesionModels;
-using StgMures.Shared.DbModels;
-using StgMures.Shared;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Azure.Core;
 
 namespace StgMures.Server.Controllers
 {

@@ -1,13 +1,5 @@
-﻿using StgMures.Server.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using StgMures.Shared.DbModels;
-using StgMures.Shared;
 
 using StgMures.Server.Data;
 

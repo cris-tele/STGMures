@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="SesionModels\SesPatient.cs" />
+    <Compile Remove="Dto\SesPatient.cs" />
   </ItemGroup>
 
   <ItemGroup>

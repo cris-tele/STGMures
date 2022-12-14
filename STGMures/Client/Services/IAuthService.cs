@@ -1,10 +1,5 @@
 ﻿using StgMures.Shared;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using StgMures.Shared.SesionModels;
-using StgMures.Shared.DbModels;
+using StgMures.Shared.Dto;
 
 namespace StgMures.Client.Services
 {

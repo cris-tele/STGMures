@@ -1,16 +1,8 @@
-﻿using StgMures.Shared;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
-using StgMures.Shared.DbModels;
-using StgMures.Shared.SesionModels;
 
 namespace StgMures.Server.Data
 {

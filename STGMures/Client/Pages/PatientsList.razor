@@ -1,0 +1,179 @@
+﻿@page "/patientslist"
+@using System.Linq
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@inject NavigationManager NavigationManager
+@inject IPatientListService PatientListService
+
+
+
+    <div class="row px-0 mx-0">
+        <AuthorizeView>
+            <div class="col-6"><h5 class="text-primary">Lista Pacientilor, medic:  @context.User.Identity.Name </h5></div>
+        </AuthorizeView>
+        <div class="col-6 d-flex flex-column align-items-end">
+            <div class="flexbuttons">
+            <button type="button" class="btn btn-sm btn-success" @onclick="HandlePatientTreatment" title="Tratamete pacient">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-capsule" viewBox="0 0 16 16">
+                    <path d="M1.828 8.9 8.9 1.827a4 4 0 1 1 5.657 5.657l-7.07 7.071A4 4 0 1 1 1.827 8.9Zm9.128.771 2.893-2.893a3 3 0 1 0-4.243-4.242L6.713 5.429l4.243 4.242Z" />
+                </svg>Tratamente
+            </button>
+            <button type="button" class="btn btn-sm btn-success" @onclick="HandlePatientTreatment" title="Boli asociate">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-medical" viewBox="0 0 16 16">
+                    <path d="M8.5 4.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L7 6l-.549.317a.5.5 0 1 0 .5.866l.549-.317V7.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L9 6l.549-.317a.5.5 0 1 0-.5-.866l-.549.317V4.5zM5.5 9a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z" />
+                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z" />
+                </svg>Boli asociate
+            </button>
+            <button type="button" class="btn btn-sm btn-danger " @onclick="HandlePatientTreatment" title="Operatie">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-prescription2" viewBox="0 0 16 16">
+                    <path d="M7 6h2v2h2v2H9v2H7v-2H5V8h2V6Z" />
+                    <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v10.5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 3 14.5V4a1 1 0 0 1-1-1V1Zm2 3v10.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V4H4ZM3 3h10V1H3v2Z" />
+                </svg>Operatie
+            </button>
+            </div>
+        </div>
+    </div>
+
+<EditForm Model="patient" OnValidSubmit="HandlePatient" class="px-0">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <p></p>
+    <div class="row px-0 py-0 mx-0"> <!--Pacient-->
+        <label class="col-form-label col-1 px-0" for="lastname">Nume</label>
+        <label class="col-form-label col-1 px-0" for="lastname">Prenume</label>
+        <label class="col-form-label col-1 px-0" for="birthdate">Data Nastere</label>
+        <label class="col-form-label col-1 px-0" for="sex">Sex</label>
+        <label class="col-form-label col-1 px-0" for="bloodgroup">Gr.Pacient</label> <!-- coded -->
+        <label class="col-form-label col-1 px-0" for="bloodgroup">Gr.Mama</label> <!-- coded -->
+        <label class="col-form-label col-1 px-0" for="cnp">C.N.P.</label> <!-- coded -->
+        <label class="col-form-label col-1 px-0" for="cnascode">Cod CNAS</label> <!-- coded -->
+        <label class="col-form-label col   px-0"  for="note">Observatii, adnotari</label> <!-- coded -->
+
+    </div>
+
+    <div class="row px-0 py-0 mx-0"> <!--Pacient-->
+        <div class="input-grup col-1 px-0">
+            <InputText id="lastname" @bind-Value="patient.LastName" class="form-control px-0" placeholder="Nume pacient"></InputText>
+                <ValidationMessage For="@(() => patient.LastName)" />
+        </div>
+        <div class="input-grup col-1 px-0">
+            <InputText id="firstname" @bind-Value="patient.FirstName" class="form-control  px-0" placeholder="Prenume pacient"></InputText>
+                <ValidationMessage For="@(() => patient.FirstName)" />
+        </div>
+        <div class="form-group col-1 px-0" >
+            <InputDate id="birthdate" @bind-Value="patient.BirthDate" class="form-control" placeholder="Data"></InputDate>
+            <ValidationMessage For="@(() => patient.BirthDate)" />
+        </div>
+        <div class="form-group col-1 px-0" >
+            <InputSelect id="sex" @bind-Value="patient.Sex" class="form-control" placeholder="Sex">
+                <option>Feminin</option>
+                <option>Masculin</option>
+            </InputSelect>
+            <ValidationMessage For="@(() => patient.Sex)" />
+        </div>
+        <div class="form-group col-1 px-0">
+            <InputSelect id="bloodgroup" @bind-Value="patient.BloodGroup" class="form-control">
+                <option>Nedeterminata</option>
+                <option>OI - Rh pozitiv</option>
+                <option>OI - Rh negativ</option>
+                <option>AII - Rh pozitiv</option>
+                <option>AII - Rh negativ</option>
+                <option>BIII - Rh pozitiv</option>
+                <option>BIII - Rh negativ</option>
+                <option>ABIV - Rh pozitiv</option>
+                <option>ABIV - Rh negativ</option>
+            </InputSelect>
+            <ValidationMessage For="@(() => patient.BloodGroup)" />
+            </div>
+            <div class="form-group col-1 px-0">
+            <InputSelect id="bloodgroup" @bind-Value="patient.BloodGroup" class="form-control">
+                <option>Nedeterminata</option>
+                <option>OI - Rh pozitiv</option>
+                <option>OI - Rh negativ</option>
+                <option>AII - Rh pozitiv</option>
+                <option>AII - Rh negativ</option>
+                <option>BIII - Rh pozitiv</option>
+                <option>BIII - Rh negativ</option>
+                <option>ABIV - Rh pozitiv</option>
+                <option>ABIV - Rh negativ</option>
+            </InputSelect>
+            <ValidationMessage For="@(() => patient.BloodGroup)" />
+        </div>
+
+        <div class="form-group col-1 px-0">
+            <InputText id="cnp" @bind-Value="patient.Cnp" class="form-control"></InputText>
+            <ValidationMessage For="@(() => patient.Cnp)" />
+        </div>
+
+        <div class="form-group col-1 px-0">
+            <InputText id="cnascode" @bind-Value="patient.Cnascode" class="form-control"></InputText>
+            <ValidationMessage For="@(() => patient.Cnascode)" />
+        </div>
+        <div class="form-group col px-0">
+            <InputText id="note" @bind-Value="patient.Note" class="form-control"></InputText>
+            <ValidationMessage For="@(() => patient.Note)" />
+        </div>
+
+</div> <!--Pacient-->       
+
+</EditForm>
+<div></div>
+
+    <QuickGrid Items="@patientlist" ResizableColumns>
+            <PropertyColumn Property="@(p => p.LastName)"/> 
+            <PropertyColumn Property="@(p => p.FirstName)" />
+    </QuickGrid>
+
+
+
+@code {
+    Patient patient = new Patient();
+    IQueryable<Patient>? patientlist;
+    PaginationState pagination = new PaginationState { ItemsPerPage = 15 };
+    //    string nameFilter = string.Empty;
+
+    /*
+    GridSort<Pacient> rankSort = GridSort<Pacient>
+        .ByDescending(x => x..Gold)
+        .ThenDescending(x => x.Medals.Silver)
+        .ThenDescending(x => x.Medals.Bronze);
+    */
+    //IQueryable<Pacient>? FilteredItems => patientlist?.Where(x => x.LastName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase));
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        patientlist = (await PatientListService.GetAllPatients()).AsQueryable();
+        var x = patientlist;
+    }
+
+
+    async void HandlePatient()
+    {
+        NavigationManager.NavigateTo("patientfile");
+    }
+
+
+    void HandlePatientTreatment(MouseEventArgs e)
+    {
+        NavigationManager.NavigateTo("patienttreatment");
+
+    }
+
+
+    StgMures.Shared.DbModels.PatientFile localpatientfile = new StgMures.Shared.DbModels.PatientFile();
+
+    async void HandlePatientFile()
+    {
+        NavigationManager.NavigateTo("patientdiagnostic");
+
+    }
+
+    void HandlePatientSurgery(MouseEventArgs e)
+    {
+        NavigationManager.NavigateTo("patientsurgery");
+    }
+
+}
+
+
+

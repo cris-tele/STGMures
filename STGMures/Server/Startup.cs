@@ -1,18 +1,6 @@
-using StgMures.Server.Data;
-using StgMures.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System.Linq;
-
 
 namespace StgMures.Server
 {
@@ -48,6 +36,11 @@ namespace StgMures.Server
                 });
             services.AddScoped<IUtilityService, UtilityService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddQuickGridEntityFrameworkAdapter();
+
+        //    services.AddScoped<IPatientListService, PatientListService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

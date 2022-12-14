@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using StgMures.Shared;
 
 namespace StgMures.Server.Controllers
 {
