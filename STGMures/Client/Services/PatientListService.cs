@@ -1,8 +1,11 @@
 ﻿using Blazored.Toast.Services;
+using Microsoft.EntityFrameworkCore;
 using StgMures.Shared.DbModels;
+using StgMures.Client;
 using System.Net.Http;
 
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace StgMures.Client.Services
 {
@@ -41,7 +44,7 @@ namespace StgMures.Client.Services
         {
             if (Patients.Count == 0)
             {
-                Patients = await _http.GetFromJsonAsync<IList<Patient>>("api/patientslist");
+                Patients = await _http.GetFromJsonAsync<IList<Patient>>("/PatientsList");
             }
             return Patients;
         }

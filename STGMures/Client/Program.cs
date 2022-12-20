@@ -22,6 +22,8 @@ namespace StgMures.Client
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<IAuthService, AuthService>();    // login si register
 
+            builder.Services.AddQuickGridEntityFrameworkAdapter();
+
             builder.Services.AddScoped<IPatientListService, PatientListService>();
 
 

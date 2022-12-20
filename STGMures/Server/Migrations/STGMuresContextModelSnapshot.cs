@@ -469,7 +469,7 @@ namespace StgMures.Server.Migrations
                         .HasColumnType("nvarchar(250)")
                         .HasComment("General comments");
 
-                    b.Property<string>("ParentName")
+                    b.Property<string>("ParentsName")
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 

@@ -45,11 +45,11 @@ public partial class Patient
     /// <summary>
     /// Grupa Sangvina
     /// </summary>
-    [Required, StringLength(20, ErrorMessage = "Va rugam completati grupa sanguina, max 20 caractere")]
+    [/*Required,*/ StringLength(20, ErrorMessage = "Va rugam completati grupa sanguina, max 20 caractere")]
     public string BloodGroup { get; set; }
 
     [StringLength(150, ErrorMessage = "Nume, prenume parinte, max 150 caractere")]
-    public string ParentName { get; set; }
+    public string ParentsName { get; set; }
 
     /// <summary>
     /// General comments

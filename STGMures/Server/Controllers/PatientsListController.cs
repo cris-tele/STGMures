@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StgMures.Client.Services;
 using StgMures.Shared.DbModels;
 
 namespace StgMures.Server.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    [Route("[controller]")]
+    [Controller]
+    [Authorize]
     public class PatientsListController : ControllerBase
     {
         private readonly StgMuresContext _context;
@@ -19,8 +21,8 @@ namespace StgMures.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPatients()
         {
-            var patients = await _context.Patients.ToListAsync();
-            return Ok(patients);
+            var ret = await _context.Patients.ToListAsync();
+            return Ok(ret);
         }
 
         [HttpPost]
@@ -42,7 +44,7 @@ namespace StgMures.Server.Controllers
 
             dbPatient.FirstName = patient.FirstName;
             dbPatient.LastName = patient.LastName;
-            dbPatient.ParentName = patient.ParentName;
+            dbPatient.ParentsName = patient.ParentsName;
             dbPatient.BirthDate = patient.BirthDate;
             dbPatient.BloodGroup = patient.BloodGroup;
             dbPatient.ChildOrAdult = patient.ChildOrAdult;
@@ -82,7 +84,7 @@ namespace StgMures.Server.Controllers
 
             dbPatient.FirstName = patient.FirstName;
             dbPatient.LastName = patient.LastName;
-            dbPatient.ParentName = patient.ParentName;
+            dbPatient.ParentsName = patient.ParentsName;
             dbPatient.BirthDate = patient.BirthDate;
             dbPatient.BloodGroup = patient.BloodGroup;
             dbPatient.ChildOrAdult = patient.ChildOrAdult;

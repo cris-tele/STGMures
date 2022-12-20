@@ -1,4 +1,6 @@
 ﻿@page "/patientslist"
+@inject AuthenticationStateProvider AuthStateProvider
+
 @using System.Linq
 @using Microsoft.AspNetCore.Components.QuickGrid
 
@@ -118,7 +120,7 @@
 </EditForm>
 <div></div>
 
-    <QuickGrid Items="@patientlist" ResizableColumns>
+    <QuickGrid Items="@patientlist"  ResizableColumns>
             <PropertyColumn Property="@(p => p.LastName)"/> 
             <PropertyColumn Property="@(p => p.FirstName)" />
     </QuickGrid>
@@ -142,8 +144,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        patientlist = (await PatientListService.GetAllPatients()).AsQueryable();
-        var x = patientlist;
+
+        await AuthStateProvider.GetAuthenticationStateAsync();
+        try
+        {
+            patientlist = (await PatientListService.GetAllPatients()).AsQueryable();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+
+
     }
 
 

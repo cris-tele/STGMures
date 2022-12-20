@@ -311,11 +311,11 @@ public partial class StgMuresContext : DbContext
                 .HasComment("Data nasterii")
                 .HasColumnType("date");
             entity.Property(e => e.BloodGroup)
-                .IsRequired()
+                //.IsRequired()
                 .HasMaxLength(20)
                 .HasComment("Grupa Sangvina");
             entity.Property(e => e.ChildOrAdult)
-                .IsRequired()
+                //.IsRequired()
                 .HasMaxLength(10)
                 .HasDefaultValueSql("(N'COPIL')")
                 .IsFixedLength()
@@ -340,9 +340,9 @@ public partial class StgMuresContext : DbContext
             entity.Property(e => e.Note)
                 .HasMaxLength(250)
                 .HasComment("General comments");
-            entity.Property(e => e.ParentName).HasMaxLength(150);
+            entity.Property(e => e.ParentsName).HasMaxLength(150);
             entity.Property(e => e.Sex)
-                .IsRequired()
+                //.IsRequired()
                 .HasMaxLength(1)
                 .IsFixedLength();
         });

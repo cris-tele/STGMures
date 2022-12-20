@@ -187,7 +187,7 @@ Relational:Comment: Prenume" IsPrimaryKey="False" IsForeignKey="False" IsRequire
 Relational:Comment: NUme" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
 <Node Id = "Patient.Note" Label="Note (string)" Name="Note" Category="Property Optional" Type="string" MaxLength="(250)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 250
 Relational:Comment: General comments" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
-<Node Id = "Patient.ParentName" Label="ParentName (string)" Name="ParentName" Category="Property Optional" Type="string" MaxLength="(150)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 150" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
+<Node Id = "Patient.ParenstName" Label="ParentsName (string)" Name="ParentsName" Category="Property Optional" Type="string" MaxLength="(150)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 150" IsPrimaryKey="False" IsForeignKey="False" IsRequired="False" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
 <Node Id = "Patient.Sex" Label="Sex (string)" Name="Sex" Category="Property Required" Type="string" MaxLength="(1)" Field="" PropertyAccessMode="PropertyAccessMode.Default" BeforeSaveBehavior="PropertySaveBehavior.Save" AfterSaveBehavior="PropertySaveBehavior.Save" Annotations="MaxLength: 1
 Relational:IsFixedLength: True" IsPrimaryKey="False" IsForeignKey="False" IsRequired="True" IsIndexed="False" IsShadow="False" IsAlternateKey="False" IsConcurrencyToken="False" IsUnicode="True" ValueGenerated="None" />
 <Node Id = "PatientDailyTreatment" Label="PatientDailyTreatment" Name="PatientDailyTreatment" BaseClass="" IsAbstract="False" ChangeTrackingStrategy="ChangeTrackingStrategy.Snapshot"  Annotations="Relational:Schema:
@@ -459,7 +459,7 @@ Relational:Comment: Defaul admin method (dosage, perfusion...)" IsPrimaryKey="Fa
 <Link Source = "Patient" Target="Patient.FirstName" Category="Contains" />
 <Link Source = "Patient" Target="Patient.LastName" Category="Contains" />
 <Link Source = "Patient" Target="Patient.Note" Category="Contains" />
-<Link Source = "Patient" Target="Patient.ParentName" Category="Contains" />
+<Link Source = "Patient" Target="Patient.ParentsName" Category="Contains" />
 <Link Source = "Patient" Target="Patient.Sex" Category="Contains" />
 <Link Source = "IModel" Target="PatientDailyTreatment" Category="Contains" />
 <Link Source = "PatientAssocDisease" Target="PatientAssocDisease.AsociatedDisease" Category="Contains" />
