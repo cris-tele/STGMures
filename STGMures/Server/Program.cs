@@ -4,7 +4,6 @@ global using StgMures.Shared.Dto;
 
 global using StgMures.Server.Data;
 global using StgMures.Server.Services;
-global using StgMures.Client.Services;
 
 
 

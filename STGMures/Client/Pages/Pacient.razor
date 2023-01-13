@@ -1,6 +1,5 @@
 ﻿@page "/patient"
 @inject IAuthService AuthService
-@inject IToastService ToastService
 @inject NavigationManager NavigationManager
 
 <EditForm Model="patient" OnValidSubmit="HandlePatient" class="bg-light">
@@ -175,7 +174,7 @@
 
     void HandleInvalidDiagnostic()
     {
-        ToastService.ShowError("Internal ERROR");
+        //ToastService.ShowError("Internal ERROR");
     }
 
     void HandlePatientTreatment(MouseEventArgs e)

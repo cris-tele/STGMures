@@ -16,17 +16,10 @@
 
   <ItemGroup>
     <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
-    <PackageReference Include="Blazored.Toast" Version="4.0.0" />
-    <PackageReference Include="Blazored.Toast.TestExtensions" Version="4.0.0" />
     <PackageReference Include="bootstrap" Version="5.3.0-alpha1" />
-    <PackageReference Include="BootstrapBlazor" Version="7.2.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Forms" Version="7.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="0.1.0-alpha.22351.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="0.1.0-alpha.22351.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.1" PrivateAssets="all" />
-    <PackageReference Include="System.Net.Http.Json" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.2" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

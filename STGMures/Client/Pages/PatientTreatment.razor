@@ -1,6 +1,5 @@
 ﻿@page "/patienttreatment"
 @inject IAuthService AuthService
-@inject IToastService ToastService
 @inject NavigationManager NavigationManager
 
 
@@ -98,7 +97,7 @@
 
     void HandleInvalidDiagnostic()
     {
-        ToastService.ShowError("Internal ERROR");
+        // ToastService.ShowError("Internal ERROR");
     }
 
     void HandleTreatment(MouseEventArgs e)

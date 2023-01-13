@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StgMures.Client.Services;
 using StgMures.Shared.DbModels;
 
 namespace StgMures.Server.Controllers

@@ -15,13 +15,5 @@ namespace StgMures.Shared
 
     }
 
-    private class MaTa
-        { 
-        string x = Param.Genders[0];
-
-
-
-    }
-
 
 }

@@ -60,8 +60,8 @@ namespace StgMures.Client
         {
             var payload = jwt.Split('.')[1];
             var jsonBytes = ParseBase64WithoutPadding(payload);
-            var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
-            var claims = keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()));
+            var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes)!;
+            var claims = keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()))!;
 
             return claims;
         }

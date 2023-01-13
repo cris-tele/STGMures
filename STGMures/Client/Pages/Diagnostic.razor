@@ -1,6 +1,5 @@
 ﻿@page "/diagnostic"
 @inject IAuthService AuthService
-@inject IToastService ToastService
 @inject NavigationManager NavigationManager
 
 
@@ -100,7 +99,7 @@
 
     void HandleInvalidDiagnostic()
     {
-        ToastService.ShowError("Internal ERROR");
+        // ToastService.ShowError("Internal ERROR");
     }
 
     protected override async Task OnInitializedAsync()

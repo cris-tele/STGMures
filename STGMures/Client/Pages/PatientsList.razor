@@ -2,7 +2,6 @@
 @inject AuthenticationStateProvider AuthStateProvider
 
 @using System.Linq
-@using Microsoft.AspNetCore.Components.QuickGrid
 
 @inject NavigationManager NavigationManager
 @inject IPatientListService PatientListService
@@ -120,17 +119,12 @@
 </EditForm>
 <div></div>
 
-    <QuickGrid Items="@patientlist"  ResizableColumns>
-            <PropertyColumn Property="@(p => p.LastName)"/> 
-            <PropertyColumn Property="@(p => p.FirstName)" />
-    </QuickGrid>
-
+    
 
 
 @code {
     Patient patient = new Patient();
     IQueryable<Patient>? patientlist;
-    PaginationState pagination = new PaginationState { ItemsPerPage = 15 };
     //    string nameFilter = string.Empty;
 
     /*

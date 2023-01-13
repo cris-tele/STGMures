@@ -1,11 +1,5 @@
-﻿using Blazored.Toast.Services;
-using Microsoft.EntityFrameworkCore;
-using StgMures.Shared.DbModels;
-using StgMures.Client;
-using System.Net.Http;
-
+﻿using StgMures.Shared.DbModels;
 using System.Net.Http.Json;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace StgMures.Client.Services
 {
@@ -13,7 +7,7 @@ namespace StgMures.Client.Services
     {
         private readonly HttpClient _http;
 
-        public PatientListService(/*IToastService toastService,*/ HttpClient http)
+        public PatientListService(HttpClient http)
         {
             _http = http;
         }
