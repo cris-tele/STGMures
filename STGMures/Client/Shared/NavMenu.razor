@@ -2,118 +2,41 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavigationManager
 
+<MudNavMenu Dense="true">
+    <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
+    <AuthorizeView>
+        <Authorized>
+            <MudNavLink Href="patientslist" Match="NavLinkMatch.Prefix">Pacienti</MudNavLink>
+            <MudNavLink Href="patienttreatment" Match="NavLinkMatch.Prefix">Tratament pacient<span class="oi oi-eyedropper"></span> </MudNavLink>
 
-<nav class="navbar navbar-expand navbar-light sticky-top my-0 py-0 navbar-expand">
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+            <MudNavGroup Title="Setari" Expanded="false" >
 
-    <div class="colapse navbar-collapse @NavMenuCssClass">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <span class="oi oi-home text-success" title="Acasa"></span>
-                </NavLink>
-            </li>
+                <MudNavGroup Title="Tipuri" Expanded="false">
+                    <MudNavLink Href="diagnostic" Match="NavLinkMatch.Prefix">Diagnostice </MudNavLink>
+                    <MudNavLink Href="treatment" Match="NavLinkMatch.Prefix">Tratamente</MudNavLink>
+                    <MudNavLink Href="treatment" Match="NavLinkMatch.Prefix">Consumabile</MudNavLink>
+                    <MudNavLink Href="treatment" Match="NavLinkMatch.Prefix">Interventii chirurgicale</MudNavLink>
+                </MudNavGroup>
 
+                <MudNavGroup Title="Categorii" Expanded="false">
+                    <MudNavLink Href="DiagnosticCategories" Match="NavLinkMatch.Prefix">Diagnostice</MudNavLink>
+                    <MudNavLink Href="treatmentcategory" Match="NavLinkMatch.Prefix">Tratamente</MudNavLink>
+                    <MudNavLink Href="ConsumableCategories" Match="NavLinkMatch.Prefix">Consumabile</MudNavLink>
+                </MudNavGroup>
+            </MudNavGroup>
 
-           <AuthorizeView>
-                <Authorized>
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="patientslist">
-                            <span class="oi oi-people" aria-hidden="true"></span> Pacienti
-                        </NavLink>
-                    </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="patienttreatment">
-                            <span class="oi oi-eyedropper" aria-hidden="true"></span> Tratament pacient
-                        </NavLink>
-                    </li>
-                    <li class="nav-item" style="width:max-content "></li> <!--blank spacer-->
-                    <li class="nav-item dropdown position-absolute end-0 mx-auto">
-                        <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <span class="oi oi-wrench" aria-hidden="true"></span> Admin</a>
-                        <ul class="dropdown-menu " >
-                            <li> <a class="dropdown-item" href="diagnosticcategory">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-files" viewBox="0 0 16 16">
-                                      <path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z"/>
-                                    </svg>
-                                    Categorii Diagnostice
-                                </a>
-                            </li>
-                            <li> <a class="dropdown-item" href="diagnostic">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-pulse" viewBox="0 0 16 16">
-                                        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053.918 3.995.78 5.323 1.508 7H.43c-2.128-5.697 4.165-8.83 7.394-5.857.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17c3.23-2.974 9.522.159 7.394 5.856h-1.078c.728-1.677.59-3.005.108-3.947C13.486.878 10.4.28 8.717 2.01L8 2.748ZM2.212 10h1.315C4.593 11.183 6.05 12.458 8 13.795c1.949-1.337 3.407-2.612 4.473-3.795h1.315c-1.265 1.566-3.14 3.25-5.788 5-2.648-1.75-4.523-3.434-5.788-5Z" />
-                                        <path d="M10.464 3.314a.5.5 0 0 0-.945.049L7.921 8.956 6.464 5.314a.5.5 0 0 0-.88-.091L3.732 8H.5a.5.5 0 0 0 0 1H4a.5.5 0 0 0 .416-.223l1.473-2.209 1.647 4.118a.5.5 0 0 0 .945-.049l1.598-5.593 1.457 3.642A.5.5 0 0 0 12 9h3.5a.5.5 0 0 0 0-1h-3.162l-1.874-4.686Z" />
-                                    </svg>
-                                    Tipuri Diagnostice 
-                                </a>
-                            </li>
-                            <div class="dropdown-divider"></div>
-                            <li> <a class="dropdown-item" href="treatmentcategory">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-capsule-pill" viewBox="0 0 16 16">
-                                        <path d="M11.02 5.364a3 3 0 0 0-4.242-4.243L1.121 6.778a3 3 0 1 0 4.243 4.243l5.657-5.657Zm-6.413-.657 2.878-2.879a2 2 0 1 1 2.829 2.829L7.435 7.536 4.607 4.707ZM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm-.5 1.042a3 3 0 0 0 0 5.917V9.042Zm1 5.917a3 3 0 0 0 0-5.917v5.917Z" />
-                                    </svg>
-                                    Categorii Tratamente
-                                </a>
-                            </li>
-                            <li> <a class="dropdown-item" href="treatment">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-capsule" viewBox="0 0 16 16">
-                                        <path d="M1.828 8.9 8.9 1.827a4 4 0 1 1 5.657 5.657l-7.07 7.071A4 4 0 1 1 1.827 8.9Zm9.128.771 2.893-2.893a3 3 0 1 0-4.243-4.242L6.713 5.429l4.243 4.242Z" />
-                                    </svg>
-                                    Tipuri Tratamente
-                                </a>
-                            </li>
-                            <div class="dropdown-divider"></div>
-                            <li> <a class="dropdown-item" href="treatment">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-boxes" viewBox="0 0 16 16">
-                                        <path d="M7.752.066a.5.5 0 0 1 .496 0l3.75 2.143a.5.5 0 0 1 .252.434v3.995l3.498 2A.5.5 0 0 1 16 9.07v4.286a.5.5 0 0 1-.252.434l-3.75 2.143a.5.5 0 0 1-.496 0l-3.502-2-3.502 2.001a.5.5 0 0 1-.496 0l-3.75-2.143A.5.5 0 0 1 0 13.357V9.071a.5.5 0 0 1 .252-.434L3.75 6.638V2.643a.5.5 0 0 1 .252-.434L7.752.066ZM4.25 7.504 1.508 9.071l2.742 1.567 2.742-1.567L4.25 7.504ZM7.5 9.933l-2.75 1.571v3.134l2.75-1.571V9.933Zm1 3.134 2.75 1.571v-3.134L8.5 9.933v3.134Zm.508-3.996 2.742 1.567 2.742-1.567-2.742-1.567-2.742 1.567Zm2.242-2.433V3.504L8.5 5.076V8.21l2.75-1.572ZM7.5 8.21V5.076L4.75 3.504v3.134L7.5 8.21ZM5.258 2.643 8 4.21l2.742-1.567L8 1.076 5.258 2.643ZM15 9.933l-2.75 1.571v3.134L15 13.067V9.933ZM3.75 14.638v-3.134L1 9.933v3.134l2.75 1.571Z" />
-                                    </svg>
-                                    Categorii Consumabile
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="treatment">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bandaid" viewBox="0 0 16 16">
-                                        <path d="M14.121 1.879a3 3 0 0 0-4.242 0L8.733 3.026l4.261 4.26 1.127-1.165a3 3 0 0 0 0-4.242ZM12.293 8 8.027 3.734 3.738 8.031 8 12.293 12.293 8Zm-5.006 4.994L3.03 8.737 1.879 9.88a3 3 0 0 0 4.241 4.24l.006-.006 1.16-1.121ZM2.679 7.676l6.492-6.504a4 4 0 0 1 5.66 5.653l-1.477 1.529-5.006 5.006-1.523 1.472a4 4 0 0 1-5.653-5.66l.001-.002 1.505-1.492.001-.002Z" />
-                                        <path d="M5.56 7.646a.5.5 0 1 1-.706.708.5.5 0 0 1 .707-.708Zm1.415-1.414a.5.5 0 1 1-.707.707.5.5 0 0 1 .707-.707ZM8.39 4.818a.5.5 0 1 1-.708.707.5.5 0 0 1 .707-.707Zm0 5.657a.5.5 0 1 1-.708.707.5.5 0 0 1 .707-.707ZM9.803 9.06a.5.5 0 1 1-.707.708.5.5 0 0 1 .707-.707Zm1.414-1.414a.5.5 0 1 1-.706.708.5.5 0 0 1 .707-.708ZM6.975 9.06a.5.5 0 1 1-.707.708.5.5 0 0 1 .707-.707ZM8.39 7.646a.5.5 0 1 1-.708.708.5.5 0 0 1 .707-.708Zm1.413-1.414a.5.5 0 1 1-.707.707.5.5 0 0 1 .707-.707Z" />
-                                    </svg>
-                                    Tipuri Consumabile
-                                </a>
-                            </li>
+            <MudDivider DividerType="DividerType.Middle" /> <!--Separator-->
+            <MudNavLink OnClick="@(() =>Logout())">Logout</MudNavLink>
 
-                            <div class="dropdown-divider"></div>
-                            <li>
-                                <a class="dropdown-item" @onclick="Logout" style="cursor: pointer;">
-                                    <span class="oi oi-account-logout" aria-hidden="true" title="Log out"></span> Logout
-                                 </a>
-                            </li>
-                        </ul>
-                    </li>
+        </Authorized>
+        <NotAuthorized>
+            <MudNavLink href="register" title="Inregistrare utilizator"><span class="oi oi-pencil"></span> </MudNavLink>
+        </NotAuthorized>
+    </AuthorizeView>
+</MudNavMenu>
 
-                </Authorized>
-               <NotAuthorized>
-                    <li class="nav-item">
-                        <NavLink class="nav-link text-primary" href="register" title="Inregistrare utilizator">
-                            <span class="oi oi-pencil" aria-hidden="true"></span> 
-                        </NavLink>
-                    </li>
-                </NotAuthorized>
-            </AuthorizeView>
-        </ul>
-    </div>
-</nav>
 
 @code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-
     private async void Logout()
     {
         await LocalStorage.RemoveItemAsync("authToken");

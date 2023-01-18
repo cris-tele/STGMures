@@ -3,14 +3,13 @@
 namespace StgMures.Client.Services
 {
     public interface ITreatmentCategoryService 
-    { 
-    IList<TreatmentCategoryService> TreatmentCategoryes { get; set; }
-    Task<TreatmentCategoryService> GetTreatmentCategory(int id);
-    Task<TreatmentCategoryService> GetTreatmentCategoryes();
-
-    Task AddTreatmentCategory(int id, TreatmentCategoryService treatmentCategory);
-    Task DeleteTreatmentCategory(int id);
-    Task<Patient> UpdateTreatmentCategory(TreatmentCategoryService treatmentCategory);
+    {
+        List<TreatmentCategory> Categories { get; set; }
+        Task<TreatmentCategory> GetTreatmentCategory(int id);
+        Task LoadTreatmentCategoriesAsync(); //getall
+        Task /*<TreatmentCategory>*/ AddTreatmentCategory(TreatmentCategory treatmentCategory);
+        Task UpdateTreatmentCategory(TreatmentCategory treatmentCategory);   
+        Task DeleteTreatmentCategory(int id);   // delete dupa id
     
     }
 }

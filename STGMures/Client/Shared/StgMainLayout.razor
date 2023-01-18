@@ -1,13 +1,62 @@
 ﻿@inherits LayoutComponentBase
+@inject StgMures.Client.Services.ITreatmentCategoryService appBar
 
-<div class="container-fluid px-1" >
-    <NavMenu/>
-    <div class="content">
-        @Body
-    </div>
-</div>
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
+<MudLayout>
+    <MudAppBar>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+
+            <MudGrid>
+            <MudItem xs="5">
+                <MudButton StartIcon="@Icons.Material.Outlined.MedicalServices" Variant="Variant.Text"></MudButton>     <!-- denumire pagina -->
+            </MudItem>
+            <MudItem xs="2">
+                <MudButton StartIcon="@Icons.Material.Outlined.MedicalServices" Variant="Variant.Text"></MudButton>    <!-- denumire medic -->
+            </MudItem>
+            <MudItem xs="2">
+                <MudButton StartIcon="@Icons.Material.Outlined.MedicalInformation" Variant="Variant.Text"></MudButton>  <!-- denumire pacient -->
+            </MudItem>
+            <MudSpacer></MudSpacer>
+            <MudItem xs="2">
+                <MudText>S.T.G. Mures ATI</MudText>
+            </MudItem>
+        </MudGrid>
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen">
+        <NavMenu/>
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
 
 @code {
+    bool _drawerOpen = true;
+    string _medicName = string.Empty;
+    string _patientName = string.Empty;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+    private void GetMedic(string medic)       
+    {
+        _medicName = "Medic: ";
+        if (medic.Length > 0)
+            _medicName = $"Medic: {medic}";
+
+    }
+    private void GetPatient(string patient)
+    {
+        _patientName = "Pacient: ";
+        if (patient.Length > 0)
+            _patientName += $"Pacient: {patient}" ;
+    }
 
 }
+

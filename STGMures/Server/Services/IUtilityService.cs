@@ -2,6 +2,6 @@
 {
     public interface IUtilityService
     {
-        Task<Medic> GetUser();
+        Task<Medic> GetMedic(); // Medic = user 
     }
 }

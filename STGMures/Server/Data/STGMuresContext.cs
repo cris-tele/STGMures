@@ -191,7 +191,7 @@ public partial class StgMuresContext : DbContext
             entity.ToTable("ConsumableCategory", tb => tb.HasComment("type of consumables used in surgery"));
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("ID");
             entity.Property(e => e.Name)
                 .IsRequired()
@@ -588,6 +588,7 @@ public partial class StgMuresContext : DbContext
             entity.ToTable("Treatment");
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            
             entity.Property(e => e.AdministrationMethod)
                 .HasMaxLength(50)
                 .HasComment("Defaul admin method (dosage, perfusion...) ");
@@ -609,8 +610,9 @@ public partial class StgMuresContext : DbContext
             entity.ToTable("TreatmentCategory");
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("ID");
+                .ValueGeneratedOnAdd()
+                .HasColumnName("ID")
+                .UseIdentityColumn(); 
             entity.Property(e => e.Name).HasMaxLength(150);
         });
 

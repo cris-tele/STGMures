@@ -1,37 +1,52 @@
-﻿using StgMures.Shared.DbModels;
+﻿using StgMures.Shared;
+using System.Net.Http.Json;
+using System.Net;
+using MudBlazor;
+
+using StgMures.Shared.DbModels;
 
 namespace StgMures.Client.Services
 {
     public class TreatmentCategoryService : ITreatmentCategoryService
     {
-        public TreatmentCategoryService()
-        {
+        private readonly HttpClient _http;
 
-        }
-        IList<TreatmentCategoryService> ITreatmentCategoryService.TreatmentCategoryes { get ; set ; } = new List<TreatmentCategoryService>();
+        public List<TreatmentCategory> Categories { get; set; } = new List<TreatmentCategory>();
 
-        Task ITreatmentCategoryService.AddTreatmentCategory(int id, TreatmentCategoryService treatmentCategory)
+        public TreatmentCategoryService(HttpClient http)
         {
-            throw new NotImplementedException();
+            _http = http;
         }
 
-        Task ITreatmentCategoryService.DeleteTreatmentCategory(int id)
+
+        public async Task AddTreatmentCategory(TreatmentCategory treatmentCategory) // POST
         {
-            throw new NotImplementedException();
+            var response = await _http.PostAsJsonAsync("api/TCategory", treatmentCategory);
+            await LoadTreatmentCategoriesAsync();
         }
 
-        Task<TreatmentCategoryService> ITreatmentCategoryService.GetTreatmentCategory(int id)
+        public async Task DeleteTreatmentCategory(int id)   //DELETE
         {
-            throw new NotImplementedException();
-        }
-        Task<TreatmentCategoryService> ITreatmentCategoryService.GetTreatmentCategoryes()
-        {
-            throw new NotImplementedException();
+            await _http.DeleteAsync($"api/TCategory/{id}");
+            await LoadTreatmentCategoriesAsync();
         }
 
-        Task<Patient> ITreatmentCategoryService.UpdateTreatmentCategory(TreatmentCategoryService treatmentCategory)
+        public async Task LoadTreatmentCategoriesAsync() //GETALL
         {
-            throw new NotImplementedException();
+            Categories = await _http.GetFromJsonAsync<List<TreatmentCategory>>("api/TCategory");
+        }
+
+        public async Task<TreatmentCategory> GetTreatmentCategory(int id) //GET
+        {
+            var response = await _http
+                .GetFromJsonAsync<ServiceResponse<TreatmentCategory>>("api/TCategory");
+            return response.Data;
+        }
+
+        public async Task UpdateTreatmentCategory(TreatmentCategory treatmentCategory) // PUT
+        {
+            await _http.PutAsJsonAsync("api/TCategory", treatmentCategory);
+            await LoadTreatmentCategoriesAsync();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace StgMures.Server.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<Medic> GetUser()
+        public async Task<Medic> GetMedic()
         {
             var userId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var user = await _context.Medics.FirstOrDefaultAsync(u => u.Id == userId);

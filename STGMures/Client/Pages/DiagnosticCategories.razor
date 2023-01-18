@@ -1,0 +1,230 @@
+﻿@page "/DiagnosticCategories"
+
+@using StgMures.Shared.DbModels;
+
+@inject StgMures.Client.Services.IDiagnosticCategoryService categoryService
+@inject MudBlazor.ISnackbar snackBar
+
+<!--titlu pagina-->
+<MudText Align="Align.Center" Typo="Typo.h6">Categorii Diagnostice</MudText>
+<br />
+
+<!--edit card-->
+<MudCard Elevation="5">
+<!--    <MudCardHeader >  </MudCardHeader> --> <!--Nu stiu daca voi folosi-->
+    <MudCardContent >
+        <MudGrid>
+            <MudItem xs="1">
+                <MudTextField Disabled="true" @bind-Value="category.Id" Label="ID" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="category.Type" Label="ID" Variant="Variant.Outlined" Margin="Margin.Dense">
+                @foreach (var _option in Param.TypeOfDiagnosticCategories)
+                {
+                    <MudSelectItem Value="@_option" />
+                }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="8">
+                <MudTextField Disabled="@_disabledField" @bind-Value="category.Name" Label="Denumire categorie" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+
+    <MudDivider DividerType="DividerType.FullWidth"/>
+
+    <MudCardActions>
+        <MudTooltip Text="Adauga o noua inregistrare">
+            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add"    Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success" OnClick="AddNewRecord">Adauga</MudIconButton>
+        </MudTooltip>
+
+        <MudTooltip Text="Modifica inregistrarea selectata">
+            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit"   Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success" OnClick="UpdateRecord">Modifica</MudIconButton>
+        </MudTooltip>
+
+        <MudTooltip Text="Sterge inregistrarea selectata">
+            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
+        </MudTooltip>
+        <MudSpacer></MudSpacer>
+        <MudTooltip Text="Validare">
+            <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
+        </MudTooltip>
+        <MudTooltip Text="Renuntare">
+            <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
+        </MudTooltip>
+
+
+    </MudCardActions>
+</MudCard>
+<br />
+
+
+<!--table list-->
+<MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5"
+          Items="@categories" Filter="new Func<DiagnosticCategory, bool>(Search)" @bind-customer="category" OnRowClick="@RowClicked" T="DiagnosticCategory">
+    <ToolBarContent>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Cautati o categorie..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>ID</MudTh>
+        <MudTh>Denumire Categorie Tratamente</MudTh>
+        <MudTh>Actiuni</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd Class="col-1" DataLabel="Id">@context.Id</MudTd>
+        <MudTd Class="col-2" DataLabel="Tip">@context.Type</MudTd>
+        <MudTd Class="col-9" DataLabel="Denumire">@context.Name</MudTd>
+        <MudTd Class="col-1" DataLabel="">
+            <MudIconButton @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small"  />
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
+    </PagerContent>
+
+</MudTable>
+
+
+
+
+@code {
+    // card design 
+    private bool _disabledField = true;
+    private bool _disabledBtn = true;
+    private bool _disabledBtnValid = true;
+    private int _currentAction = 0;
+
+    private enum _actionbtn { None, Add, Edit, Delete };
+
+    private void ClearCurrentSelection()
+    {
+        _disabledField = true;                  // disable editing
+        _disabledBtn = true;                 // disable actions
+        _disabledBtnValid = true;               // disable validations
+
+        StateHasChanged();
+    }
+    private void EnableCurrentSelection()
+    {
+        _disabledField = false;                  // disable editing
+        _disabledBtn = false;                 // disable actions
+        _disabledBtnValid = false;               // disable validations
+
+        StateHasChanged();
+    }
+
+
+    private void AddNewRecord()
+    {
+        _currentAction = (int)_actionbtn.Add;
+        _disabledBtn = true;
+        _disabledBtnValid = false;
+        StateHasChanged();
+    }
+    private void UpdateRecord()
+    {
+        _currentAction = (int)_actionbtn.Edit;
+        _disabledBtn = true;
+        _disabledBtnValid = false;
+        StateHasChanged();
+    }
+
+    private void DeleteRecord()
+    {
+        _currentAction = (int)_actionbtn.Delete;
+        _disabledBtn = true;
+        _disabledBtnValid = false;
+        StateHasChanged();
+    }
+
+
+    // table design
+    private MudTable<DiagnosticCategory>? _table;
+    private int _currentPage = 0;          // start with first page
+
+    private void PageChanged(int i)
+    {
+        _table!.NavigateTo(i - 1);
+        _currentPage = _table.CurrentPage;
+    }
+
+
+    // data
+    private DiagnosticCategory category = new DiagnosticCategory() { Id = 0, Name = string.Empty };
+    private List<DiagnosticCategory> categories = new List<DiagnosticCategory>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await categoryService.LoadDiagnosticCategoriesAsync();
+        categories = categoryService.Categories;
+        if (categories.Count == 0)
+            EnableCurrentSelection();
+
+    }
+
+
+
+    protected void RowClicked(TableRowClickEventArgs<DiagnosticCategory> clickedCategory)
+    {
+        if (_table!.GetFilteredItemsCount() == 0)
+            EnableCurrentSelection();
+        if (_table!.SelectedItem == null)
+            return;
+        SelectCurrentItem(clickedCategory.Item.Id);
+        EnableCurrentSelection();
+    }
+
+
+
+    private async Task ValidateAction()
+    {
+        switch (_currentAction)
+        {
+            case (int)_actionbtn.None:
+                ClearCurrentSelection();            // Invalid action, disable all 
+                return;
+            case (int)_actionbtn.Add:
+                await categoryService.AddDiagnosticCategory(category);
+                snackBar.Add("Inregistrare adaugata", Severity.Success);
+                break;
+            case (int)_actionbtn.Edit:
+                await categoryService.UpdateDiagnosticCategory(category);
+                snackBar.Add("Inregistrare modificata", Severity.Success);
+                break;
+            case (int)_actionbtn.Delete:
+                if (category.Id == 0)               // Invalid selection
+                    return;
+                await categoryService.DeleteDiagnosticCategory(category.Id);
+                snackBar.Add("Inregistrare stearsa", Severity.Success);
+                break;
+        }
+
+        _currentAction = 0;
+        categories = categoryService.Categories;
+
+        ClearCurrentSelection();
+
+        await Task.Delay(1); // let UI refresh
+    }
+
+    // movers
+    private string searchString = "";
+
+    private void SelectCurrentItem(int id)
+    {
+        category = categories.FirstOrDefault(c => c.Id == id);
+    }
+
+    private bool Search(DiagnosticCategory category)
+    {
+        if (string.IsNullOrWhiteSpace(searchString)) return true;
+
+        if (category.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        return false;
+    }
+
+}

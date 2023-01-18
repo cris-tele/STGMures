@@ -38,7 +38,7 @@ namespace StgMures.Client.Services
         {
             if (Patients.Count == 0)
             {
-                Patients = await _http.GetFromJsonAsync<IList<Patient>>("/PatientsList");
+                Patients = (await _http.GetFromJsonAsync<IList<Patient>>("/PatientsList"))!;
             }
             return Patients;
         }
