@@ -1,6 +1,7 @@
 ﻿@page "/DiagnosticCategories"
 
 @using StgMures.Shared.DbModels;
+@inherits EditButtonsBase
 
 @inject StgMures.Client.Services.IDiagnosticCategoryService categoryService
 @inject MudBlazor.ISnackbar snackBar
@@ -90,53 +91,6 @@
 
 @code {
     // card design 
-    private bool _disabledField = true;
-    private bool _disabledBtn = true;
-    private bool _disabledBtnValid = true;
-    private int _currentAction = 0;
-
-    private enum _actionbtn { None, Add, Edit, Delete };
-
-    private void ClearCurrentSelection()
-    {
-        _disabledField = true;                  // disable editing
-        _disabledBtn = true;                 // disable actions
-        _disabledBtnValid = true;               // disable validations
-
-        StateHasChanged();
-    }
-    private void EnableCurrentSelection()
-    {
-        _disabledField = false;                  // disable editing
-        _disabledBtn = false;                 // disable actions
-        _disabledBtnValid = false;               // disable validations
-
-        StateHasChanged();
-    }
-
-
-    private void AddNewRecord()
-    {
-        _currentAction = (int)_actionbtn.Add;
-        _disabledBtn = true;
-        _disabledBtnValid = false;
-        StateHasChanged();
-    }
-    private void UpdateRecord()
-    {
-        _currentAction = (int)_actionbtn.Edit;
-        _disabledBtn = true;
-        _disabledBtnValid = false;
-        StateHasChanged();
-    }
-
-    private void DeleteRecord()
-    {
-        _currentAction = (int)_actionbtn.Delete;
-        _disabledBtn = true;
-        _disabledBtnValid = false;
-        StateHasChanged();
-    }
 
 
     // table design

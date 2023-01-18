@@ -536,7 +536,7 @@ public partial class StgMuresContext : DbContext
             entity.ToTable("Surgery", tb => tb.HasComment("Intersection table: one surgery can have many procedures"));
 
             entity.Property(e => e.Id)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("ID");
             entity.Property(e => e.Description).HasMaxLength(250);
             entity.Property(e => e.PatientSurgeryId).HasColumnName("PatientSurgeryID");

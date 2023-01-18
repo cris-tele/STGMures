@@ -18,7 +18,7 @@ namespace StgMures.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTreatmentCategories()
+        public async Task<IActionResult> GetDiagnosticCategories()
         {
             var ret = await _context.DiagnosticCategories.ToListAsync();
             return Ok(ret);
