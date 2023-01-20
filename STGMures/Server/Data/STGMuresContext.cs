@@ -314,6 +314,10 @@ public partial class StgMuresContext : DbContext
                 //.IsRequired()
                 .HasMaxLength(20)
                 .HasComment("Grupa Sangvina");
+            entity.Property(e => e.MotherBloodGroup)
+                //.IsRequired()
+                .HasMaxLength(20)
+                .HasComment("Grupa Sangvina");
             entity.Property(e => e.ChildOrAdult)
                 //.IsRequired()
                 .HasMaxLength(10)

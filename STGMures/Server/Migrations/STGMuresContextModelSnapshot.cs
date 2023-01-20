@@ -434,20 +434,20 @@ namespace StgMures.Server.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(10)
-                        .HasColumnType("nchar(10)")
+                        .HasColumnType("nvarchar(10)")
                         .HasDefaultValueSql("(N'COPIL')")
                         .IsFixedLength()
                         .HasComment("COPIL = child; Not directly related to age but to the specific of the medical procedures");
 
                     b.Property<string>("Cnascode")
                         .HasMaxLength(30)
-                        .HasColumnType("nchar(30)")
+                        .HasColumnType("nvarchar(30)")
                         .HasColumnName("CNASCode")
                         .IsFixedLength();
 
                     b.Property<string>("Cnp")
                         .HasMaxLength(20)
-                        .HasColumnType("nchar(20)")
+                        .HasColumnType("nvarchar(20)")
                         .HasColumnName("CNP")
                         .IsFixedLength()
                         .HasComment("Social Security Number; Romanian CNP is 13 digits length; Newborns may not have it");
@@ -476,7 +476,7 @@ namespace StgMures.Server.Migrations
                     b.Property<string>("Sex")
                         .IsRequired()
                         .HasMaxLength(1)
-                        .HasColumnType("nchar(1)")
+                        .HasColumnType("nvarchar(20)")
                         .IsFixedLength();
 
                     b.HasKey("Id");
@@ -879,7 +879,7 @@ namespace StgMures.Server.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<int?>("ParentId")
+                    b.Property<int>("ParentId")
                         .HasColumnType("int")
                         .HasColumnName("ParentID");
 
@@ -907,7 +907,7 @@ namespace StgMures.Server.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<int?>("ParentId")
+                    b.Property<int>("ParentId")
                         .HasColumnType("int")
                         .HasColumnName("ParentID");
 

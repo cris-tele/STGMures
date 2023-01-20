@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StgMures.Shared.DbModels;
 
 namespace StgMures.Server.Controllers
 {
-    [Route("[controller]")]
-    [Controller]
-    [Authorize]
+    [Route("api/[controller]")]
+    [ApiController]
+    [AllowAnonymous]
     public class PatientsListController : ControllerBase
     {
         private readonly StgMuresContext _context;
@@ -73,7 +72,7 @@ namespace StgMures.Server.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> DeleteUnit(int id , Patient patient) //soft delete
+        public async Task<IActionResult> DeletePatient(int id , Patient patient) //soft delete
         {
             var dbPatient = await _context.Patients.FirstOrDefaultAsync(p => p.Id == id);
             if (dbPatient == null)

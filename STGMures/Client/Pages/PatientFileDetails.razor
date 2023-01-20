@@ -1,10 +1,10 @@
-﻿@page "/SurgicalProcedures"
+﻿@page "/PatientFileDetails"
 
-@using StgMures.Shared.DbModels;
+@using StgMures.Shared.DbModels
+@inherits _RazorPageBehaviorBase
 
-@inject StgMures.Client.Services.ISurgicalProcedureCategoryService categoryService
+@inject StgMures.Client.Services.IDiagnosticCategoryService categoryService
 @inject MudBlazor.ISnackbar snackBar
-@inherits EditButtonsBase
 
 <!--titlu pagina-->
 <MudText Align="Align.Center" Typo="Typo.h6">Categorii Diagnostice</MudText>
@@ -19,11 +19,10 @@
                 <MudTextField Disabled="true" @bind-Value="category.Id" Label="ID" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
             </MudItem>
             <MudItem xs="2">
-                <!--!!!!!!!!!!!!!!!!!!!!  -->
-                <MudSelect Disabled="@_disabledField" T="int" @bind-Value="category.Id" AnchorOrigin="Origin.BottomCenter" Label="ID" Variant="Variant.Outlined" Margin="Margin.Dense">
-                    @foreach (var _option in categories)
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="category.Type" Label="ID" Variant="Variant.Outlined" Margin="Margin.Dense">
+                    @foreach (var _option in Param.TypeOfDiagnosticCategories)
                     {
-                        <MudSelectItem Value="@_option.Id">@_option.Name</MudSelectItem>
+                        <MudSelectItem Value="@_option" />
                     }
                 </MudSelect>
             </MudItem>
@@ -63,21 +62,20 @@
 
 <!--table list-->
 <MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5"
-          Items="@categories" Filter="new Func<SurgicalProcedure, bool>(Search)" @bind-customer="category" OnRowClick="@RowClicked" T="SurgicalProcedure">
+          Items="@categories" Filter="new Func<DiagnosticCategory, bool>(Search)" @bind-customer="category" OnRowClick="@RowClicked" T="DiagnosticCategory">
     <ToolBarContent>
         <MudSpacer />
         <MudTextField @bind-Value="searchString" Placeholder="Cautati o categorie..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>ID</MudTh>
-        <MudTh>Denumire Procedura</MudTh>
-        <MudTh>Apartine de Procedura</MudTh>
+        <MudTh>Denumire Categorie Tratamente</MudTh>
         <MudTh>Actiuni</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd Class="col-1" DataLabel="Id">@context.Id</MudTd>
+        <MudTd Class="col-2" DataLabel="Tip">@context.Type</MudTd>
         <MudTd Class="col-9" DataLabel="Denumire">@context.Name</MudTd>
-        <MudTd Class="col-2" DataLabel="">@context.ParentId</MudTd>
         <MudTd Class="col-1" DataLabel="">
             <MudIconButton @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small" />
         </MudTd>
@@ -92,10 +90,11 @@
 
 
 @code {
-   
+    // card design
+
 
     // table design
-    private MudTable<SurgicalProcedure>? _table;
+    private MudTable<DiagnosticCategory>? _table;
     private int _currentPage = 0;          // start with first page
 
     private void PageChanged(int i)
@@ -106,12 +105,12 @@
 
 
     // data
-    private SurgicalProcedure category = new SurgicalProcedure() { Id = 0, Name = string.Empty };
-    private List<SurgicalProcedure> categories = new List<SurgicalProcedure>();
+    private DiagnosticCategory category = new DiagnosticCategory() { Id = 0, Name = string.Empty };
+    private List<DiagnosticCategory> categories = new List<DiagnosticCategory>();
 
     protected override async Task OnInitializedAsync()
     {
-        await categoryService.LoadSurgicalProceduresAsync();
+        await categoryService.LoadDiagnosticCategoriesAsync();
         categories = categoryService.Categories;
         if (categories.Count == 0)
             EnableCurrentSelection();
@@ -119,7 +118,8 @@
     }
 
 
-    protected void RowClicked(TableRowClickEventArgs<SurgicalProcedure> clickedCategory)
+
+    protected void RowClicked(TableRowClickEventArgs<DiagnosticCategory> clickedCategory)
     {
         if (_table!.GetFilteredItemsCount() == 0)
             EnableCurrentSelection();
@@ -139,17 +139,17 @@
                 ClearCurrentSelection();            // Invalid action, disable all
                 return;
             case (int)_actionbtn.Add:
-                await categoryService.AddSurgicalProcedure(category);
+                await categoryService.AddDiagnosticCategory(category);
                 snackBar.Add("Inregistrare adaugata", Severity.Success);
                 break;
             case (int)_actionbtn.Edit:
-                await categoryService.UpdateSurgicalProcedure(category);
+                await categoryService.UpdateDiagnosticCategory(category);
                 snackBar.Add("Inregistrare modificata", Severity.Success);
                 break;
             case (int)_actionbtn.Delete:
                 if (category.Id == 0)               // Invalid selection
                     return;
-                await categoryService.DeleteSurgicalProcedure(category.Id);
+                await categoryService.DeleteDiagnosticCategory(category.Id);
                 snackBar.Add("Inregistrare stearsa", Severity.Success);
                 break;
         }
@@ -170,7 +170,7 @@
         category = categories.FirstOrDefault(c => c.Id == id);
     }
 
-    private bool Search(SurgicalProcedure category)
+    private bool Search(DiagnosticCategory category)
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
 

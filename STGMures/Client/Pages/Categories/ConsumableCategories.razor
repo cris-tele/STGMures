@@ -1,6 +1,6 @@
 ﻿@page "/ConsumableCategories"
 @using StgMures.Shared.DbModels;
-@inherits EditButtonsBase
+@inherits _RazorPageBehaviorBase
 
 @inject StgMures.Client.Services.IConsumableCategoryService categoryService
 @inject MudBlazor.ISnackbar snackBar
@@ -15,10 +15,10 @@
     <MudCardContent>
         <MudGrid>
             <MudItem xs="1">
-                <MudTextField Disabled="true" @bind-Value="category.Id" Label="ID" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="true" @bind-Value="category.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
             </MudItem>
             <MudItem xs="10">
-                <MudTextField Disabled="@_disabledField" @bind-Value="category.Name" Label="Denumire categorie" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="category.Name" HelperText="Denumire categorie" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
             </MudItem>
         </MudGrid>
     </MudCardContent>
@@ -27,22 +27,22 @@
 
     <MudCardActions>
         <MudTooltip Text="Adauga o noua inregistrare">
-            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success" OnClick="AddNewRecord">Adauga</MudIconButton>
+            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="AddNewRecord">Adauga</MudIconButton>
         </MudTooltip>
 
         <MudTooltip Text="Modifica inregistrarea selectata">
-            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success" OnClick="UpdateRecord">Modifica</MudIconButton>
+            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="UpdateRecord">Modifica</MudIconButton>
         </MudTooltip>
 
         <MudTooltip Text="Sterge inregistrarea selectata">
-            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
+            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
         </MudTooltip>
         <MudSpacer></MudSpacer>
         <MudTooltip Text="Validare">
-            <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
+            <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
         </MudTooltip>
         <MudTooltip Text="Renuntare">
-            <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
+            <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
         </MudTooltip>
 
 

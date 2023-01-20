@@ -2,13 +2,15 @@
 
 namespace StgMures.Client.Pages
 {
-    public class EditButtonsBase : ComponentBase 
+    public class _RazorPageBehaviorBase :ComponentBase
     {
-        // card 
         protected bool _disabledField = true;
         protected bool _disabledBtn = true;
         protected bool _disabledBtnValid = true;
         protected int _currentAction = 0;
+        protected int _currentPage = 0;          // start with first page
+
+        protected int _pageSize = 10;
 
         protected enum _actionbtn { None, Add, Edit, Delete };
 
@@ -28,6 +30,7 @@ namespace StgMures.Client.Pages
 
             StateHasChanged();
         }
+
 
         protected void AddNewRecord()
         {
@@ -52,9 +55,7 @@ namespace StgMures.Client.Pages
             StateHasChanged();
         }
 
-
-
     }
 
-
 }
+

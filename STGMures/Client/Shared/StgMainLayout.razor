@@ -7,29 +7,25 @@
 
 <MudLayout>
     <MudAppBar>
+   
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-
-            <MudGrid>
-            <MudItem xs="5">
-                <MudButton StartIcon="@Icons.Material.Outlined.MedicalServices" Variant="Variant.Text"></MudButton>     <!-- denumire pagina -->
-            </MudItem>
-            <MudItem xs="2">
-                <MudButton StartIcon="@Icons.Material.Outlined.MedicalServices" Variant="Variant.Text"></MudButton>    <!-- denumire medic -->
-            </MudItem>
-            <MudItem xs="2">
-                <MudButton StartIcon="@Icons.Material.Outlined.MedicalInformation" Variant="Variant.Text"></MudButton>  <!-- denumire pacient -->
-            </MudItem>
-            <MudSpacer></MudSpacer>
-            <MudItem xs="2">
-                <MudText>S.T.G. Mures ATI</MudText>
-            </MudItem>
-        </MudGrid>
+        <AuthorizeView>
+            <Authorized>
+            <MudSpacer />
+                <MudButton StartIcon="@Icons.Material.Filled.MedicalServices" Color="Color.Error" Variant="Variant.Text">@context.User.Identity!.Name </MudButton>
+            <MudSpacer />
+            <MudButton StartIcon="@Icons.Material.Outlined.MedicalInformation" Color="Color.Error" Variant="Variant.Text">@_patientName</MudButton>
+            <MudSpacer />
+            </Authorized>
+        </AuthorizeView>
+        <MudSpacer />
+        <MudText Color="Color.Error">S.T.G. Mures ATI</MudText>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen">
         <NavMenu/>
     </MudDrawer>
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Large">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge">
             @Body
         </MudContainer>
     </MudMainContent>
@@ -37,21 +33,26 @@
 
 @code {
     bool _drawerOpen = true;
-    string _medicName = string.Empty;
+    string _medicName =string.Empty;
     string _patientName = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1); // let UI refresh
+    }
 
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
-    private void GetMedic(string medic)       
+    private void GetMedic(string medic= "")       
     {
         _medicName = "Medic: ";
         if (medic.Length > 0)
             _medicName = $"Medic: {medic}";
 
     }
-    private void GetPatient(string patient)
+    private void GetPatient(string patient = "")
     {
         _patientName = "Pacient: ";
         if (patient.Length > 0)

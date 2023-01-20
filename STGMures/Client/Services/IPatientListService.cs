@@ -4,15 +4,13 @@ namespace StgMures.Client.Services
 {
     public interface IPatientListService
     {
-        IList<Patient> Patients { get; set; }
-        IList<Medic>    GetMyMedics { get; set; }
+        List<Patient> Patients { get; set; }
+        // List<Medic>    GetMyMedics { get; set; }
 
-        Task AddPatient(int id, Patient patient);
-        Task DeletePatient(int id);
         Task<Patient> GetPatient(int id);
-        Task<IList<Patient>> GetAllPatients();
-        Task<Patient> UpdatePatient(Patient patient);
-
-
+        Task LoadPatientsAsync();
+        Task AddPatient(Patient patient);
+        Task UpdatePatient(Patient patient);
+        Task DeletePatient(int id);
     }
 }

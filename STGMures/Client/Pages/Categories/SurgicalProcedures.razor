@@ -1,0 +1,185 @@
+﻿@page "/SurgicalProcedures"
+
+@using StgMures.Shared.DbModels
+@inherits _RazorPageBehaviorBase
+@inject MudBlazor.ISnackbar snackBar
+
+@inject StgMures.Client.Services.ISurgicalProcedureCategoryService categoryService
+
+<!--titlu pagina-->
+<MudText Align="Align.Center" Typo="Typo.h6">Proceduri chirurgicale</MudText>
+<br />
+
+<!--edit card-->
+<MudCard Elevation="5">
+    <!--    <MudCardHeader >  </MudCardHeader> --> <!--Nu stiu daca voi folosi-->
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="1">
+                <MudTextField Disabled="true" @bind-Value="category.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <!--!!!!!!!!!!!!!!!!!!!!  -->
+                <MudSelect Disabled="@_disabledField" T="int?" @bind-Value="category.ParentId" AnchorOrigin="Origin.BottomCenter" HelperText="ID" Variant="Variant.Text" Margin="Margin.Dense">
+                    @foreach (var _option in parentCategories)
+                    {
+                        <MudSelectItem Value="@_option.ParentId">@_option.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="8">
+                <MudTextField Disabled="@_disabledField" @bind-Value="category.Name" HelperText="Denumire categorie" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+
+    <MudDivider DividerType="DividerType.FullWidth" />
+
+    <MudCardActions>
+        <MudTooltip Text="Adauga o noua inregistrare">
+            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="AddNewRecord">Adauga</MudIconButton>
+        </MudTooltip>
+
+        <MudTooltip Text="Modifica inregistrarea selectata">
+            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="UpdateRecord">Modifica</MudIconButton>
+        </MudTooltip>
+
+        <MudTooltip Text="Sterge inregistrarea selectata">
+            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
+        </MudTooltip>
+        <MudSpacer></MudSpacer>
+        <MudTooltip Text="Validare">
+            <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
+        </MudTooltip>
+        <MudTooltip Text="Renuntare">
+            <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
+        </MudTooltip>
+
+
+    </MudCardActions>
+</MudCard>
+<br />
+
+
+<!--table list-->
+<MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5"
+          Items="@categories" Filter="new Func<SurgicalProcedure, bool>(Search)" @bind-customer="category" OnRowClick="@RowClicked" T="SurgicalProcedure">
+    <ToolBarContent>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Cautati o categorie..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>ID</MudTh>
+        <MudTh>Denumire Procedura</MudTh>
+        <MudTh>Apartine de Procedura</MudTh>
+        <MudTh>Actiuni</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd Class="col-1" DataLabel="Id">@context.Id</MudTd>
+        <MudTd Class="col-9" DataLabel="Denumire">@context.Name</MudTd>
+        <MudTd Class="col-2" DataLabel="">@context.ParentId</MudTd>
+        <MudTd Class="col-1" DataLabel="">
+            <MudIconButton @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small" />
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
+    </PagerContent>
+
+</MudTable>
+
+
+
+
+@code {
+    private MudTable<SurgicalProcedure>? _table;
+    private SurgicalProcedure category = new SurgicalProcedure() { Id = 0, ParentId=0, Name = string.Empty };
+    private List<SurgicalProcedure> categories = new List<SurgicalProcedure>();
+    private List<SurgicalProcedure> parentCategories = new List<SurgicalProcedure>();
+
+
+
+    // data
+
+    protected override async Task OnInitializedAsync()
+    {
+        await categoryService.LoadSurgicalProceduresAsync();
+        categories = categoryService.Categories;
+        parentCategories = categories.GetRange(0, categories.Count);
+        parentCategories.Insert(0, new SurgicalProcedure { Id = 0, ParentId = 0, Name = " --- " });
+        if (categories.Count == 0)
+            EnableCurrentSelection();
+
+    }
+
+
+    protected void RowClicked(TableRowClickEventArgs<SurgicalProcedure> clickedCategory)
+    {
+        if (_table!.GetFilteredItemsCount() == 0)
+            EnableCurrentSelection();
+        if (_table!.SelectedItem == null)
+            return;
+        SelectCurrentItem(clickedCategory.Item.Id);
+        EnableCurrentSelection();
+    }
+
+
+
+    private async Task ValidateAction()
+    {
+        switch (_currentAction)
+        {
+            case (int)_actionbtn.None:
+                ClearCurrentSelection();            // Invalid action, disable all
+                return;
+            case (int)_actionbtn.Add:
+                await categoryService.AddSurgicalProcedure(category);
+                snackBar.Add("Inregistrare adaugata", Severity.Success);
+                break;
+            case (int)_actionbtn.Edit:
+                await categoryService.UpdateSurgicalProcedure(category);
+                snackBar.Add("Inregistrare modificata", Severity.Success);
+                break;
+            case (int)_actionbtn.Delete:
+                if (category.Id == 0)               // Invalid selection
+                    return;
+                await categoryService.DeleteSurgicalProcedure(category.Id);
+                snackBar.Add("Inregistrare stearsa", Severity.Success);
+                break;
+        }
+
+        _currentAction = 0;
+        categories = categoryService.Categories;
+        parentCategories = categories.GetRange(0, categories.Count);
+        parentCategories.Insert(0, new SurgicalProcedure { Id = 0, ParentId = 0, Name = " --- " });
+
+        ClearCurrentSelection();
+
+        await Task.Delay(1); // let UI refresh
+    }
+
+    // movers
+    private string searchString = "";
+
+    private void SelectCurrentItem(int id)
+    {
+        category = categories.FirstOrDefault(c => c.Id == id);
+    }
+
+    private bool Search(SurgicalProcedure category)
+    {
+        if (string.IsNullOrWhiteSpace(searchString)) return true;
+
+        if (category.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        return false;
+    }
+    private void PageChanged(int i)
+    {
+        _table!.NavigateTo(i - 1);
+        _currentPage = _table.CurrentPage;
+    }
+
+}

@@ -1,185 +1,226 @@
-﻿@page "/patientslist"
-@inject AuthenticationStateProvider AuthStateProvider
-
-@using System.Linq
+﻿@page "/PatientsList"
+@using StgMures.Shared.DbModels;
+@inherits _RazorPageBehaviorBase
+@inject IPatientListService patientListService
+@inject MudBlazor.ISnackbar snackBar
 
 @inject NavigationManager NavigationManager
-@inject IPatientListService PatientListService
+
+<!--titlu pagina-->
+<MudText Align="Align.Center" Typo="Typo.h6">Lista pacientilor</MudText>
+<br />
+
+<MudCard Elevation="5">
+    <MudCardContent >
+        <MudGrid >
+            <MudItem xs="1">
+                <MudTextField Disabled="true" @bind-Value="_currentPatient.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+            </MudItem>
+            <MudItem xs="1">
+                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.LastName" HelperText="Nume" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+            </MudItem>
+            <MudItem xs="1">
+                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+            </MudItem>
+            <MudItem xs="1">
+                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatient.BirthDate" HelperText="Data Nasterii" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+            </MudItem>
+            <MudItem xs="1">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="_currentPatient.Sex" HelperText="Sex" Variant="Variant.Text" Margin="Margin.Dense">
+                    @foreach (var _option in Param.Genders)
+                    {
+                        <MudSelectItem Value="@_option" />
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="1">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="_currentPatient.BloodGroup" HelperText="Gr.Sangvina" Variant="Variant.Text" Margin="Margin.Dense">
+                    @foreach (var _option in Param.BloodGroup)
+                    {
+                        <MudSelectItem Value="@_option" />
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="1">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="_currentPatient.MotherBloodGroup" HelperText="Gr.Sv.Mama" Variant="Variant.Text" Margin="Margin.Dense">
+                    @foreach (var _option in Param.BloodGroup)
+                    {
+                        <MudSelectItem Value="@_option" />
+                    }
+                </MudSelect>
+            </MudItem>
+            <!--cnascode not required for the moment, skipped-->
+            <MudItem xs="1">
+                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.Cnp" HelperText="C.N.P" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+            </MudItem>
+            <MudItem xs="4">
+                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.Note" Label="Observatii" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+            </MudItem>
+        </MudGrid>
+        </MudCardContent>
+
+    <MudDivider DividerType="DividerType.FullWidth"/>
+
+    <MudCardActions>
+        <MudTooltip Text="Adauga o noua inregistrare">
+            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add"    Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="AddNewRecord">Adauga</MudIconButton>
+        </MudTooltip>
+
+        <MudTooltip Text="Modifica inregistrarea selectata">
+            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit"   Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="UpdateRecord">Modifica</MudIconButton>
+        </MudTooltip>
+
+        <MudTooltip Text="Sterge inregistrarea selectata">
+            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
+        </MudTooltip>
+        <MudSpacer></MudSpacer>
+        <MudTooltip Text="Validare">
+            <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
+        </MudTooltip>
+        <MudTooltip Text="Renuntare">
+            <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
+        </MudTooltip>
+    </MudCardActions>
+</MudCard>
+<br />
 
 
+<!--table list-->
+<MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5"
+          Items="@_patientsList" Filter="new Func<Patient, bool>(Search)" @bind-customer="_currentPatient" OnRowClick="@RowClicked" T="Patient">
+    <ToolBarContent>
+        <MudSpacer />
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" ></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>ID</MudTh>
+        <MudTh>Nume</MudTh>
+        <MudTh>Prenume</MudTh>
+        <MudTh>Data Nasterii</MudTh>
+        <MudTh>Sex</MudTh>
+        <MudTh>Gr.Sg.Pacient</MudTh>
+        <MudTh>Gr.Sg.Mama</MudTh>
+        <MudTh>C.N.P.</MudTh>
+        <MudTh>Observatii</MudTh>
 
-    <div class="row px-0 mx-0">
-        <AuthorizeView>
-            <div class="col-6"><h5 class="text-primary">Lista Pacientilor, medic:  @context.User.Identity.Name </h5></div>
-        </AuthorizeView>
-        <div class="col-6 d-flex flex-column align-items-end">
-            <div class="flexbuttons">
-            <button type="button" class="btn btn-sm btn-success" @onclick="HandlePatientTreatment" title="Tratamete pacient">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-capsule" viewBox="0 0 16 16">
-                    <path d="M1.828 8.9 8.9 1.827a4 4 0 1 1 5.657 5.657l-7.07 7.071A4 4 0 1 1 1.827 8.9Zm9.128.771 2.893-2.893a3 3 0 1 0-4.243-4.242L6.713 5.429l4.243 4.242Z" />
-                </svg>Tratamente
-            </button>
-            <button type="button" class="btn btn-sm btn-success" @onclick="HandlePatientTreatment" title="Boli asociate">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-medical" viewBox="0 0 16 16">
-                    <path d="M8.5 4.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L7 6l-.549.317a.5.5 0 1 0 .5.866l.549-.317V7.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L9 6l.549-.317a.5.5 0 1 0-.5-.866l-.549.317V4.5zM5.5 9a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z" />
-                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z" />
-                </svg>Boli asociate
-            </button>
-            <button type="button" class="btn btn-sm btn-danger " @onclick="HandlePatientTreatment" title="Operatie">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-prescription2" viewBox="0 0 16 16">
-                    <path d="M7 6h2v2h2v2H9v2H7v-2H5V8h2V6Z" />
-                    <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v10.5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 3 14.5V4a1 1 0 0 1-1-1V1Zm2 3v10.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V4H4ZM3 3h10V1H3v2Z" />
-                </svg>Operatie
-            </button>
-            </div>
-        </div>
-    </div>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd Class="col-1" DataLabel="ID">@context.Id</MudTd>
+        <MudTd Class="col-1" DataLabel="Nume">@context.LastName</MudTd>
+        <MudTd Class="col-1" DataLabel="Prenume">@context.FirstName</MudTd>
+        <MudTd Class="col-1" DataLabel="Denumire">@context.BirthDate</MudTd>
+        <MudTd Class="col-1" DataLabel="Denumire">@context.Sex</MudTd>
+        <MudTd Class="col-1" DataLabel="Denumire">@context.BloodGroup</MudTd>
+        <MudTd Class="col-1" DataLabel="Denumire">@context.MotherBloodGroup</MudTd>
+        <MudTd Class="col-1" DataLabel="Denumire">@context.Cnp</MudTd>
+        <MudTd Class="col-4" DataLabel="Denumire">@context.Note</MudTd>
 
-<EditForm Model="patient" OnValidSubmit="HandlePatient" class="px-0">
-    <DataAnnotationsValidator></DataAnnotationsValidator>
-    <p></p>
-    <div class="row px-0 py-0 mx-0"> <!--Pacient-->
-        <label class="col-form-label col-1 px-0" for="lastname">Nume</label>
-        <label class="col-form-label col-1 px-0" for="lastname">Prenume</label>
-        <label class="col-form-label col-1 px-0" for="birthdate">Data Nastere</label>
-        <label class="col-form-label col-1 px-0" for="sex">Sex</label>
-        <label class="col-form-label col-1 px-0" for="bloodgroup">Gr.Pacient</label> <!-- coded -->
-        <label class="col-form-label col-1 px-0" for="bloodgroup">Gr.Mama</label> <!-- coded -->
-        <label class="col-form-label col-1 px-0" for="cnp">C.N.P.</label> <!-- coded -->
-        <label class="col-form-label col-1 px-0" for="cnascode">Cod CNAS</label> <!-- coded -->
-        <label class="col-form-label col   px-0"  for="note">Observatii, adnotari</label> <!-- coded -->
+        <MudTd Class="col-1" DataLabel="">
+            <MudIconButton @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small"  />
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
+    </PagerContent>
 
-    </div>
+</MudTable>
 
-    <div class="row px-0 py-0 mx-0"> <!--Pacient-->
-        <div class="input-grup col-1 px-0">
-            <InputText id="lastname" @bind-Value="patient.LastName" class="form-control px-0" placeholder="Nume pacient"></InputText>
-                <ValidationMessage For="@(() => patient.LastName)" />
-        </div>
-        <div class="input-grup col-1 px-0">
-            <InputText id="firstname" @bind-Value="patient.FirstName" class="form-control  px-0" placeholder="Prenume pacient"></InputText>
-                <ValidationMessage For="@(() => patient.FirstName)" />
-        </div>
-        <div class="form-group col-1 px-0" >
-            <InputDate id="birthdate" @bind-Value="patient.BirthDate" class="form-control" placeholder="Data"></InputDate>
-            <ValidationMessage For="@(() => patient.BirthDate)" />
-        </div>
-        <div class="form-group col-1 px-0" >
-            <InputSelect id="sex" @bind-Value="patient.Sex" class="form-control" placeholder="Sex">
-                <option>Feminin</option>
-                <option>Masculin</option>
-            </InputSelect>
-            <ValidationMessage For="@(() => patient.Sex)" />
-        </div>
-        <div class="form-group col-1 px-0">
-            <InputSelect id="bloodgroup" @bind-Value="patient.BloodGroup" class="form-control">
-                <option>Nedeterminata</option>
-                <option>OI - Rh pozitiv</option>
-                <option>OI - Rh negativ</option>
-                <option>AII - Rh pozitiv</option>
-                <option>AII - Rh negativ</option>
-                <option>BIII - Rh pozitiv</option>
-                <option>BIII - Rh negativ</option>
-                <option>ABIV - Rh pozitiv</option>
-                <option>ABIV - Rh negativ</option>
-            </InputSelect>
-            <ValidationMessage For="@(() => patient.BloodGroup)" />
-            </div>
-            <div class="form-group col-1 px-0">
-            <InputSelect id="bloodgroup" @bind-Value="patient.BloodGroup" class="form-control">
-                <option>Nedeterminata</option>
-                <option>OI - Rh pozitiv</option>
-                <option>OI - Rh negativ</option>
-                <option>AII - Rh pozitiv</option>
-                <option>AII - Rh negativ</option>
-                <option>BIII - Rh pozitiv</option>
-                <option>BIII - Rh negativ</option>
-                <option>ABIV - Rh pozitiv</option>
-                <option>ABIV - Rh negativ</option>
-            </InputSelect>
-            <ValidationMessage For="@(() => patient.BloodGroup)" />
-        </div>
 
-        <div class="form-group col-1 px-0">
-            <InputText id="cnp" @bind-Value="patient.Cnp" class="form-control"></InputText>
-            <ValidationMessage For="@(() => patient.Cnp)" />
-        </div>
-
-        <div class="form-group col-1 px-0">
-            <InputText id="cnascode" @bind-Value="patient.Cnascode" class="form-control"></InputText>
-            <ValidationMessage For="@(() => patient.Cnascode)" />
-        </div>
-        <div class="form-group col px-0">
-            <InputText id="note" @bind-Value="patient.Note" class="form-control"></InputText>
-            <ValidationMessage For="@(() => patient.Note)" />
-        </div>
-
-</div> <!--Pacient-->       
-
-</EditForm>
-<div></div>
-
-    
 
 
 @code {
-    Patient patient = new Patient();
-    IQueryable<Patient>? patientlist;
-    //    string nameFilter = string.Empty;
+    // card design 
 
-    /*
-    GridSort<Pacient> rankSort = GridSort<Pacient>
-        .ByDescending(x => x..Gold)
-        .ThenDescending(x => x.Medals.Silver)
-        .ThenDescending(x => x.Medals.Bronze);
-    */
-    //IQueryable<Pacient>? FilteredItems => patientlist?.Where(x => x.LastName.Contains(nameFilter, StringComparison.CurrentCultureIgnoreCase));
+    // table design
+    private MudTable<Patient>? _table;
 
+    // data
+    private Patient _currentPatient = new Patient() ;
+    private List<Patient> _patientsList = new List<Patient>();
 
     protected override async Task OnInitializedAsync()
     {
-
-        await AuthStateProvider.GetAuthenticationStateAsync();
-        try
+        await patientListService.LoadPatientsAsync();
+        _patientsList = patientListService.Patients;
+        if (_patientsList.Count == 0)
         {
-            patientlist = (await PatientListService.GetAllPatients()).AsQueryable();
+            _patientsList.Add(_currentPatient);
+            EnableCurrentSelection();
+       
         }
-        catch (Exception e)
+        await Task.Delay(1); // let UI refresh
+    }
+
+
+
+    protected void RowClicked(TableRowClickEventArgs<Patient> clickedPatient)
+    {
+        if (_table!.GetFilteredItemsCount() == 0)
+            EnableCurrentSelection();
+        if (_table!.SelectedItem == null)
+            return;
+        SelectCurrentItem(clickedPatient.Item.Id);
+        EnableCurrentSelection();
+    }
+
+
+
+    private async Task ValidateAction()
+    {
+        switch (_currentAction)
         {
-            Console.WriteLine(e.Message);
+            case (int)_actionbtn.None:
+                ClearCurrentSelection();            // Invalid action, disable all 
+                return;
+            case (int)_actionbtn.Add:
+                await patientListService.AddPatient(_currentPatient);
+                snackBar.Add("Inregistrare adaugata", Severity.Success);
+                break;
+            case (int)_actionbtn.Edit:
+                await patientListService.UpdatePatient(_currentPatient);
+                snackBar.Add("Inregistrare modificata", Severity.Success);
+                break;
+            case (int)_actionbtn.Delete:
+                if (_currentPatient.Id == 0)               // Invalid selection
+                    return;
+                await patientListService.DeletePatient(_currentPatient.Id);
+                snackBar.Add("Inregistrare stearsa", Severity.Success);
+                break;
         }
 
+        _currentAction = 0;
+        _patientsList = patientListService.Patients;
 
+        ClearCurrentSelection();
+
+        await Task.Delay(1); // let UI refresh
     }
 
+    // movers
+    private string searchString = "";
 
-    async void HandlePatient()
+    private void SelectCurrentItem(int id)
     {
-        NavigationManager.NavigateTo("patientfile");
+        _currentPatient = _patientsList.FirstOrDefault(c => c.Id == id);
     }
 
-
-    void HandlePatientTreatment(MouseEventArgs e)
+    private bool Search(Patient patient)
     {
-        NavigationManager.NavigateTo("patienttreatment");
+        bool _exists = false;
+        if (string.IsNullOrWhiteSpace(searchString)) 
+        return _exists ;
 
+        if (patient.LastName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        {
+            return _exists = true;
+        }
+        return _exists;
     }
 
-
-    StgMures.Shared.DbModels.PatientFile localpatientfile = new StgMures.Shared.DbModels.PatientFile();
-
-    async void HandlePatientFile()
+    private void PageChanged(int i)
     {
-        NavigationManager.NavigateTo("patientdiagnostic");
-
-    }
-
-    void HandlePatientSurgery(MouseEventArgs e)
-    {
-        NavigationManager.NavigateTo("patientsurgery");
+        _table!.NavigateTo(i - 1 < 0 ? 0 : i-1);
     }
 
 }
-
-
-

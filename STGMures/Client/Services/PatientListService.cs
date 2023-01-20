@@ -1,4 +1,5 @@
-﻿using StgMures.Shared.DbModels;
+﻿using StgMures.Shared;
+using StgMures.Shared.DbModels;
 using System.Net.Http.Json;
 
 namespace StgMures.Client.Services
@@ -7,40 +8,43 @@ namespace StgMures.Client.Services
     {
         private readonly HttpClient _http;
 
+        public List<Patient> Patients { get; set; } = new List<Patient>();
+        //        public List<Medic> GetMyMedics { get ; set ; } = new List<Medic>();   // de ce medic/medici apartine pacientul
         public PatientListService(HttpClient http)
         {
             _http = http;
         }
-        public IList<Patient> Patients { get; set; } = new List<Patient>();
-        IList<Medic> IPatientListService.GetMyMedics { get ; set ; } = new List<Medic>();   // de ce medic/medici apartine pacientul
-
-        Task IPatientListService.AddPatient(int id, Patient patient)
+  
+        public async Task AddPatient(Patient patient) // POST
         {
-            throw new NotImplementedException();
+            await _http.PostAsJsonAsync("api/PatientsList", patient);
+            await LoadPatientsAsync();
         }
 
-        Task IPatientListService.DeletePatient(int id)
+        public async Task DeletePatient(int id)   //DELETE
         {
-            throw new NotImplementedException();
+            await _http.DeleteAsync($"api/PatientsList/{id}");
+            await LoadPatientsAsync();
         }
 
-        Task<Patient> IPatientListService.GetPatient(int id)
+        public async Task<Patient> GetPatient(int id) //GET
         {
-            throw new NotImplementedException();
+            var response = await _http
+                .GetFromJsonAsync<ServiceResponse<Patient>>("api/PatientsList");
+            return response.Data;
+        }
+        
+        public async Task LoadPatientsAsync()
+        {
+            Patients = await _http.GetFromJsonAsync<List<Patient>>("api/PatientsList");
         }
 
-        Task<Patient> IPatientListService.UpdatePatient(Patient patient)
+        
+        public async Task UpdatePatient(Patient Patient) // PUT
         {
-            throw new NotImplementedException();
+            await _http.PutAsJsonAsync("api/PatientsList", Patient);
+            await LoadPatientsAsync();
         }
 
-        public async Task<IList<Patient>> GetAllPatients()
-        {
-            if (Patients.Count == 0)
-            {
-                Patients = (await _http.GetFromJsonAsync<IList<Patient>>("/PatientsList"))!;
-            }
-            return Patients;
-        }
     }
 }
