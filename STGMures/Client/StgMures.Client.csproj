@@ -23,6 +23,7 @@
   <ItemGroup>
     <Content Remove="Pages\Counter.razor" />
     <Content Remove="Pages\FetchData.razor" />
+    <Content Remove="Pages\PatientFiles_old.razor" />
     <Content Remove="Pages\PatientsList_old.razor" />
     <Content Remove="Pages\Patients_old.razor" />
     <Content Remove="wwwroot\css\bootstrap\bootstrap.min.css.old" />

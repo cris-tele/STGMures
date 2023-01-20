@@ -434,10 +434,10 @@ public partial class StgMuresContext : DbContext
             entity.Property(e => e.Atidays)
                 .HasComment("In theory it may be calculated; but refer hospital day, not calendaristic day")
                 .HasColumnName("ATIDays");
-            entity.Property(e => e.AtiretakeoverDate)
+            entity.Property(e => e.AtiRetakeOverDate)
                 .HasColumnType("date")
                 .HasColumnName("ATIRetakeoverDate");
-            entity.Property(e => e.AtitakeOverDate)
+            entity.Property(e => e.AtiTakeOverDate)
                 .HasColumnType("date")
                 .HasColumnName("ATITakeOverDate");
             entity.Property(e => e.Bmi)
@@ -454,6 +454,8 @@ public partial class StgMuresContext : DbContext
             entity.Property(e => e.Height).HasColumnType("decimal(5, 2)");
             entity.Property(e => e.HospitalAdmissionDate).HasColumnType("date");
             entity.Property(e => e.PatientId).HasColumnName("PatientID");
+            entity.Property(e => e.WardRetransferDate).HasColumnName("WardRetransferDate")
+                .HasColumnType("date");
             entity.Property(e => e.WardDays).HasComment("In theory it may be calculated; but refer hospital day, not calendaristic day");
             entity.Property(e => e.WardTransferDate)
                 .HasComment("Data transferului pe sectie")

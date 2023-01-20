@@ -27,9 +27,9 @@ public partial class PatientFile
     //    [Required]
     public DateTime? HospitalAdmissionDate { get; set; }
 
-    public DateTime? AtitakeOverDate { get; set; }
+    public DateTime? AtiTakeOverDate { get; set; }
 
-    public DateTime? AtiretakeoverDate { get; set; }
+    public DateTime? AtiRetakeOverDate { get; set; }
 
     public decimal? Weight { get; set; }
 
@@ -45,6 +45,7 @@ public partial class PatientFile
     /// Data transferului pe sectie
     /// </summary>
     public DateTime? WardTransferDate { get; set; }
+    public DateTime? WardRetransferDate { get; set; }
 
     public DateTime? DischargeDate { get; set; }
 
