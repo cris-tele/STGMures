@@ -71,7 +71,7 @@
         </MudTd>
     </RowTemplate>
     <PagerContent>
-        <MudPagination SelectedChanged="PageChanged" Count="@((_table.GetFilteredItemsCount() + _table.RowsPerPage - 1) / _table.RowsPerPage)" Class="pa-4" />
+        <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 5, 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
     </PagerContent>
 
 </MudTable>
@@ -83,12 +83,12 @@
 
     // table design
     private MudTable<TreatmentCategory>? _table;
-    private int _currentPage = 0 ;          // start with first page
 
-    private void PageChanged(int i)
+    protected override Task OnAfterRenderAsync(bool firstRender)
     {
-        _table!.NavigateTo(i - 1);
-        _currentPage = _table.CurrentPage;
+        if (firstRender)
+            _table.SetRowsPerPage(5);
+        return base.OnAfterRenderAsync(firstRender);
     }
 
 

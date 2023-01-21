@@ -9,8 +9,8 @@ namespace StgMures.Client.Services
 
         Task<Patient> GetPatient(int id);
         Task LoadPatientsAsync();
-        Task AddPatient(Patient patient);
-        Task UpdatePatient(Patient patient);
+        Task AddPatient(Patient _patient);
+        Task UpdatePatient(Patient _patient);
         Task DeletePatient(int id);
     }
 }

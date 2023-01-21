@@ -15,9 +15,9 @@ namespace StgMures.Client.Services
             _http = http;
         }
   
-        public async Task AddPatient(Patient patient) // POST
+        public async Task AddPatient(Patient _patient) // POST
         {
-            await _http.PostAsJsonAsync("api/PatientsList", patient);
+            await _http.PostAsJsonAsync("api/PatientsList", _patient);
             await LoadPatientsAsync();
         }
 

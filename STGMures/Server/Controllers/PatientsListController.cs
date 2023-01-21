@@ -6,7 +6,6 @@ namespace StgMures.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
     public class PatientsListController : ControllerBase
     {
         private readonly StgMuresContext _context;

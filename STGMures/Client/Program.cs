@@ -23,10 +23,12 @@ namespace StgMures.Client
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<IAuthService, AuthService>();    // login si register
 
-            builder.Services.AddScoped<IPatientListService, PatientListService>();
             builder.Services.AddScoped<ITreatmentCategoryService, TreatmentCategoryService>();
             builder.Services.AddScoped<IDiagnosticCategoryService, DiagnosticCategoryService>();
+            builder.Services.AddScoped<IConsumableCategoryService, ConsumableCategoryService>();
             builder.Services.AddScoped<ISurgicalProcedureCategoryService, SurgicalProcedureCategoryService>();
+
+            builder.Services.AddScoped<IPatientListService, PatientListService>();
 
 
             await builder.Build().RunAsync();
