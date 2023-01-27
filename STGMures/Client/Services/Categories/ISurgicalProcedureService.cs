@@ -2,7 +2,7 @@
 
 namespace StgMures.Client.Services
 {
-    public interface ISurgicalProcedureCategoryService
+    public interface ISurgicalProcedureService
     {
         List<SurgicalProcedure> Categories { get; set; }
         Task<SurgicalProcedure> GetSurgicalProcedure(int id);

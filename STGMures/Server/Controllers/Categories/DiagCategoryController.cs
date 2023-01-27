@@ -7,12 +7,12 @@ namespace StgMures.Server.Controllers
     [ApiController]
     // [Authorize]
 
-    public class DCategoryController : ControllerBase
+    public class DiagCategoryController : ControllerBase
     {
 
         private readonly StgMuresContext _context;
 
-        public DCategoryController(StgMuresContext context)
+        public DiagCategoryController(StgMuresContext context)
         {
             _context = context;
         }

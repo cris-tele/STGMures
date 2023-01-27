@@ -7,11 +7,11 @@ namespace StgMures.Server.Controllers
     [ApiController]
     // [Authorize]
 
-    public class SPCategoryController : ControllerBase
+    public class SProcCategoryController : ControllerBase
     {
         private readonly StgMuresContext _context;
 
-        public SPCategoryController(StgMuresContext context)
+        public SProcCategoryController(StgMuresContext context)
         {
             _context = context;
         }

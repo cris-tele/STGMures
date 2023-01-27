@@ -19,7 +19,7 @@ public partial class Diagnostic
     /// </summary>
     public int Id { get; set; }
 
-    public int? ParentId { get; set; }
+    public int ParentId { get; set; }   // 0= no parent
 
     public int DiagnosticCategoryId { get; set; }
 

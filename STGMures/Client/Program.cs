@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
 using MudBlazor.Services;
-using StgMures.Client.Services.Categories;
 
 namespace StgMures.Client
 {
@@ -22,12 +21,18 @@ namespace StgMures.Client
             builder.Services.AddOptions();
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<IAuthService, AuthService>();    // login si register
-
+            //categories
             builder.Services.AddScoped<ITreatmentCategoryService, TreatmentCategoryService>();
             builder.Services.AddScoped<IDiagnosticCategoryService, DiagnosticCategoryService>();
             builder.Services.AddScoped<IConsumableCategoryService, ConsumableCategoryService>();
-            builder.Services.AddScoped<ISurgicalProcedureCategoryService, SurgicalProcedureCategoryService>();
+            builder.Services.AddScoped<ISurgicalProcedureService, SurgicalProcedureService>();
+            builder.Services.AddScoped<IConsumableCategoryService, ConsumableCategoryService>();
+            
+            //types
+            builder.Services.AddScoped<IDiagnosticTypeService, DiagnosticTypeService>();
+            builder.Services.AddScoped<ISurgeryTypeService, SurgeryTypeService>();
 
+            // action pages
             builder.Services.AddScoped<IPatientListService, PatientListService>();
 
 

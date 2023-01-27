@@ -28,6 +28,14 @@ namespace StgMures.Shared
         static public List<string> BloodGroup = new() 
             { "Nedeterminata","OI - Rh pozitiv", "OI - Rh negativ", "AII - Rh pozitiv","AII - Rh negativ","BIII - Rh pozitiv","BIII - Rh negativ","ABIV - Rh pozitiv","ABIV - Rh negativ"};
 
+        static public List<string> FieldFormat= new()
+            { "Text","Numar intreg", "Numar zecimal"};
+
+        static public List<string> DiagnosticsMeasureUnits = new()
+            { "N/A", /*TEXT nu are unitate de masura. Este o optiune (denumirea unui child) */
+            "Kg", "cm"};    // de adaugat
+
+
 #pragma warning restore CA2211
 
 

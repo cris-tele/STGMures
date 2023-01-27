@@ -7,12 +7,12 @@ namespace StgMures.Server.Controllers
     [Route("api/[controller]")]
     [ApiController]
     // [Authorize]
-    public class TCategoryController : ControllerBase
+    public class TreatCategoryController : ControllerBase
     {
 
         private readonly StgMuresContext _context;
 
-        public TCategoryController(StgMuresContext context)
+        public TreatCategoryController(StgMuresContext context)
         {
             _context = context;
         }
