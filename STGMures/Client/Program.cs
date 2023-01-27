@@ -31,6 +31,8 @@ namespace StgMures.Client
             //types
             builder.Services.AddScoped<IDiagnosticTypeService, DiagnosticTypeService>();
             builder.Services.AddScoped<ISurgeryTypeService, SurgeryTypeService>();
+            builder.Services.AddScoped<ITreatmentTypeService, TreatmentTypeService>();
+            builder.Services.AddScoped<IConsumableTypeService, ConsumableTypeService>();
 
             // action pages
             builder.Services.AddScoped<IPatientListService, PatientListService>();

@@ -1,0 +1,6 @@
+﻿namespace StgMures.Client.Services
+{
+    public interface Interface
+    {
+    }
+}

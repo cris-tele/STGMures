@@ -11,11 +11,11 @@ public partial class Treatment
 
     public int TreatmentCategoryId { get; set; }
 
-    public int? ParentId { get; set; }
+    public int ParentId { get; set; }
 
     public string Name { get; set; }
 
-    public string ValueType { get; set; }
+    public string ValueFormat { get; set; }
 
     /// <summary>
     /// Defaul admin method (dosage, perfusion...) 

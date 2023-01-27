@@ -603,7 +603,7 @@ public partial class StgMuresContext : DbContext
                 .HasMaxLength(150);
             entity.Property(e => e.ParentId).HasColumnName("ParentID");
             entity.Property(e => e.TreatmentCategoryId).HasColumnName("TreatmentCategoryID");
-            entity.Property(e => e.ValueType).HasMaxLength(50);
+            entity.Property(e => e.ValueFormat).HasMaxLength(50);
 
             entity.HasOne(d => d.TreatmentCategory).WithMany(p => p.Treatments)
                 .HasForeignKey(d => d.TreatmentCategoryId)

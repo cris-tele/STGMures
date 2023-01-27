@@ -32,8 +32,11 @@ namespace StgMures.Shared
             { "Text","Numar intreg", "Numar zecimal"};
 
         static public List<string> DiagnosticsMeasureUnits = new()
-            { "N/A", /*TEXT nu are unitate de masura. Este o optiune (denumirea unui child) */
+            { "N/A", /*TEXT nu are unitate de masura. Este UN TEXT/OPTIUNE SELECTABILA (denumirea unui child) */
             "Kg", "cm"};    // de adaugat
+
+        static public List<string> TreatmentAdministrationMethod = new()
+            { "NESPECIFICAT", "ORAL", "DOZAJ", "PERFUZIE"};    // de adaugat
 
 
 #pragma warning restore CA2211
