@@ -14,7 +14,7 @@ public partial class PatientAssocDisease
     /// <summary>
     /// Act as a short description
     /// </summary>
-    public int AsociatedDiseaseId { get; set; }
+    public int DiagnosticId{ get; set; }
 
     public string Symptom { get; set; }
 

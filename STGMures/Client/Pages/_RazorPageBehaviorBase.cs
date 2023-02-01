@@ -4,6 +4,8 @@ namespace StgMures.Client.Pages
 {
     public class _RazorPageBehaviorBase :ComponentBase
     {
+        protected string  _currentPageTitle = string.Empty;
+
         protected bool _disabledField = true;
         protected bool _disabledBtn = true;
         protected bool _disabledBtnValid = true;

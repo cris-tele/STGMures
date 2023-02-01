@@ -1,6 +1,13 @@
 ﻿@page "/patienttreatment"
+
+@using StgMures.Shared.DbModels
+@inherits _RazorPageBehaviorBase
+
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
+
+@inject StgMures.Client.Services.ITreatmentTypeService treatmentService
+@inject MudBlazor.ISnackbar snackBar
 
 
 <h3>Tratament Pacient</h3>

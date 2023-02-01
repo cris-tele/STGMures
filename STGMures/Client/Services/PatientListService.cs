@@ -30,7 +30,7 @@ namespace StgMures.Client.Services
         public async Task<Patient> GetPatient(int id) //GET
         {
             var response = await _http
-                .GetFromJsonAsync<ServiceResponse<Patient>>("api/PatientsList");
+                .GetFromJsonAsync<ServiceResponse<Patient>>($"api/PatientsList/{id}");
             return response.Data;
         }
         

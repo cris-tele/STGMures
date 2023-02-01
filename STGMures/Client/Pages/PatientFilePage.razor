@@ -1,0 +1,235 @@
+﻿@page "/PatientFilePage"
+
+@using StgMures.Shared.DbModels
+@inject MudBlazor.ISnackbar snackBar
+@inherits _RazorPageBehaviorBase
+
+<!--current pacient = selected patient in the patient list page-->
+@inject IPatientFileService patientFileService
+
+
+<!--titlu pagina-->
+<MudText Align="Align.Center" Typo="Typo.h6">Fisa Pacient</MudText>
+<br />
+
+<!--edit card-->
+<MudCard Elevation="5" >
+<!--    <MudCardHeader >  </MudCardHeader> --> <!--Nu stiu daca voi folosi-->
+    <MudCardContent >
+        <MudGrid >
+            <MudItem xs="1" >
+            <MudAutocomplete  Disabled="_disabledField" @bind-Value="currentPatientFile.FileNumber" HelperText="Numar fisa" Variant="Variant.Text" Margin="Margin.Dense"></MudAutocomplete> <!-- pentru inceput va fi doar o fisa -->
+            </MudItem>
+            <MudItem xs="1">
+                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.FileDate" HelperText="Din data" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+            </MudItem>
+            <MudSpacer/>
+            <MudItem xs="1">
+                <MudTextField  Style="visibility:hidden" Disabled="true" @bind-Value="_currentPatient.Id" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <MudTextField Disabled="true" @bind-Value="_currentPatient.LastName" HelperText="Nume" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <MudTextField Disabled="true" @bind-Value="_currentPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+            </MudItem>
+        </MudGrid>
+
+        <MudGrid>
+            <MudItem xs="1" />
+
+            <MudItem Elevation="5" xs="3" title="Pacient">
+                <MudTextField Disabled="_disabledField" @bind-Value="currentPatientFile.Height" HelperText="Inaltime" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="_disabledField" @bind-Value="currentPatientFile.Weight" HelperText="Greutate" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Label="" Disabled="@_disabledField" @bind-Value="currentPatientFile.Bmi" HelperText="B.M.I" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="currentPatientFile.Bsa" HelperText="B.S.A" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+            </MudItem>
+
+            <MudItem  xs="1" />
+
+            <MudItem Elevation="5" xs="3" title="ATI" >
+                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.HospitalAdmissionDate" HelperText="Data Internarii in Spital" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.AtiTakeOverDate" HelperText="Data Internarii ATI" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.WardTransferDate" HelperText="Data transfer pe sectie" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.AtiRetakeOverDate" HelperText="Data reinternarii ATI" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.WardRetransferDate" HelperText="Data retransfer pe sectie" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+            </MudItem>
+
+            <MudItem Elevation="5" xs="3" title="ZILE">
+                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.DischargeDate" HelperText="Data reinternarii ATI" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+                <MudDatePicker Disabled="true" @bind-Value="currentPatientFile.WardDays" HelperText="Nr. Zile pe sectie" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+                <MudDatePicker Disabled="true" @bind-Value="currentPatientFile.Atidays" HelperText="Nr. Zile ATI" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+                <MudTextField Disabled="@_disabledField" @bind-Value="currentPatientFile.AnotherHospitalAdmission" HelperText="Tranferat de la un alt spital" Variant="Variant.Text" Margin="Margin.Dense" Lines="2"></MudTextField>
+            </MudItem>
+
+        </MudGrid>
+
+
+    </MudCardContent>
+
+    <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
+
+    <MudCardActions>
+        <MudGrid>
+            <MudItem xs="1">
+                <MudTooltip Text="Adauga o noua inregistrare">
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add"    Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="AddNewRecord">Adauga</MudIconButton>
+                </MudTooltip>
+
+                <MudTooltip Text="Modifica inregistrarea selectata">
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit"   Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="UpdateRecord">Modifica</MudIconButton>
+                </MudTooltip>
+
+                <MudTooltip Text="Sterge inregistrarea selectata">
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
+                </MudTooltip>
+            </MudItem>
+            <MudItem xs="1" />
+            <MudItem xs="1">
+            <MudTooltip Text="Validare">
+                <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
+            </MudTooltip>
+            <MudTooltip Text="Renuntare">
+                <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
+        </MudTooltip>
+        </MudItem>
+        </MudGrid>
+    </MudCardActions>
+
+
+</MudCard>
+<br />
+<!-- butoane detalii -->
+<MudCard Elevation="5" >
+</MudCard>
+
+
+<!--table list-->
+<MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5"
+          Items="@patientsFiles" @bind-customer="currentPatientFile" OnRowClick="@RowClicked" T="PatientFile">
+
+          <!-- no filter: Items="@patientsFiles" Filter="new Func<PatientFile, bool>(Search)" @bind-customer="currentPatientFile" OnRowClick="@RowClicked" T="PatientFile"> -->
+
+    <!-- NU e cazul, vor fi 2-3 fise max
+    <ToolBarContent>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Cautati o categorie..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.currentPatientFile" IconSize="Size.Small" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    -->
+    <HeaderContent>
+        <MudTh>Nr.Fisa</MudTh>
+        <MudTh>Data Fisa</MudTh>
+        <MudTh>Data Internarii</MudTh>
+        <MudTh>Data Externarii</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd Class="col-1" DataLabel="Id">@context.FileNumber</MudTd>
+        <MudTd Class="col-2" DataLabel="Tip">@context.FileDate</MudTd>
+        <MudTd Class="col-9" DataLabel="Denumire">@context.HospitalAdmissionDate</MudTd>
+        <MudTd Class="col-9" DataLabel="Denumire">@context.DischargeDate</MudTd>
+    </RowTemplate>
+    <!--fara pager,ca nu sunt atat de multe-->
+    <!--
+    <PagerContent>
+        <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 5, 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
+    </PagerContent>
+    -->
+</MudTable>
+
+
+
+
+@code {
+    // card design 
+    private Patient _currentPatient = new Patient();
+    private PatientFile currentPatientFile = new PatientFile();
+ 
+
+
+    // table design
+    private MudTable<PatientFile>? _table;  // deocamdata afisez lista de fise ale pacientului; 
+
+    private List<PatientFile> patientsFiles = new List<PatientFile>();  // se pot selecta fisele, daca sunt mai multe.
+
+    // data
+    // Ar fi o idee sa afisez in fisa pacientului direct diagnosticele, dar in varianta 1 fac pagina separata.
+
+    // private PatientFile currentPatientFile = new PatientFile() { Id = 0, Name = string.Empty };
+    // private List<PatientFile> patientsFiles = new List<PatientFile>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await patientFileService.LoadPatientFilesAsync();
+        patientsFiles = patientFileService.PatientFiles;
+        if (patientsFiles.Count == 0)
+            EnableCurrentSelection();
+
+    }
+
+
+
+    protected void RowClicked(TableRowClickEventArgs<PatientFile> clickedCategory)
+    {
+        if (_table!.GetFilteredItemsCount() == 0)
+            EnableCurrentSelection();
+        if (_table!.SelectedItem == null)
+            return;
+        SelectCurrentItem(clickedCategory.Item.Id);
+        EnableCurrentSelection();
+    }
+
+
+
+    private async Task ValidateAction()
+    {
+        switch (_currentAction)
+        {
+            case (int)_actionbtn.None:
+                ClearCurrentSelection();            // Invalid action, disable all 
+                return;
+            case (int)_actionbtn.Add:
+                await patientFileService.AddPatientFile(currentPatientFile);
+                snackBar.Add("Inregistrare adaugata", Severity.Success);
+                break;
+            case (int)_actionbtn.Edit:
+                await patientFileService.UpdatePatientFile(currentPatientFile);
+                snackBar.Add("Inregistrare modificata", Severity.Success);
+                break;
+            case (int)_actionbtn.Delete:
+                if (currentPatientFile.Id == 0)               // Invalid selection
+                    return;
+                await patientFileService.DeletePatientFile(currentPatientFile.Id);
+                snackBar.Add("Inregistrare stearsa", Severity.Success);
+                break;
+        }
+
+        _currentAction = 0;
+        patientsFiles = patientFileService.PatientFiles;
+
+        ClearCurrentSelection();
+
+        await Task.Delay(1); // let UI refresh
+    }
+
+    // movers
+    private string searchString = "";
+
+    private void SelectCurrentItem(int id)
+    {
+        currentPatientFile = patientsFiles.FirstOrDefault(c => c.Id == id);
+    }
+
+    private bool Search(PatientFile currentPatientFile)
+    {
+        if (string.IsNullOrWhiteSpace(searchString)) return true;
+/*
+        if (currentPatientFile.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+*/
+        return false;
+    }
+
+}

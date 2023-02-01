@@ -1,4 +1,6 @@
-﻿<CascadingAuthenticationState>
+﻿@using StgMures.Client.Pages.AppLayout
+
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(StgMainLayout)">

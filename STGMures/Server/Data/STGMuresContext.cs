@@ -16,8 +16,6 @@ public partial class StgMuresContext : DbContext
 
     public virtual DbSet<AnesthesiaConsumable> AnesthesiaConsumables { get; set; }
 
-    public virtual DbSet<AsociatedDisease> AsociatedDiseases { get; set; }
-
     public virtual DbSet<Cec> Cecs { get; set; }
 
     public virtual DbSet<Cecconsumable> Cecconsumables { get; set; }
@@ -158,26 +156,21 @@ public partial class StgMuresContext : DbContext
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.Design)
-                .HasMaxLength(20)
-                .IsUnicode(false)
+                .HasMaxLength(50)
                 .IsFixedLength()
                 .HasComment("biolog; mecanic");
             entity.Property(e => e.MeasureUnit)
-                .HasMaxLength(20)
+                .HasMaxLength(50)
                 .HasComment("Descriptive field");
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(150);
             entity.Property(e => e.ValueFormat)
                 .IsRequired()
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .IsFixedLength();
-            entity.Property(e => e.ValueType)
+                .HasMaxLength(50);
+            entity.Property(e => e.Type)
                 .IsRequired()
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .IsFixedLength()
+                .HasMaxLength(50)
                 .HasComment("SUBSTANCE;DEVICE;CONSUMABLE;");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Consumables)
@@ -354,7 +347,7 @@ public partial class StgMuresContext : DbContext
         modelBuilder.Entity<PatientAssocDisease>(entity =>
         {
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.AsociatedDiseaseId)
+            entity.Property(e => e.DiagnosticId)
                 .HasComment("Act as a short description")
                 .HasColumnName("AsociatedDiseaseID");
             entity.Property(e => e.IntraSurgery).HasComment("Determined intra-surgery");
@@ -362,11 +355,6 @@ public partial class StgMuresContext : DbContext
             entity.Property(e => e.Symptom)
                 .IsRequired()
                 .HasMaxLength(2000);
-
-            entity.HasOne(d => d.AsociatedDisease).WithMany(p => p.PatientAssocDiseases)
-                .HasForeignKey(d => d.AsociatedDiseaseId)
-                .OnDelete(DeleteBehavior.NoAction)
-                .HasConstraintName("FK_PatientAssocDiseases_AsociatedDiseases");
 
             entity.HasOne(d => d.Patient).WithMany(p => p.PatientAssocDiseases)
                 .HasForeignKey(d => d.PatientId)

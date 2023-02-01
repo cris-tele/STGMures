@@ -36,7 +36,9 @@ namespace StgMures.Client
 
             // action pages
             builder.Services.AddScoped<IPatientListService, PatientListService>();
-
+            builder.Services.AddScoped<IPatientAssocDiseaseService, PatientAssocDiseaseService>();
+            builder.Services.AddScoped<IPatientSurgeryService, PatientSurgeryService>();
+            
 
             await builder.Build().RunAsync();
         }

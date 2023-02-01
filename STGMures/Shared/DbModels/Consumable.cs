@@ -23,7 +23,7 @@ public partial class Consumable
     /// <summary>
     /// SUBSTANCE;DEVICE;CONSUMABLE;
     /// </summary>
-    public string ValueType { get; set; }
+    public string Type { get; set; }
 
     /// <summary>
     /// Descriptive field

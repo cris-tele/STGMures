@@ -1,0 +1,48 @@
+1. Patient File		
+	page	ok
+	service	ok
+	controller	ok
+2. Patient surgery 
+	page	ok
+	service ok
+	controller ok
+3. Surgery Anesthesia 
+	page	
+	service
+	controller
+4. CEC
+	page	
+	service
+	controller
+5. Patient Treatments
+	page	
+	service
+	controller
+6. CEC consumables
+	page	
+	service
+	controller
+7. Anesthesia consumables
+	page	
+	service
+	controller
+8. Patient dayly treatment
+	page	
+	service
+	controller
+
+9. Database Views
+
+10. New controllers / page redesign
+
+11. Full database redesign
+
+12. Populate database with real data 
+
+13. Test
+
+14. Publish
+
+15. Graphics
+
+16. Prod
