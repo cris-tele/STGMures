@@ -13,10 +13,10 @@
 
 <!--edit card-->
 <MudCard Elevation="5">
-    <MudCardContent>
+    <MudCardContent Class="gap-0 pa-0 m-0">
         <MudGrid>
             <MudItem xs="2">
-                <MudSelect Disabled="@(!_disabledField)" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="consumable.CategoryId" HelperText="Categorie" Variant="Variant.Text" Margin="Margin.Dense">
+                <MudSelect Disabled="@(!_disabledField)" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="consumable.CategoryId" HelperText="Categorie" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (ConsumableCategory _option in categories)
                     {
                         <MudSelectItem Value="@_option.Id">@_option.Name</MudSelectItem>
@@ -28,13 +28,13 @@
 
         <MudGrid>
             <MudItem xs="1">
-                <MudTextField Disabled="true" @bind-Value="consumable.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="true" @bind-Value="consumable.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="2">
-                <MudTextField Disabled="@_disabledField" @bind-Value="consumable.Name" HelperText="Denumire consumable" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="consumable.Name" HelperText="Denumire consumable" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="2">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="consumable.Design" HelperText="Tratament principal" Variant="Variant.Text" Margin="Margin.Dense">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="consumable.Design" HelperText="Tratament principal" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in Param.ConsumableDesign)
                     {
                         <MudSelectItem Value="@_option" />
@@ -42,7 +42,7 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="2">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="consumable.ValueFormat" HelperText="Valori posibile" Variant="Variant.Text" Margin="Margin.Dense">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="consumable.ValueFormat" HelperText="Valori posibile" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in Param.FieldFormat)
                     {
                         <MudSelectItem Value="@_option" />
@@ -50,7 +50,7 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="1">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="consumable.Type" HelperText="ID" Variant="Variant.Text" Margin="Margin.Dense">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="consumable.Type" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in Param.ConsumableType)
                     {
                         <MudSelectItem Value="@_option" />
@@ -58,7 +58,7 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="1">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="consumable.MeasureUnit" HelperText="ID" Variant="Variant.Text" Margin="Margin.Dense">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="consumable.MeasureUnit" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in Param.ConsumableMeasureUnits)
                     {
                         <MudSelectItem Value="@_option" />

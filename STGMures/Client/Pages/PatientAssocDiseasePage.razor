@@ -18,10 +18,10 @@
     <MudCardContent>
         <MudGrid>
             <MudItem xs="1">
-                <MudTextField Disabled="true" @bind-Value="disease.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="true" @bind-Value="disease.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="2">
-                <MudSelect Disabled="@_disabledField" T="int" @bind-Value="disease.DiagnosticId" AnchorOrigin="Origin.BottomCenter" HelperText="ID" Variant="Variant.Text" Margin="Margin.Dense">
+                <MudSelect Disabled="@_disabledField" T="int" @bind-Value="disease.DiagnosticId" AnchorOrigin="Origin.BottomCenter" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in diagnostics)
                     {
                         <MudSelectItem Value="@_option">@_option.Name</MudSelectItem>
@@ -29,10 +29,10 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="8">
-                <MudTextField Disabled="@_disabledField" @bind-Value="disease.Symptom" HelperText="Denumire categorie" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="disease.Symptom" HelperText="Denumire categorie" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="8">
-                <MudTextField Disabled="@_disabledField" @bind-Value="disease.IntraSurgery" HelperText="Denumire categorie" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="disease.IntraSurgery" HelperText="Denumire categorie" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
         </MudGrid>
     </MudCardContent>

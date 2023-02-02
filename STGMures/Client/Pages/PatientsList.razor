@@ -14,19 +14,19 @@
     <MudCardContent >
         <MudGrid >
             <MudItem xs="1">
-                <MudTextField Disabled="true" @bind-Value="_currentPatient.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="true" @bind-Value="_currentPatient.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="1">
-                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.LastName" HelperText="Nume" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.LastName" HelperText="Nume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="1">
-                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="1">
-                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatient.BirthDate" HelperText="Data Nasterii" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatient.BirthDate" HelperText="Data Nasterii" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
             </MudItem>
             <MudItem xs="1">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="_currentPatient.Sex" HelperText="Sex" Variant="Variant.Text" Margin="Margin.Dense">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="_currentPatient.Sex" HelperText="Sex" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in Param.Genders)
                     {
                         <MudSelectItem Value="@_option" />
@@ -34,7 +34,7 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="1">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="_currentPatient.BloodGroup" HelperText="Gr.Sangvina" Variant="Variant.Text" Margin="Margin.Dense">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="_currentPatient.BloodGroup" HelperText="Gr.Sangvina" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in Param.BloodGroup)
                     {
                         <MudSelectItem Value="@_option" />
@@ -42,7 +42,7 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="1">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="_currentPatient.MotherBloodGroup" HelperText="Gr.Sv.Mama" Variant="Variant.Text" Margin="Margin.Dense">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="_currentPatient.MotherBloodGroup" HelperText="Gr.Sv.Mama" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in Param.BloodGroup)
                     {
                         <MudSelectItem Value="@_option" />
@@ -51,10 +51,10 @@
             </MudItem>
             <!--cnascode not required for the moment, skipped-->
             <MudItem xs="1">
-                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.Cnp" HelperText="C.N.P" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.Cnp" HelperText="C.N.P" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="4">
-                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.Note" Label="Observatii" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.Note" Label="Observatii" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
         </MudGrid>
         </MudCardContent>

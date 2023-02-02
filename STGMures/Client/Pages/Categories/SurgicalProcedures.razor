@@ -16,11 +16,11 @@
     <MudCardContent>
         <MudGrid>
             <MudItem xs="1">
-                <MudTextField Disabled="true" @bind-Value="category.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="true" @bind-Value="category.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="2">
                 <!--!!!!!!!!!!!!!!!!!!!!  -->
-                <MudSelect Disabled="@_disabledField" T="int?" @bind-Value="category.ParentId" AnchorOrigin="Origin.BottomCenter" HelperText="ID" Variant="Variant.Text" Margin="Margin.Dense">
+                <MudSelect Disabled="@_disabledField" T="int?" @bind-Value="category.ParentId" AnchorOrigin="Origin.BottomCenter" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in parentCategories)
                     {
                         <MudSelectItem Value="@_option.ParentId">@_option.Name</MudSelectItem>
@@ -28,7 +28,7 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="8">
-                <MudTextField Disabled="@_disabledField" @bind-Value="category.Name" HelperText="Denumire categorie" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="category.Name" HelperText="Denumire categorie" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
         </MudGrid>
     </MudCardContent>

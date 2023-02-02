@@ -16,7 +16,7 @@
     <MudCardContent>
         <MudGrid>
             <MudItem xs="2">
-                <MudSelect Disabled="@(!_disabledField)" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.TreatmentCategoryId" HelperText="Categorie" Variant="Variant.Text" Margin="Margin.Dense">
+                <MudSelect Disabled="@(!_disabledField)" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.TreatmentCategoryId" HelperText="Categorie" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (TreatmentCategory _option in categories)
                     {
                         <MudSelectItem Value="@_option.Id" >@_option.Name</MudSelectItem>
@@ -28,13 +28,13 @@
         </MudGrid>
         <MudGrid>
             <MudItem xs="1">
-                <MudTextField Disabled="true" @bind-Value="treatment.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="true" @bind-Value="treatment.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="2">
-                <MudTextField Disabled="@_disabledField" @bind-Value="treatment.Name" HelperText="Denumire treatment" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="treatment.Name" HelperText="Denumire treatment" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="2">
-                <MudSelect Disabled="@_disabledField" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.ParentId" HelperText="Tratament principal" Variant="Variant.Text" Margin="Margin.Dense">
+                <MudSelect Disabled="@_disabledField" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.ParentId" HelperText="Tratament principal" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in parentDiagnostics)
                     {
                         <MudSelectItem Value="@_option.Name" />
@@ -42,7 +42,7 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="2">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.ValueFormat" HelperText="Valori posibile" Variant="Variant.Text" Margin="Margin.Dense">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.ValueFormat" HelperText="Valori posibile" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in Param.FieldFormat)
                     {
                         <MudSelectItem Value="@_option" />
@@ -50,7 +50,7 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="1">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.AdministrationMethod" HelperText="ID" Variant="Variant.Text" Margin="Margin.Dense">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.AdministrationMethod" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in Param.TreatmentAdministrationMethod)
                     {
                         <MudSelectItem Value="@_option" />
@@ -59,7 +59,7 @@
             </MudItem>
             <!--
             <MudItem xs="4">
-                <MudTextField Disabled="@_disabledField" @bind-Value="treatment.Note" HelperText="Observatii" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="treatment.Note" HelperText="Observatii" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             -->
         </MudGrid>

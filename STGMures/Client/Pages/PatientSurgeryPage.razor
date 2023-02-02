@@ -11,20 +11,20 @@
     <MudCardContent>
         <MudGrid>
             <MudItem xs="1">
-                <MudAutocomplete Disabled="true" @bind-Value="_currentPatientFile.FileNumber" HelperText="Numar fisa" Variant="Variant.Text" Margin="Margin.Dense"></MudAutocomplete> 
+                <MudAutocomplete Disabled="true" @bind-Value="_currentPatientFile.FileNumber" HelperText="Numar fisa" Variant="Variant.Text" Margin="Margin.None"></MudAutocomplete> 
             </MudItem>
             <MudItem xs="1">
-                <MudDatePicker Disabled="true" @bind-Value="_currentPatientFile.FileDate" HelperText="Din data" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+                <MudDatePicker Disabled="true" @bind-Value="_currentPatientFile.FileDate" HelperText="Din data" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
             </MudItem>
             <MudSpacer />
             <MudItem xs="1">
-                <MudTextField Style="visibility:hidden" Disabled="true" @bind-Value="_currentPatient.Id" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Style="visibility:hidden" Disabled="true" @bind-Value="_currentPatient.Id" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="2">
-                <MudTextField Disabled="true" @bind-Value="_currentPatient.LastName" HelperText="Nume" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="true" @bind-Value="_currentPatient.LastName" HelperText="Nume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="2">
-                <MudTextField Disabled="true" @bind-Value="_currentPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="true" @bind-Value="_currentPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
         </MudGrid>
 
@@ -32,27 +32,27 @@
             <MudItem xs="1" />
 
             <MudItem Elevation="5" xs="3" title="Pacient">
-                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatientFile.Height" HelperText="Inaltime" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
-                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatientFile.Weight" HelperText="Greutate" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
-                <MudTextField Label="" Disabled="@_disabledField" @bind-Value="_currentPatientFile.Bmi" HelperText="B.M.I" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
-                <MudTextField Disabled="@_disabledField" @bind-Value="_currentPatientFile.Bsa" HelperText="B.S.A" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatientFile.Height" HelperText="Inaltime" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatientFile.Weight" HelperText="Greutate" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Label="" Disabled="@_disabledField" @bind-Value="_currentPatientFile.Bmi" HelperText="B.M.I" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="_currentPatientFile.Bsa" HelperText="B.S.A" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
 
             <MudItem xs="1" />
 
             <MudItem Elevation="5" xs="3" title="ATI">
-                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.HospitalAdmissionDate" HelperText="Data Internarii in Spital" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
-                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.AtiTakeOverDate" HelperText="Data Internarii ATI" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
-                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.WardTransferDate" HelperText="Data transfer pe sectie" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
-                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.AtiRetakeOverDate" HelperText="Data reinternarii ATI" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
-                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.WardRetransferDate" HelperText="Data retransfer pe sectie" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.HospitalAdmissionDate" HelperText="Data Internarii in Spital" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.AtiTakeOverDate" HelperText="Data Internarii ATI" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.WardTransferDate" HelperText="Data transfer pe sectie" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.AtiRetakeOverDate" HelperText="Data reinternarii ATI" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.WardRetransferDate" HelperText="Data retransfer pe sectie" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
             </MudItem>
 
             <MudItem Elevation="5" xs="3" title="ZILE">
-                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.DischargeDate" HelperText="Data reinternarii ATI" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
-                <MudDatePicker Disabled="true" @bind-Value="_currentPatientFile.WardDays" HelperText="Nr. Zile pe sectie" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
-                <MudDatePicker Disabled="true" @bind-Value="_currentPatientFile.Atidays" HelperText="Nr. Zile ATI" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
-                <MudTextField Disabled="@_disabledField" @bind-Value="_currentPatientFile.AnotherHospitalAdmission" HelperText="Tranferat de la un alt spital" Variant="Variant.Text" Margin="Margin.Dense" Lines="2"></MudTextField>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.DischargeDate" HelperText="Data reinternarii ATI" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
+                <MudDatePicker Disabled="true" @bind-Value="_currentPatientFile.WardDays" HelperText="Nr. Zile pe sectie" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
+                <MudDatePicker Disabled="true" @bind-Value="_currentPatientFile.Atidays" HelperText="Nr. Zile ATI" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
+                <MudTextField Disabled="@_disabledField" @bind-Value="_currentPatientFile.AnotherHospitalAdmission" HelperText="Tranferat de la un alt spital" Variant="Variant.Text" Margin="Margin.None" Lines="2"></MudTextField>
             </MudItem>
 
         </MudGrid>

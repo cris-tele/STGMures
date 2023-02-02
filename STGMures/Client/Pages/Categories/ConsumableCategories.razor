@@ -7,18 +7,18 @@
 
 <!--titlu pagina-->
 <MudText Align="Align.Center" Typo="Typo.h6">Categorii Consumabile</MudText>
-<br />
+<MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
 
 <!--edit card-->
-<MudCard Elevation="5">
+<MudCard Elevation="5" Class="gap-0 pa-0 m-0">
     <!--    <MudCardHeader >  </MudCardHeader> --> <!--Nu stiu daca voi folosi-->
-    <MudCardContent>
-        <MudGrid>
+    <MudCardContent Class="gap-0 pa-0 m-0">
+        <MudGrid Class="gap-0 pa-0 m-0">
             <MudItem xs="1">
-                <MudTextField Disabled="true" @bind-Value="category.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudTextField Class="invisible" Disabled="true" @bind-Value="category.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="10">
-                <MudTextField Disabled="@_disabledField" @bind-Value="category.Name" HelperText="Denumire categorie" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+            <MudItem xs="11">
+                <MudTextField Disabled="@_disabledField" @bind-Value="category.Name" HelperText="Denumire categorie" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
         </MudGrid>
     </MudCardContent>
@@ -63,16 +63,18 @@
         <MudTextField @bind-Value="searchString" Placeholder="Cautati o categorie..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>ID</MudTh>
+        <MudTh Class="invisible">ID</MudTh>
         <MudTh>Denumire Categorie </MudTh>
-        <MudTh>Actiuni</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd Class="col-1" DataLabel="Id">@context.Id</MudTd>
-        <MudTd Class="col-10" DataLabel="Denumire">@context.Name</MudTd>
-        <MudTd Class="col-1" DataLabel="">
-            <MudIconButton @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small" />
+        <MudTd Class="invisible col-1" DataLabel="Id">@context.Id</MudTd>
+        <MudTd Class="col-11" DataLabel="Denumire">@context.Name
+            <MudIconButton Class="invisible" @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small" />
         </MudTd>
+        <!--
+        <MudTd Class="col-1" DataLabel="">
+        </MudTd>
+        -->
     </RowTemplate>
     <PagerContent>
         <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 5, 10, 25, 50 , int.MaxValue})"> R</MudTablePager>

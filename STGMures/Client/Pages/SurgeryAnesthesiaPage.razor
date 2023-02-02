@@ -1,0 +1,254 @@
+﻿@page "/SurgeryAnesthesiaPage"
+
+@using StgMures.Shared.DbModels
+@inject MudBlazor.ISnackbar snackBar
+@inherits _RazorPageBehaviorBase
+
+@inject IPatientSurgeryService patientSurgeryService
+
+<!--edit card-->
+<MudCard Elevation="5">
+    <MudCardContent>
+        <!-- indentificare pacient (vreau sa-l pun in appbar)-->
+        <MudGrid>
+            <MudItem xs="2">
+                <MudAutocomplete Disabled="true" @bind-Value="_selectedFile.FileNumber" HelperText="Numar fisa" Variant="Variant.Text" Margin="Margin.None" Class="d-inline-flex" FullWidth width="60px"></MudAutocomplete>
+                <MudTextField Disabled="true" @bind-Value="_selectedFile.FileDate" Variant="Variant.Text" Margin="Margin.None" Format="yy" Class="d-inline-flex"></MudTextField>
+            </MudItem>
+            <MudItem xs="1">
+            </MudItem>
+            <MudItem xs="1">
+                <MudTextField Class="invisible" Disabled="true" @bind-Value="_selectedPatient.Id" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <MudTextField Disabled="true" @bind-Value="_selectedPatient.LastName" HelperText="Nume" Variant="Variant.Text"  Margin="Margin.None"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <MudTextField Disabled="true" @bind-Value="_selectedPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            </MudItem>
+        </MudGrid>
+        
+        <MudGrid>
+        <MudItem xs="5">    <!-- lista anesteziilor-->
+            <MudGrid>
+                    <MudItem xs="1">
+                        <MudTextField Disabled="@_disabledField" @bind-Value="anesthesia.Date" HelperText="Din data" Format="dd/mm/yyyy" InputType="InputType.Date" Variant="Variant.Text" Margin="Margin.None" T="DateTime?"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="1">
+                        <MudTextField Disabled="true" @bind-Value="anesthesia.Date" HelperText="Din data" Format="dd/mm/yyyy" InputType="InputType.Date" Variant="Variant.Text" Margin="Margin.None" T="DateTime?"></MudTextField>
+                    </MudItem>
+                <MudSpacer />
+                <MudItem xs="1">
+                    <MudTextField Style="visibility:hidden" Disabled="true" @bind-Value="_selectedPatient.Id" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                </MudItem>
+                <MudItem xs="2">
+                    <MudTextField Disabled="true" @bind-Value="_selectedPatient.LastName" HelperText="Nume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                </MudItem>
+                <MudItem xs="2">
+                    <MudTextField Disabled="true" @bind-Value="_selectedPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                </MudItem>
+            </MudGrid>
+                <MudTable @ref="@_tableAnesthesia" Hover="true" Dense="true" Striped="true" Elevation="5"
+                          Items="@anesthesias" @bind-customer="surgery" OnRowClick="@RowClicked" T="SurgeryAnesthesium">
+                    <HeaderContent>
+                        <MudTh>ID</MudTh>
+                        <MudTh>Data</MudTh>
+                        <MudTh>Incizie</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                    </RowTemplate>
+
+                </MudTable>
+
+
+        </MudItem>
+        <MudItem xs="1" >bzzz</MudItem>
+        <MudItem xs="5">    <!-- lista consumabilelor -->
+            <MudGrid>
+                <MudItem xs="1">
+                    <MudAutocomplete Disabled="true" @bind-Value="_selectedFile.FileNumber" HelperText="Numar fisa" Variant="Variant.Text" Margin="Margin.None"></MudAutocomplete>
+                </MudItem>
+                <MudItem xs="1">
+                    <MudDatePicker Disabled="true" @bind-Value="_selectedFile.FileDate" HelperText="Din data" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
+                </MudItem>
+                <MudSpacer />
+                <MudItem xs="1">
+                    <MudTextField Style="visibility:hidden" Disabled="true" @bind-Value="_selectedPatient.Id" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                </MudItem>
+                <MudItem xs="2">
+                    <MudTextField Disabled="true" @bind-Value="_selectedPatient.LastName" HelperText="Nume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                </MudItem>
+                <MudItem xs="2">
+                    <MudTextField Disabled="true" @bind-Value="_selectedPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                </MudItem>
+            </MudGrid>
+                <MudTable @ref="@_tableAnesthesia" Hover="true" Dense="true" Striped="true" Elevation="5"
+                          Items="@anesthesias" @bind-customer="surgery" OnRowClick="@RowClicked" T="SurgeryAnesthesium">
+                    <HeaderContent>
+                        <MudTh>ID</MudTh>
+                        <MudTh>Data</MudTh>
+                        <MudTh>Incizie</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                    </RowTemplate>
+
+                </MudTable>
+
+
+        </MudItem>
+        </MudGrid>
+
+
+    </MudCardContent>
+
+    <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
+
+    <MudCardActions>
+        <MudGrid>
+            <MudItem xs="1">
+                <MudTooltip Text="Adauga o noua inregistrare">
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="AddNewRecord">Adauga</MudIconButton>
+                </MudTooltip>
+
+                <MudTooltip Text="Modifica inregistrarea selectata">
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="UpdateRecord">Modifica</MudIconButton>
+                </MudTooltip>
+
+                <MudTooltip Text="Sterge inregistrarea selectata">
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
+                </MudTooltip>
+            </MudItem>
+            <MudItem xs="1" />
+            <MudItem xs="1">
+                <MudTooltip Text="Validare">
+                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
+                </MudTooltip>
+                <MudTooltip Text="Renuntare">
+                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
+                </MudTooltip>
+            </MudItem>
+        </MudGrid>
+    </MudCardActions>
+
+
+</MudCard>
+<br />
+<!-- butoane detalii -->
+<MudCard Elevation="5">
+</MudCard>
+
+
+<!--table list-->
+<MudTable @ref="@_tableAnesthesia" Hover="true" Dense="true" Striped="true" Elevation="5"
+          Items="@anesthesias" @bind-customer="surgery" OnRowClick="@RowClicked" T="SurgeryAnesthesium">
+    <HeaderContent>
+        <MudTh>ID</MudTh>
+        <MudTh>Data</MudTh>
+        <MudTh>Incizie</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+    </RowTemplate>
+
+</MudTable>
+
+
+
+
+@code {
+    // card design
+    private Patient        _selectedPatient = new ();       // parameter
+    private PatientFile    _selectedFile    = new   ();     // parameter   
+    private PatientSurgery _selectedSurgery = new ();       // parameter
+
+    private SurgeryAnesthesium anesthesia = new();      
+    private List<SurgeryAnesthesium>    anesthesias = new();  // lista anesteziilor pentru operatia curenta
+
+    private AnesthesiaConsumable        consumable= new();    // selected from consumables  
+    private List<AnesthesiaConsumable> _consumables = new();  // lista anesteziilor pentru operatia curenta
+
+    // table design
+    private MudTable<SurgeryAnesthesium>? _tableAnesthesia;
+    private MudTable<AnesthesiaConsumable>? _tableConsumable;
+
+
+    // data
+    private PatientSurgery surgery = new PatientSurgery();
+    private List<PatientSurgery> surgeries = new List<PatientSurgery>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(5); 
+        /* patientSurgeryService.LoadPatientSurgeriesAsync();
+        surgeries = patientSurgeryService.PatientSurgeries;
+        if (surgeries.Count == 0)
+            EnableCurrentSelection();
+*/
+    }
+
+
+
+    protected void RowClicked(TableRowClickEventArgs<SurgeryAnesthesium> clickedCategory)
+    {
+        if (_tableAnesthesia!.GetFilteredItemsCount() == 0)
+            EnableCurrentSelection();
+        if (_tableAnesthesia!.SelectedItem == null)
+            return;
+        SelectCurrentItem(clickedCategory.Item.Id);
+        EnableCurrentSelection();
+    }
+
+
+
+    private async Task ValidateAction()
+    {
+        switch (_currentAction)
+        {
+            case (int)_actionbtn.None:
+                ClearCurrentSelection();            // Invalid action, disable all
+                return;
+            case (int)_actionbtn.Add:
+                await patientSurgeryService.AddPatientSurgery(surgery);
+                snackBar.Add("Inregistrare adaugata", Severity.Success);
+                break;
+            case (int)_actionbtn.Edit:
+                await patientSurgeryService.UpdatePatientSurgery(surgery);
+                snackBar.Add("Inregistrare modificata", Severity.Success);
+                break;
+            case (int)_actionbtn.Delete:
+                if (surgery.Id == 0)               // Invalid selection
+                    return;
+                await patientSurgeryService.DeletePatientSurgery(surgery.Id);
+                snackBar.Add("Inregistrare stearsa", Severity.Success);
+                break;
+        }
+
+        _currentAction = 0;
+        surgeries = patientSurgeryService.PatientSurgeries;
+
+        ClearCurrentSelection();
+
+        await Task.Delay(1); // let UI refresh
+    }
+
+    // movers
+    private string searchString = "";
+
+    private void SelectCurrentItem(int id)
+    {
+        surgery = surgeries.FirstOrDefault(c => c.Id == id);
+    }
+
+    private bool Search(PatientSurgery surgery)
+    {
+        if (string.IsNullOrWhiteSpace(searchString)) return true;
+        /*
+                if (surgery.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+        */
+
+        return false;
+    }
+
+}
