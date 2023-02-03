@@ -20,6 +20,7 @@ public partial class SurgeryAnesthesium
     public int Duration { get; set; }
 
     public string Name { get; set; }
+    public string Type { get; set; }
 
     public virtual ICollection<AnesthesiaConsumable> AnesthesiaConsumables { get; } = new List<AnesthesiaConsumable>();
 

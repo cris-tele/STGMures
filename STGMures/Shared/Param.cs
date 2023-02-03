@@ -47,6 +47,10 @@ namespace StgMures.Shared
             { "N/A",                
             "BUC", "MG", "yG", "UI"};
 
+        static public List<string> AnesthesiaType = new()
+            { "GENERALA","LOCOREGIONALA", "PARAVERTREBRAL", "PARASTERNAL"};
+
+
 #pragma warning restore CA2211
 
 

@@ -6,106 +6,67 @@
 
 @inject IPatientSurgeryService patientSurgeryService
 
-<!--edit card-->
-<MudCard Elevation="5">
-    <MudCardContent>
-        <!-- indentificare pacient (vreau sa-l pun in appbar)-->
-        <MudGrid>
-            <MudItem xs="2">
-                <MudAutocomplete Disabled="true" @bind-Value="_selectedFile.FileNumber" HelperText="Numar fisa" Variant="Variant.Text" Margin="Margin.None" Class="d-inline-flex" FullWidth width="60px"></MudAutocomplete>
-                <MudTextField Disabled="true" @bind-Value="_selectedFile.FileDate" Variant="Variant.Text" Margin="Margin.None" Format="yy" Class="d-inline-flex"></MudTextField>
-            </MudItem>
-            <MudItem xs="1">
-            </MudItem>
-            <MudItem xs="1">
-                <MudTextField Class="invisible" Disabled="true" @bind-Value="_selectedPatient.Id" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-            </MudItem>
-            <MudItem xs="2">
-                <MudTextField Disabled="true" @bind-Value="_selectedPatient.LastName" HelperText="Nume" Variant="Variant.Text"  Margin="Margin.None"></MudTextField>
-            </MudItem>
-            <MudItem xs="2">
-                <MudTextField Disabled="true" @bind-Value="_selectedPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-            </MudItem>
-        </MudGrid>
-        
-        <MudGrid>
-        <MudItem xs="5">    <!-- lista anesteziilor-->
+<MudGrid>
+    <MudItem xs="12">
+        <MudPaper  Elevation="5"> <!-- indentificare pacient (vreau sa-l pun in appbar)-->
             <MudGrid>
-                    <MudItem xs="1">
-                        <MudTextField Disabled="@_disabledField" @bind-Value="anesthesia.Date" HelperText="Din data" Format="dd/mm/yyyy" InputType="InputType.Date" Variant="Variant.Text" Margin="Margin.None" T="DateTime?"></MudTextField>
-                    </MudItem>
-                    <MudItem xs="1">
-                        <MudTextField Disabled="true" @bind-Value="anesthesia.Date" HelperText="Din data" Format="dd/mm/yyyy" InputType="InputType.Date" Variant="Variant.Text" Margin="Margin.None" T="DateTime?"></MudTextField>
-                    </MudItem>
-                <MudSpacer />
-                <MudItem xs="1">
-                    <MudTextField Style="visibility:hidden" Disabled="true" @bind-Value="_selectedPatient.Id" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudItem Class="d-inline-flex" >
+                    <MudAutocomplete size="10" Disabled="false" @bind-Value="_selectedFile.FileNumber" HelperText="Numar fisa" Variant="Variant.Text" Margin="Margin.None" Class="d-inline-flex"></MudAutocomplete>
+                    <MudTextField size="4" Disabled="false" @bind-Value="_selectedFile.FileDate" Variant="Variant.Text" Margin="Margin.None" Format="dd/mm/yyyy" InputType="InputType.Date" Class="d-inline-flex" HelperText="An"></MudTextField>
                 </MudItem>
-                <MudItem xs="2">
-                    <MudTextField Disabled="true" @bind-Value="_selectedPatient.LastName" HelperText="Nume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudSpacer/>
+                <MudItem >
+                    <MudTextField size="4" Class="invisible" Disabled="true" @bind-Value="_selectedPatient.Id" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
                 </MudItem>
-                <MudItem xs="2">
+                <MudItem >
+                    <MudTextField Disabled="true" @bind-Value="_selectedPatient.LastName" HelperText="Nume" Variant="Variant.Text"  Margin="Margin.None"></MudTextField>
+                </MudItem>
+                <MudItem >
                     <MudTextField Disabled="true" @bind-Value="_selectedPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
                 </MudItem>
             </MudGrid>
-                <MudTable @ref="@_tableAnesthesia" Hover="true" Dense="true" Striped="true" Elevation="5"
-                          Items="@anesthesias" @bind-customer="surgery" OnRowClick="@RowClicked" T="SurgeryAnesthesium">
-                    <HeaderContent>
-                        <MudTh>ID</MudTh>
-                        <MudTh>Data</MudTh>
-                        <MudTh>Incizie</MudTh>
-                    </HeaderContent>
-                    <RowTemplate>
-                    </RowTemplate>
-
-                </MudTable>
-
-
-        </MudItem>
-        <MudItem xs="1" >bzzz</MudItem>
-        <MudItem xs="5">    <!-- lista consumabilelor -->
-            <MudGrid>
-                <MudItem xs="1">
-                    <MudAutocomplete Disabled="true" @bind-Value="_selectedFile.FileNumber" HelperText="Numar fisa" Variant="Variant.Text" Margin="Margin.None"></MudAutocomplete>
-                </MudItem>
-                <MudItem xs="1">
-                    <MudDatePicker Disabled="true" @bind-Value="_selectedFile.FileDate" HelperText="Din data" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-                </MudItem>
-                <MudSpacer />
-                <MudItem xs="1">
-                    <MudTextField Style="visibility:hidden" Disabled="true" @bind-Value="_selectedPatient.Id" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-                </MudItem>
-                <MudItem xs="2">
-                    <MudTextField Disabled="true" @bind-Value="_selectedPatient.LastName" HelperText="Nume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-                </MudItem>
-                <MudItem xs="2">
-                    <MudTextField Disabled="true" @bind-Value="_selectedPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-                </MudItem>
-            </MudGrid>
-                <MudTable @ref="@_tableAnesthesia" Hover="true" Dense="true" Striped="true" Elevation="5"
-                          Items="@anesthesias" @bind-customer="surgery" OnRowClick="@RowClicked" T="SurgeryAnesthesium">
-                    <HeaderContent>
-                        <MudTh>ID</MudTh>
-                        <MudTh>Data</MudTh>
-                        <MudTh>Incizie</MudTh>
-                    </HeaderContent>
-                    <RowTemplate>
-                    </RowTemplate>
-
-                </MudTable>
-
-
-        </MudItem>
-        </MudGrid>
-
-
-    </MudCardContent>
-
+        </MudPaper>
+    </MudItem>
     <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
-
-    <MudCardActions>
+    <p />
+    <MudItem xs="6">    <!-- anestezii -->
+        <MudPaper Elevation="5">
         <MudGrid>
-            <MudItem xs="1">
+            <MudItem xs="3">
+                <MudTextField Disabled="@_disabledField" @bind-Value="anesthesia.Date" HelperText="Data anestezie" Format="dd/mm/yyyy" InputType="InputType.DateTimeLocal" Variant="Variant.Text" Margin="Margin.None" T="DateTime?"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <MudNumericField Disabled="@_disabledField" @bind-Value="anesthesia.Duration" HelperText="Durata" Format="N2" Variant="Variant.Text" Margin="Margin.None" T="int"></MudNumericField>
+            </MudItem>
+            <MudItem xs="4">
+                    <MudTextField Disabled="@_disabledField" @bind-Value="anesthesia.Name" HelperText="Descriere" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                    <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="anesthesia.Type" HelperText="Tip" Variant="Variant.Text" Margin="Margin.None">
+                        @foreach (var _option in Param.AnesthesiaType)
+                        {
+                            <MudSelectItem Value="@_option" />
+                        }
+                    </MudSelect>
+            </MudItem>
+        </MudGrid>
+
+        <MudTable @ref="@_tableAnesthesia" Hover="true" Dense="true" Striped="true" Elevation="5" Bordered
+                    Items="@anesthesias" @bind-customer="surgery" OnRowClick="@RowClicked" T="SurgeryAnesthesium">
+            <HeaderContent>
+                <MudTh>Data</MudTh>
+                <MudTh>Durata</MudTh>
+                <MudTh>Descriere</MudTh>
+                <MudTh>Tip</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+            </RowTemplate>
+        </MudTable>
+    
+        <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
+
+        <MudGrid>
+            <MudItem xs="3">
                 <MudTooltip Text="Adauga o noua inregistrare">
                     <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="AddNewRecord">Adauga</MudIconButton>
                 </MudTooltip>
@@ -118,8 +79,8 @@
                     <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
                 </MudTooltip>
             </MudItem>
-            <MudItem xs="1" />
-            <MudItem xs="1">
+            <MudSpacer/>
+            <MudItem xs="2">
                 <MudTooltip Text="Validare">
                     <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
                 </MudTooltip>
@@ -128,33 +89,78 @@
                 </MudTooltip>
             </MudItem>
         </MudGrid>
-    </MudCardActions>
+
+        </MudPaper>
+        </MudItem>
+
+        <MudItem xs="6"> <!-- consumabile anestezii -->
+        <MudPaper Elevation="5">
+        <MudGrid>
+            <MudItem xs="4">
+                    <MudTextField Disabled="@_disabledField" @bind-Value="consumable.ConsumableId" HelperText="Consumabil" Variant="Variant.Text" Margin="Margin.None" T="int"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <MudTextField Disabled="@_disabledField" @bind-Value="consumable.Value" HelperText="@_helperValue" Variant="Variant.Text" Margin="Margin.None" T="string"></MudTextField>
+            </MudItem>
+                <MudItem xs="2">
+                    <MudTextField Disabled="@_disabledField" @bind-Value="@_consumableUm" HelperText="UM" Variant="Variant.Text" Margin="Margin.None" T="string"></MudTextField>
+                </MudItem>
+                <MudItem xs="4">
+                <MudTextField Disabled="@_disabledField" @bind-Value="consumable.ShortNote" HelperText="Obs" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            </MudItem>
+        </MudGrid>
+
+        <MudTable @ref="@_tableAnesthesia" Hover="true" Dense="true" Striped="true" Elevation="5" Bordered
+                    Items="@anesthesias" @bind-customer="surgery" OnRowClick="@RowClicked" T="SurgeryAnesthesium">
+            <HeaderContent>
+                <MudTh>Consumabil</MudTh>
+                <MudTh>@_helperValue</MudTh>
+                <MudTh>UM</MudTh>
+                <MudTh>Obs</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+            </RowTemplate>
+        </MudTable>
+
+        <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
+
+        <MudGrid>
+            <MudItem xs="3">
+                <MudTooltip Text="Adauga o noua inregistrare">
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="AddNewRecord">Adauga</MudIconButton>
+                </MudTooltip>
+
+                <MudTooltip Text="Modifica inregistrarea selectata">
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="UpdateRecord">Modifica</MudIconButton>
+                </MudTooltip>
+
+                <MudTooltip Text="Sterge inregistrarea selectata">
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
+                </MudTooltip>
+            </MudItem>
+            <MudSpacer />
+            <MudItem xs="2">
+                <MudTooltip Text="Validare">
+                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
+                </MudTooltip>
+                <MudTooltip Text="Renuntare">
+                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
+                </MudTooltip>
+            </MudItem>
+        </MudGrid>
+
+        </MudPaper>
+        </MudItem>
 
 
-</MudCard>
-<br />
-<!-- butoane detalii -->
-<MudCard Elevation="5">
-</MudCard>
-
-
-<!--table list-->
-<MudTable @ref="@_tableAnesthesia" Hover="true" Dense="true" Striped="true" Elevation="5"
-          Items="@anesthesias" @bind-customer="surgery" OnRowClick="@RowClicked" T="SurgeryAnesthesium">
-    <HeaderContent>
-        <MudTh>ID</MudTh>
-        <MudTh>Data</MudTh>
-        <MudTh>Incizie</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-    </RowTemplate>
-
-</MudTable>
+</MudGrid>
 
 
 
 
-@code {
+
+
+            @code {
     // card design
     private Patient        _selectedPatient = new ();       // parameter
     private PatientFile    _selectedFile    = new   ();     // parameter   
@@ -170,6 +176,8 @@
     private MudTable<SurgeryAnesthesium>? _tableAnesthesia;
     private MudTable<AnesthesiaConsumable>? _tableConsumable;
 
+    private string _helperValue = "Qtty";   // changed 
+    private string _consumableUm = "gr.";   // changed
 
     // data
     private PatientSurgery surgery = new PatientSurgery();
@@ -178,6 +186,7 @@
     protected override async Task OnInitializedAsync()
     {
         await Task.Delay(5); 
+        EnableCurrentSelection();
         /* patientSurgeryService.LoadPatientSurgeriesAsync();
         surgeries = patientSurgeryService.PatientSurgeries;
         if (surgeries.Count == 0)
