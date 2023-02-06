@@ -50,7 +50,8 @@ namespace StgMures.Shared
         static public List<string> AnesthesiaType = new()
             { "GENERALA","LOCOREGIONALA", "PARAVERTREBRAL", "PARASTERNAL"};
 
-
+        static public List<string> TreatmentType = new()
+            {"NORMAL", "ANESTEZIE","CEC","PRIMARY", "SECONDARY", "ATI","OTHER" };
 #pragma warning restore CA2211
 
 

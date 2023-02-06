@@ -1,4 +1,4 @@
-﻿@page "/patienttreatment"
+﻿@page "/PatientTreatmentPage"
 
 @using StgMures.Shared.DbModels
 @inherits _RazorPageBehaviorBase
@@ -12,76 +12,95 @@
 
 <h3>Tratament Pacient</h3>
 
-<EditForm Model="patienttreatment" OnValidSubmit="HandlePatientTreatment">
-    <DataAnnotationsValidator></DataAnnotationsValidator>
- 
-    <div class="form-group">
-        <label for="treatmenttype">Tip Tratament</label>
-        <InputSelect id="treatmenttype" @bind-Value="patienttreatment.TreatmentType " class="form-control">
-            <option>Tratament aferent diagnosticului Cardiologic Principal</option>
-            <option>Tratament aferent diagnosticului Cardiologic Secundar</option>
-            <option>Tratament aferent CEC</option>
-            <option>Tratament aferent Anestezie</option>
-            <option>Tratament Ambulator ?</option>
-            <option>Alte tratamente (de definit)</option>
-        </InputSelect>
-        <ValidationMessage For="@(() => patienttreatment.TreatmentType)" />
-    </div>
-    <div class="form-group">
-        <label for="diagnosticid">Tratament pentru diagnosticul:</label>
-        <InputSelect id ="diagnosticid" @bind-Value="patienttreatment.PatientDiagnosticId" class="form-control">
-            <option>Sedare/Fentanil</option>
-            <option>Alte diagnotice (se incarca din baza)</option>
-        </InputSelect>
-        <ValidationMessage For="@(() => patienttreatment.PatientDiagnosticId)" />
-    </div>
+<MudCard Elevation="5">
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="2">  <!-- tratamente se dau in toate aceste cazuri; va fi dat de pagina din care e accesat-->
+                <MudSelect Disabled="@(!_disabledField)" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="patienttreatment.TreatmentType" HelperText="Tip Tratament" Variant="Variant.Text" Margin="Margin.None">
+                    @foreach (var _option in Param.TreatmentType)
+                    {
+                        <MudSelectItem Value="@_option" />
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="2">
+                <MudSelect Disabled="@_disabledField" T="int?" AnchorOrigin="Origin.BottomCenter" @bind-Value="patienttreatment.PatientDiagnosticId" HelperText="Diagnostic" Variant="Variant.Text" Margin="Margin.None">
+                    @foreach (var _option in patientDiagnostics)
+                    {
+                        <MudSelectItem Value="@_option.ShortNote" />    <!-- trebuie un select, sa iau denumirea-->
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="1">
+                <MudNumericField Disabled="@_disabledField" @bind-Value="patienttreatment.NoOfDays" HelperText="Nr.Zile" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
+            </MudItem>
+            <MudItem xs="1">
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.WeekSchema" HelperText="Schema" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            </MudItem>
+            <MudItem xs="1">
+                <MudNumericField Disabled="@_disabledField" @bind-Value="patienttreatment.Dosage" HelperText="Dozaj" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
+            </MudItem>
+            <MudItem xs="1">
+                <MudNumericField Disabled="@_disabledField" @bind-Value="patienttreatment.DosageQtty" HelperText="Nr.Doze" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
+            </MudItem>
+            <MudItem xs="1">
+                <MudNumericField Disabled="@_disabledField" @bind-Value="patienttreatment.DosageTotal" HelperText="Dozaj Total" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
+            </MudItem>
+            <MudItem xs="3">    <!-- se ia din tratament, se poate schimba ? -->
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="patienttreatment.Administration" HelperText="Mod administrare" Variant="Variant.Text" Margin="Margin.None">
+                    @foreach (var _option in Param.TreatmentAdministrationMethod)
+                    {
+                        <MudSelectItem Value="@_option" />
+                    }
+                </MudSelect>
+            </MudItem>
+        </MudGrid>
+        <MudGrid>
+        <MudItem xs="12">
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.DosageNote" HelperText="Observatii" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+        </MudItem>
+        </MudGrid>
+    </MudCardContent>
 
-    <div class="form-group">
-        <label for="noofdays">Nr. zile Tratament</label>
-        <InputNumber id="noofdays" @bind-Value="patienttreatment.NoOfDays" class="form-control"></InputNumber>
-        <ValidationMessage For="@(() => patienttreatment.NoOfDays)" />
-    </div>
-    <div class="form-group">
-        <label for="weekschema">Schema de tratament pe zile</label>
-        <InputText id="weekschema" @bind-Value="patienttreatment.WeekSchema" class="form-control"></InputText>
-        <ValidationMessage For="@(() => patienttreatment.WeekSchema)" />
-    </div>
-    <div class="form-group">
-        <label for="dosage">Dozaj zilnic</label>
-        <InputNumber id="dosage" @bind-Value="patienttreatment.Dosage" class="form-control"></InputNumber>
-        <ValidationMessage For="@(() => patienttreatment.Dosage)" />
-    </div>
-    <div class="form-group">
-        <label for="dosageqtty">Dozaj cantitate</label>
-        <InputNumber id="dosageqtty" @bind-Value="patienttreatment.DosageQtty" class="form-control"></InputNumber>
-        <ValidationMessage For="@(() => patienttreatment.DosageQtty)" />
-    </div>
-    <div class="form-group">
-        <label for="dosagetotal">Dozaj total</label>
-        <InputNumber id="dosagetotal" @bind-Value="patienttreatment.DosageTotal" class="form-control"></InputNumber>
-        <ValidationMessage For="@(() => patienttreatment.DosageTotal)" />
+    <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
 
-    </div>
-    <div class="form-group">
-        <label for="administration">Mod Administrare</label>
-        <InputText id="administration" @bind-Value="patienttreatment.Administration" class="form-control"></InputText>
-        <ValidationMessage For="@(() => patienttreatment.Administration)" />
-    </div>
+    <MudCardActions>
+        <MudGrid>
+            <MudItem xs="1">
+                <MudTooltip Text="Adauga o noua inregistrare">
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="AddNewRecord">Adauga</MudIconButton>
+                </MudTooltip>
 
-    <div class="form-group">
-        <label for="dosagenote">Descriere/adnotari privind administrarea/dosajul</label>
-        <InputTextArea id="dosagenote" @bind-Value="patienttreatment.DosageNote" class="form-control"> </InputTextArea>
-        <ValidationMessage For="@(() => patienttreatment.DosageNote)" />
-    </div>
+                <MudTooltip Text="Modifica inregistrarea selectata">
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="UpdateRecord">Modifica</MudIconButton>
+                </MudTooltip>
 
-</EditForm>
+                <MudTooltip Text="Sterge inregistrarea selectata">
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
+                </MudTooltip>
+            </MudItem>
+            <MudItem xs="1" />
+            <MudItem xs="1">
+                <MudTooltip Text="Validare">
+                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
+                </MudTooltip>
+                <MudTooltip Text="Renuntare">
+                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
+                </MudTooltip>
+            </MudItem>
+        </MudGrid>
+    </MudCardActions>
+</MudCard>
+<br />
 
 
 
 @code {
     /*<button type="submit" class="btn btn-info "> Inregistreaza</button> */
 
-    StgMures.Shared.DbModels.PatientTreatment patienttreatment = new StgMures.Shared.DbModels.PatientTreatment();
+    PatientTreatment patienttreatment = new PatientTreatment();
+    List<Treatment> treatments = new();
+    List <PatientDiagnostic> patientDiagnostics = new();
 
     async void HandlePatientTreatment()
     {
@@ -123,7 +142,10 @@
 
         await base.OnInitializedAsync();
     }
-
+    private async Task ValidateAction()
+    {
+        await Task.Delay(1);
+    }
 }
 
 

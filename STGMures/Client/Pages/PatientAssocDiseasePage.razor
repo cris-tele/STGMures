@@ -7,6 +7,10 @@
 @inject StgMures.Client.Services.IPatientAssocDiseaseService diseasesService
 @inject StgMures.Client.Services.IDiagnosticTypeService diagnosticService
 
+<!-- A patient can be in the hospital for a heart desease (a very serios physical and psihological trauma), -->
+<!-- The problem with the heart deseases is they "generate" others, like lungs or kidney conditions... and even most unespected ones -->
+<!-- Some of them are determined at clinical consult, but there are also associated deseases observed during surgery or post-surgery -->
+
 
 <!--titlu pagina-->
 <MudText Align="Align.Center" Typo="Typo.h6">@_currentpageName</MudText>

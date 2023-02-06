@@ -2,6 +2,10 @@
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
+<!-- the user is the medical specialist -->
+<!-- at this moment only one :) dr Carmen S.-->
+<!-- but, one medic can have more than one patient and viceversa -->
+<!-- for the future, maybe I will implement some filtering conditions (a medic may have acces to all patients, but to modify data only for those in his responsibility) -->
 
 
 <EditForm Model="user" OnValidSubmit="HandleRegistration" class="bg-light">
