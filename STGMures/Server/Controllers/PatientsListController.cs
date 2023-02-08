@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace StgMures.Server.Controllers
@@ -44,7 +43,7 @@ namespace StgMures.Server.Controllers
             dbPatient.ParentsName = patient.ParentsName;
             dbPatient.BirthDate = patient.BirthDate;
             dbPatient.BloodGroup = patient.BloodGroup;
-            dbPatient.ChildOrAdult = patient.ChildOrAdult;
+            //dbPatient.ChildOrAdult = patient.ChildOrAdult;
             dbPatient.Cnp = patient.Cnp;
             dbPatient.Cnascode = patient.Cnascode;
             dbPatient.Note = patient.Note;
@@ -84,7 +83,7 @@ namespace StgMures.Server.Controllers
             dbPatient.ParentsName = patient.ParentsName;
             dbPatient.BirthDate = patient.BirthDate;
             dbPatient.BloodGroup = patient.BloodGroup;
-            dbPatient.ChildOrAdult = patient.ChildOrAdult;
+            //dbPatient.ChildOrAdult = patient.ChildOrAdult;
             dbPatient.Cnp = patient.Cnp;
             dbPatient.Cnascode = patient.Cnascode;
             dbPatient.Note = patient.Note;

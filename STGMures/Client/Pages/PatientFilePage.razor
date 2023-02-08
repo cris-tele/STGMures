@@ -7,17 +7,15 @@
 <!--current pacient = selected patient in the patient list page-->
 @inject IPatientFileService patientFileService
 
+@inject ISetAppMenuInfos SetAppMenuInfos
+
+
 <!-- Usually, a patient has only one observation file-->
 <!-- But, we a dealing with heart desease type of diagnostoics, and there are too many case when-->
 <!-- - The patient stays in hospital for a long periood of time (cases of one year of hospitalisation ) -->
 <!-- - Or, more frequently, the patient comes back after a period of years, for another surgery or another treatment scheme, complete investigations... -->
 <!-- So, one patient can have more than one file, and also the medical history is important -->
 <!-- The last one must be the "default" but the medical team can select and older one -->
-
-
-<!--titlu pagina-->
-<MudText Align="Align.Center" Typo="Typo.h6">Fisa Pacient</MudText>
-<br />
 
 <!--edit card-->
 <MudCard Elevation="5" >
@@ -112,17 +110,16 @@
 
 
 <!--table list-->
-<MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5"
-          Items="@patientsFiles" @bind-customer="currentPatientFile" OnRowClick="@RowClicked" T="PatientFile">
+<!--<MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5" 
+          Items="@patientsFiles" @bind-customer="currentPatientFile" OnRowClick="@RowClicked" T="PatientFile"> -->
 
           <!-- no filter: Items="@patientsFiles" Filter="new Func<PatientFile, bool>(Search)" @bind-customer="currentPatientFile" OnRowClick="@RowClicked" T="PatientFile"> -->
 
-    <!-- NU e cazul, vor fi 2-3 fise max
+<!-- NU e cazul, vor fi 2-3 fise max
     <ToolBarContent>
         <MudSpacer />
         <MudTextField @bind-Value="searchString" Placeholder="Cautati o categorie..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.currentPatientFile" IconSize="Size.Small" Class="mt-0"></MudTextField>
     </ToolBarContent>
-    -->
     <HeaderContent>
         <MudTh>Nr.Fisa</MudTh>
         <MudTh>Data Fisa</MudTh>
@@ -135,13 +132,14 @@
         <MudTd Class="col-9" DataLabel="Denumire">@context.HospitalAdmissionDate</MudTd>
         <MudTd Class="col-9" DataLabel="Denumire">@context.DischargeDate</MudTd>
     </RowTemplate>
-    <!--fara pager,ca nu sunt atat de multe-->
+-->
+<!--fara pager,ca nu sunt atat de multe-->
     <!--
     <PagerContent>
         <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 5, 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
     </PagerContent>
     -->
-</MudTable>
+<!--</MudTable>-->
 
 
 
@@ -166,6 +164,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SetAppMenuInfos.SetPageTitle("Fisa Pacient");
+        SetAppMenuInfos.SetSelectedPatient(_currentPatient!.FirstName + " " + _currentPatient!.LastName);   // trebuie sa fie un pacient selectat. Daca nu e, ar trebui sa oblig alegerea unui pacient
+
         await patientFileService.LoadPatientFilesAsync();
         patientsFiles = patientFileService.PatientFiles;
         if (patientsFiles.Count == 0)

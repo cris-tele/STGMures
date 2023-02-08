@@ -6,10 +6,7 @@
 
 @inject StgMures.Client.Services.ITreatmentTypeService treatmentService
 @inject MudBlazor.ISnackbar snackBar
-
-<!--titlu pagina-->
-<MudText Align="Align.Center" Typo="Typo.h6">Tipuri de diagnostice</MudText>
-<br />
+@inject ISetAppMenuInfos SetAppMenuInfos
 
 <!--edit card-->
 <MudCard Elevation="5">
@@ -43,7 +40,7 @@
             </MudItem>
             <MudItem xs="2">
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.ValueFormat" HelperText="Valori posibile" Variant="Variant.Text" Margin="Margin.None">
-                    @foreach (var _option in Param.FieldFormat)
+                    @foreach (var _option in StaticParam.FieldFormat)
                     {
                         <MudSelectItem Value="@_option" />
                     }
@@ -51,7 +48,7 @@
             </MudItem>
             <MudItem xs="1">
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.AdministrationMethod" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
-                    @foreach (var _option in Param.TreatmentAdministrationMethod)
+                    @foreach (var _option in StaticParam.TreatmentAdministrationMethod)
                     {
                         <MudSelectItem Value="@_option" />
                     }
@@ -149,6 +146,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SetAppMenuInfos.SetPageTitle("Tipuri de tratamente");
         await treatmentService.LoadTreatmentsAsync();
         treatments = treatmentService.Types;
         if (treatments.Count == 0)

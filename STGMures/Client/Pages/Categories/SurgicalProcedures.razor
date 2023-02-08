@@ -3,12 +3,9 @@
 @using StgMures.Shared.DbModels
 @inherits _RazorPageBehaviorBase
 @inject MudBlazor.ISnackbar snackBar
+@inject ISetAppMenuInfos SetAppMenuInfos
 
 @inject StgMures.Client.Services.ISurgicalProcedureService categoryService
-
-<!--titlu pagina-->
-<MudText Align="Align.Center" Typo="Typo.h6">Proceduri chirurgicale</MudText>
-<br />
 
 <!--edit card-->
 <MudCard Elevation="5">
@@ -20,7 +17,7 @@
             </MudItem>
             <MudItem xs="2">
                 <!--!!!!!!!!!!!!!!!!!!!!  -->
-                <MudSelect Disabled="@_disabledField" T="int?" @bind-Value="category.ParentId" AnchorOrigin="Origin.BottomCenter" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
+                <MudSelect Disabled="@_disabledField" T="int" @bind-Value="category.ParentId" AnchorOrigin="Origin.BottomCenter" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in parentCategories)
                     {
                         <MudSelectItem Value="@_option.ParentId">@_option.Name</MudSelectItem>
@@ -113,6 +110,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SetAppMenuInfos.SetPageTitle("Categorii de proceduri chirurgicale");
         await categoryService.LoadSurgicalProceduresAsync();
         categories = categoryService.Categories;
         parentCategories = categories.GetRange(0, categories.Count);

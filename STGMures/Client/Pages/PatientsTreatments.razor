@@ -8,16 +8,15 @@
 
 @inject StgMures.Client.Services.ITreatmentTypeService treatmentService
 @inject MudBlazor.ISnackbar snackBar
+@inject ISetAppMenuInfos SetAppMenuInfos
 
-
-<h3>Tratament Pacient</h3>
 
 <MudCard Elevation="5">
     <MudCardContent>
         <MudGrid>
             <MudItem xs="2">  <!-- tratamente se dau in toate aceste cazuri; va fi dat de pagina din care e accesat-->
                 <MudSelect Disabled="@(!_disabledField)" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="patienttreatment.TreatmentType" HelperText="Tip Tratament" Variant="Variant.Text" Margin="Margin.None">
-                    @foreach (var _option in Param.TreatmentType)
+                    @foreach (var _option in StaticParam.TreatmentType)
                     {
                         <MudSelectItem Value="@_option" />
                     }
@@ -48,7 +47,7 @@
             </MudItem>
             <MudItem xs="3">    <!-- se ia din tratament, se poate schimba ? -->
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="patienttreatment.Administration" HelperText="Mod administrare" Variant="Variant.Text" Margin="Margin.None">
-                    @foreach (var _option in Param.TreatmentAdministrationMethod)
+                    @foreach (var _option in StaticParam.TreatmentAdministrationMethod)
                     {
                         <MudSelectItem Value="@_option" />
                     }
@@ -57,7 +56,7 @@
         </MudGrid>
         <MudGrid>
         <MudItem xs="12">
-                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.DosageNote" HelperText="Observatii" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Observatii" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
         </MudItem>
         </MudGrid>
     </MudCardContent>
@@ -134,11 +133,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        string[] sextype = { "Masculin", "Feminin" };
-
-
-        // await DiagnosticService.LoadDiagnosticsAsync();
-        // await DiagnosticService.LoadDiagnosticCategoriesAsync();
+        SetAppMenuInfos.SetPageTitle("Tratamente Pacient");
+        // SetAppMenuInfos.SetSelectedPatient(_currentPatient!.FirstName + " " + _currentPatient!.LastName);   // trebuie sa fie un pacient selectat. Daca nu e, ar trebui sa oblig alegerea unui pacient
 
         await base.OnInitializedAsync();
     }

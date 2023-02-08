@@ -21,6 +21,7 @@ namespace StgMures.Client
             builder.Services.AddOptions();
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<IAuthService, AuthService>();    // login si register
+            builder.Services.AddScoped<ISetAppMenuInfos, SetAppMenuInfos>();
             //categories
             builder.Services.AddScoped<ITreatmentCategoryService, TreatmentCategoryService>();
             builder.Services.AddScoped<IDiagnosticCategoryService, DiagnosticCategoryService>();

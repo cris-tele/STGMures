@@ -5,10 +5,8 @@
 
 @inject StgMures.Client.Services.IDiagnosticCategoryService categoryService
 @inject MudBlazor.ISnackbar snackBar
+@inject ISetAppMenuInfos SetAppMenuInfos
 
-<!--titlu pagina-->
-<MudText Align="Align.Center" Typo="Typo.h6">Categorii Diagnostice</MudText>
-<br />
 
 <!--edit card-->
 <MudCard Elevation="5">
@@ -20,7 +18,7 @@
             </MudItem>
             <MudItem xs="2">
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="category.Type" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
-                @foreach (var _option in Param.TypeOfDiagnosticCategories)
+                @foreach (var _option in StaticParam.TypeOfDiagnosticCategories)
                 {
                     <MudSelectItem Value="@_option" />
                 }
@@ -114,6 +112,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SetAppMenuInfos.SetPageTitle("Categorii de diagnostice");
         await categoryService.LoadDiagnosticCategoriesAsync();
         categories = categoryService.Categories;
         if (categories.Count == 0)

@@ -4,12 +4,10 @@
 
 @inject StgMures.Client.Services.IConsumableCategoryService categoryService
 @inject MudBlazor.ISnackbar snackBar
+@inject ISetAppMenuInfos SetAppMenuInfos
 
-<!--titlu pagina-->
-<MudText Align="Align.Center" Typo="Typo.h6">Categorii Consumabile</MudText>
-<MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
 
-<!--edit card-->
+
 <MudCard Elevation="5" Class="gap-0 pa-0 m-0">
     <!--    <MudCardHeader >  </MudCardHeader> --> <!--Nu stiu daca voi folosi-->
     <MudCardContent Class="gap-0 pa-0 m-0">
@@ -92,7 +90,7 @@
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            _table.SetRowsPerPage(5);
+            _table!.SetRowsPerPage(5);
         return base.OnAfterRenderAsync(firstRender);
     }
 
@@ -103,6 +101,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SetAppMenuInfos.SetPageTitle("Categorii de consumabile");
         await categoryService.LoadConsumableCategoriesAsync();
         categories = categoryService.Categories;
     }

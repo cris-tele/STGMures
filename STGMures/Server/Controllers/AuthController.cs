@@ -1,5 +1,4 @@
-﻿using StgMures.Server.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace StgMures.Server.Controllers
 {

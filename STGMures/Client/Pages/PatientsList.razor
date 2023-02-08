@@ -3,12 +3,9 @@
 @inherits _RazorPageBehaviorBase
 @inject IPatientListService patientListService
 @inject MudBlazor.ISnackbar snackBar
-
+@inject ISetAppMenuInfos SetAppMenuInfos
 @inject NavigationManager NavigationManager
 
-<!--titlu pagina-->
-<MudText Align="Align.Center" Typo="Typo.h6">Lista pacientilor</MudText>
-<br />
 
 <MudCard Elevation="5">
     <MudCardContent >
@@ -27,7 +24,7 @@
             </MudItem>
             <MudItem xs="1">
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="_currentPatient.Sex" HelperText="Sex" Variant="Variant.Text" Margin="Margin.None">
-                    @foreach (var _option in Param.Genders)
+                    @foreach (var _option in StaticParam.Genders)
                     {
                         <MudSelectItem Value="@_option" />
                     }
@@ -35,7 +32,7 @@
             </MudItem>
             <MudItem xs="1">
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="_currentPatient.BloodGroup" HelperText="Gr.Sangvina" Variant="Variant.Text" Margin="Margin.None">
-                    @foreach (var _option in Param.BloodGroup)
+                    @foreach (var _option in StaticParam.BloodGroup)
                     {
                         <MudSelectItem Value="@_option" />
                     }
@@ -43,7 +40,7 @@
             </MudItem>
             <MudItem xs="1">
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="_currentPatient.MotherBloodGroup" HelperText="Gr.Sv.Mama" Variant="Variant.Text" Margin="Margin.None">
-                    @foreach (var _option in Param.BloodGroup)
+                    @foreach (var _option in StaticParam.BloodGroup)
                     {
                         <MudSelectItem Value="@_option" />
                     }
@@ -153,13 +150,14 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SetAppMenuInfos.SetPageTitle("Lista Pacientilor");
         await patientListService.LoadPatientsAsync();
         _patientsList = patientListService.Patients;
         if (_patientsList.Count() == 0)
         {
-            
+
             EnableCurrentSelection();
-       
+
         }
     }
 
@@ -172,6 +170,7 @@
         if (_table!.SelectedItem == null)
             return;
         SelectCurrentItem(clickedPatient.Item.Id);
+        SetAppMenuInfos.SetSelectedPatient(clickedPatient.Item.FirstName + " " + clickedPatient.Item.LastName);
         EnableCurrentSelection();
     }
 

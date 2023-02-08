@@ -1,7 +1,5 @@
 ﻿using StgMures.Shared;
 using System.Net.Http.Json;
-using System.Net;
-using MudBlazor;
 
 using StgMures.Shared.DbModels;
 

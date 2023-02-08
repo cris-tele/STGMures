@@ -1,15 +1,12 @@
-﻿
-@page "/ConsumableTypes"
+﻿@page "/ConsumableTypes"
 
 @using StgMures.Shared.DbModels
 @inherits _RazorPageBehaviorBase
 
 @inject StgMures.Client.Services.IConsumableTypeService consumableService
 @inject MudBlazor.ISnackbar snackBar
+@inject ISetAppMenuInfos SetAppMenuInfos
 
-<!--titlu pagina-->
-<MudText Align="Align.Center" Typo="Typo.h6">Tipuri de diagnostice</MudText>
-<br />
 
 <!--edit card-->
 <MudCard Elevation="5">
@@ -35,7 +32,7 @@
             </MudItem>
             <MudItem xs="2">
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="consumable.Design" HelperText="Tratament principal" Variant="Variant.Text" Margin="Margin.None">
-                    @foreach (var _option in Param.ConsumableDesign)
+                    @foreach (var _option in StaticParam.ConsumableDesign)
                     {
                         <MudSelectItem Value="@_option" />
                     }
@@ -43,7 +40,7 @@
             </MudItem>
             <MudItem xs="2">
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="consumable.ValueFormat" HelperText="Valori posibile" Variant="Variant.Text" Margin="Margin.None">
-                    @foreach (var _option in Param.FieldFormat)
+                    @foreach (var _option in StaticParam.FieldFormat)
                     {
                         <MudSelectItem Value="@_option" />
                     }
@@ -51,7 +48,7 @@
             </MudItem>
             <MudItem xs="1">
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="consumable.Type" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
-                    @foreach (var _option in Param.ConsumableType)
+                    @foreach (var _option in StaticParam.ConsumableType)
                     {
                         <MudSelectItem Value="@_option" />
                     }
@@ -59,7 +56,7 @@
             </MudItem>
             <MudItem xs="1">
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="consumable.MeasureUnit" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
-                    @foreach (var _option in Param.ConsumableMeasureUnits)
+                    @foreach (var _option in StaticParam.ConsumableMeasureUnits)
                     {
                         <MudSelectItem Value="@_option" />
                     }
@@ -152,6 +149,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SetAppMenuInfos.SetPageTitle("Tipuri de consumabile");
         await consumableService.LoadConsumablesAsync();
         consumables = consumableService.Types;
         if (consumables.Count == 0)

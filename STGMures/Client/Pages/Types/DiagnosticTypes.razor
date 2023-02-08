@@ -1,5 +1,4 @@
-﻿
-@page "/DiagnosticTypes"
+﻿@page "/DiagnosticTypes"
 
 @using StgMures.Shared.DbModels
 @inherits _RazorPageBehaviorBase
@@ -7,10 +6,7 @@
 @inject StgMures.Client.Services.IDiagnosticCategoryService categoryService
 @inject StgMures.Client.Services.IDiagnosticTypeService diagnosticService
 @inject MudBlazor.ISnackbar snackBar
-
-<!--titlu pagina-->
-<MudText Align="Align.Center" Typo="Typo.h6">Tipuri de diagnostice</MudText>
-<br />
+@inject ISetAppMenuInfos SetAppMenuInfos
 
 <!--edit card-->
 <MudCard Elevation="5">
@@ -44,7 +40,7 @@
             </MudItem>
             <MudItem xs="2">
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="diagnostic.ValueFormat" HelperText="Valori posibile" Variant="Variant.Text" Margin="Margin.None">
-                    @foreach (var _option in Param.DiagnosticsMeasureUnits)
+                    @foreach (var _option in StaticParam.DiagnosticsMeasureUnits)
                     {
                         <MudSelectItem Value="@_option" />
                     }
@@ -52,7 +48,7 @@
             </MudItem>
             <MudItem xs="1">
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="diagnostic.MeasureUnit" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
-                    @foreach (var _option in Param.DiagnosticsMeasureUnits)
+                    @foreach (var _option in StaticParam.DiagnosticsMeasureUnits)
                     {
                         <MudSelectItem Value="@_option" />
                     }
@@ -148,6 +144,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SetAppMenuInfos.SetPageTitle("Tipuri de diagnostice");
         await diagnosticService.LoadDiagnosticsAsync();
         diagnostics = diagnosticService.Types;
         if (diagnostics.Count == 0)

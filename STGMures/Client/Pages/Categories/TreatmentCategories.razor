@@ -4,10 +4,7 @@
 
 @inject StgMures.Client.Services.ITreatmentCategoryService categoryService
 @inject MudBlazor.ISnackbar snackBar
-
-<!--titlu pagina-->
-<MudText Align="Align.Center" Typo="Typo.h6">Categorii Tratamente</MudText>
-<br />
+@inject ISetAppMenuInfos SetAppMenuInfos
 
 <!--edit card-->
 <MudCard Elevation="5">
@@ -102,7 +99,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await categoryService.LoadTreatmentCategoriesAsync();       
+        SetAppMenuInfos.SetPageTitle("Categorii de Tratamente");
+        await categoryService.LoadTreatmentCategoriesAsync();
         categories = categoryService.Categories;
     }
 

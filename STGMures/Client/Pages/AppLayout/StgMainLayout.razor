@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
-@inject StgMures.Client.Services.ITreatmentCategoryService appBar
+@inject ISetAppMenuInfos SetAppMenuInfos
+@implements IDisposable
 
 <MudThemeProvider />
 <MudDialogProvider />
@@ -8,20 +9,21 @@
 
 <MudLayout>
     <MudAppBar>
-   
+
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <!-- _currentPageTitle -->
+        <MudElement>@SetAppMenuInfos.PageTitle</MudElement>
         <AuthorizeView>
             <Authorized>
             <MudSpacer />
                 <MudButton StartIcon="@Icons.Material.Filled.MedicalServices" Color="Color.Error" Variant="Variant.Text">@context.User.Identity!.Name </MudButton>
             <MudSpacer />
-            <MudButton StartIcon="@Icons.Material.Outlined.MedicalInformation" Color="Color.Error" Variant="Variant.Text">@_patientName</MudButton>
+                <MudButton StartIcon="@Icons.Material.Outlined.MedicalInformation" Color="Color.Error" Variant="Variant.Text">@SetAppMenuInfos.SelectedPatient</MudButton>
             <MudSpacer />
             </Authorized>
         </AuthorizeView>
         <MudSpacer />
-        <MudText Color="Color.Error">S.T.G. Mures ATI</MudText>
+        <MudText Color="Color.Default">S.T.G. Mures ATI</MudText>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen">
         <NavMenu/>
@@ -34,32 +36,31 @@
 </MudLayout>
 
 @code {
-    bool _drawerOpen = true;
-    string _medicName =string.Empty;
-    string _patientName = string.Empty;
+    /*
+    [Parameter]
+    public string PRMMedicName { get; set; } = string.Empty;
+    [Parameter]
+    public string PRMPatientName { get; set; } = string.Empty;
+    [Parameter]
+    public string PRMPageTitle { get; set; } = string.Empty;
+*/
+
 
     protected override async Task OnInitializedAsync()
     {
+        SetAppMenuInfos.OnChange += StateHasChanged;
         await Task.Delay(1); // let UI refresh
     }
 
+    bool _drawerOpen = true;
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
-    private void GetMedic(string medic= "")       
-    {
-        _medicName = "Medic: ";
-        if (medic.Length > 0)
-            _medicName = $"Medic: {medic}";
 
-    }
-    private void GetPatient(string patient = "")
+    public void Dispose()
     {
-        _patientName = "Pacient: ";
-        if (patient.Length > 0)
-            _patientName += $"Pacient: {patient}" ;
+        SetAppMenuInfos.OnChange -= StateHasChanged;
     }
-
 }
 

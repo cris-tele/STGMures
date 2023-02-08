@@ -1,13 +1,8 @@
-﻿<h3>SurgeryCEC</h3>
-
-@page "/surgerycec"
+﻿@page "/surgerycec"
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
+@inject ISetAppMenuInfos SetAppMenuInfos
 
-<h3>PatientSurgery</h3>
-
-
-CEC
 
 <EditForm Model="patientsurgery" OnValidSubmit="HandlePatientSurgery">
     <DataAnnotationsValidator></DataAnnotationsValidator>
@@ -17,6 +12,12 @@ CEC
 
 @code {
     StgMures.Shared.DbModels.PatientSurgery patientsurgery = new StgMures.Shared.DbModels.PatientSurgery();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1);    // just to have an assing call
+        SetAppMenuInfos.SetPageTitle("Pregatire operatie - Circuit Extra Corporal");
+    }
 
     async void HandlePatientSurgery()
     {

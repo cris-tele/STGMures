@@ -5,6 +5,8 @@
 @inherits _RazorPageBehaviorBase
 
 @inject IPatientSurgeryService patientSurgeryService
+@inject ISetAppMenuInfos SetAppMenuInfos
+
 
 <!--edit card-->
 <MudCard Elevation="5">
@@ -133,6 +135,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SetAppMenuInfos.SetPageTitle("Operatii Pacient");
+        // SetAppMenuInfos.SetSelectedPatient(_currentPatient!.FirstName + " " + _currentPatient!.LastName);   // trebuie sa fie un pacient selectat. Daca nu e, ar trebui sa oblig alegerea unui pacient
+
         await patientSurgeryService.LoadPatientSurgeriesAsync();
         surgeries = patientSurgeryService.PatientSurgeries;
         if (surgeries.Count == 0)

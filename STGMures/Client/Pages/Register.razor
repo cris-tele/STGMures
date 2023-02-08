@@ -1,6 +1,7 @@
 ﻿@page "/register"
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
+@inject ISetAppMenuInfos SetAppMenuInfos
 
 <!-- the user is the medical specialist -->
 <!-- at this moment only one :) dr Carmen S.-->
@@ -12,9 +13,6 @@
     <DataAnnotationsValidator></DataAnnotationsValidator>
 
     <div class="row" >
-        <div class="row border-bottom">
-            <h4 class="text-primary">Inregistrare personal medical</h4>
-        </div>
         <div class="col-6 bg-light">
             <div class="form-group">
                 <label for="name">Nume, prenume</label>
@@ -74,6 +72,12 @@
 
 @code {
     UserRegister user = new UserRegister();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1);    // just to have an assing call
+        SetAppMenuInfos.SetPageTitle("Inregistrare medic");
+    }
 
     async void HandleRegistration()
     {

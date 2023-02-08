@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.VisualBasic.FileIO;
-
-// shared parameters & constants
+﻿// shared parameters & constants
 namespace StgMures.Shared
 {
-    static public class Param
+    static public class StaticParam
     {
 #pragma warning disable CA2211
         static public List<string> Genders     = new() 

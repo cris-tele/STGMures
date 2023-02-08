@@ -7,10 +7,8 @@
 @inject MudBlazor.ISnackbar snackBar
 
 @inject StgMures.Client.Services.ISurgeryTypeService surgeryService
+@inject ISetAppMenuInfos SetAppMenuInfos
 
-<!--titlu pagina-->
-<MudText Align="Align.Center" Typo="Typo.h6">Tipuri de operatii</MudText>
-<br />
 
 <!--edit card-->
 <MudCard Elevation="5">
@@ -110,6 +108,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        SetAppMenuInfos.SetPageTitle("Tipuri de proceduri chirurgicale / operatii");
+
         await surgeryService.LoadSurgeryTypesAsync();
         types = surgeryService.Types;
         if (types.Count == 0)

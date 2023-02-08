@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
-using StgMures.Server.Data;
+using System.Security.Claims;
 
 namespace StgMures.Server.Services
 {
