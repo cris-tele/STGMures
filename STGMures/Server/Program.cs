@@ -20,7 +20,11 @@ namespace StgMures.Server
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder
+                    .UseIISIntegration()
+                    .UseIIS()
+                    .UseKestrel().UseStartup<Startup>();
+                    
                 });
     }
 }

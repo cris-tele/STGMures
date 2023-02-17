@@ -36,13 +36,13 @@ namespace StgMures.Client.Services
         public async Task<Consumable> GetConsumable(int id) //GET
         {
             var response = await _http
-                .GetFromJsonAsync<ServiceResponse<Consumable>>("api/ConsType");
+                .GetFromJsonAsync<ServiceResponse<Consumable>>($"api/ConsType/{id}");
             return response.Data;
         }
 
         public async Task UpdateConsumable(Consumable consumable) // PUT
         {
-            await _http.PutAsJsonAsync("api/ConsType", consumable);
+            await _http.PutAsJsonAsync($"api/ConsType/{consumable.Id}", consumable);
             await LoadConsumablesAsync();
         }
 

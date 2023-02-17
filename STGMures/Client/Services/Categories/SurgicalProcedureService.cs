@@ -8,7 +8,7 @@ namespace StgMures.Client.Services
     {
         private readonly HttpClient _http;
 
-        public List<SurgicalProcedure> Categories { get; set; } = new List<SurgicalProcedure>();
+        public List<SurgicalProcedure> SurgicalProcedures { get; set; } = new List<SurgicalProcedure>();
 
         public SurgicalProcedureService(HttpClient http)
         {
@@ -30,19 +30,19 @@ namespace StgMures.Client.Services
 
         public async Task LoadSurgicalProceduresAsync() //GETALL
         {
-            Categories = await _http.GetFromJsonAsync<List<SurgicalProcedure>>("api/SProcCategory");
+            SurgicalProcedures = await _http.GetFromJsonAsync<List<SurgicalProcedure>>("api/SProcCategory");
         }
 
         public async Task<SurgicalProcedure> GetSurgicalProcedure(int id) //GET
         {
             var response = await _http
-                .GetFromJsonAsync<ServiceResponse<SurgicalProcedure>>("api/SProcCategory");
+                .GetFromJsonAsync<ServiceResponse<SurgicalProcedure>>($"api/SProcCategory/{id}");
             return response.Data;
         }
 
-        public async Task UpdateSurgicalProcedure(SurgicalProcedure SurgicalProcedure) // PUT
+        public async Task UpdateSurgicalProcedure(SurgicalProcedure surgicalProcedure) // PUT
         {
-            await _http.PutAsJsonAsync("api/SProcCategory", SurgicalProcedure);
+            await _http.PutAsJsonAsync($"api/SProcCategory/{surgicalProcedure.Id}", surgicalProcedure);
             await LoadSurgicalProceduresAsync();
         }
 

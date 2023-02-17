@@ -2,7 +2,7 @@
 
 @using StgMures.Shared.DbModels
 @inject MudBlazor.ISnackbar snackBar
-@inherits _RazorPageBehaviorBase
+@inherits PageBehavior
 
 @inject IPatientSurgeryService patientSurgeryService
 @inject ISetAppMenuInfos SetAppMenuInfos
@@ -85,7 +85,7 @@
                     <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
                 </MudTooltip>
                 <MudTooltip Text="Renuntare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DisableAll">Cancel</MudIconButton>
                 </MudTooltip>
             </MudItem>
         </MudGrid>
@@ -141,7 +141,7 @@
         await patientSurgeryService.LoadPatientSurgeriesAsync();
         surgeries = patientSurgeryService.PatientSurgeries;
         if (surgeries.Count == 0)
-            EnableCurrentSelection();
+            EnableAll();
 
     }
 
@@ -150,11 +150,11 @@
     protected void RowClicked(TableRowClickEventArgs<PatientSurgery> clickedCategory)
     {
         if (_table!.GetFilteredItemsCount() == 0)
-            EnableCurrentSelection();
+            EnableAll();
         if (_table!.SelectedItem == null)
             return;
         SelectCurrentItem(clickedCategory.Item.Id);
-        EnableCurrentSelection();
+        EnableAll();
     }
 
 
@@ -164,7 +164,7 @@
         switch (_currentAction)
         {
             case (int)_actionbtn.None:
-                ClearCurrentSelection();            // Invalid action, disable all
+                DisableAll();            // Invalid action, disable all
                 return;
             case (int)_actionbtn.Add:
                 await patientSurgeryService.AddPatientSurgery(surgery);
@@ -185,7 +185,7 @@
         _currentAction = 0;
         surgeries = patientSurgeryService.PatientSurgeries;
 
-        ClearCurrentSelection();
+        DisableAll();
 
         await Task.Delay(1); // let UI refresh
     }

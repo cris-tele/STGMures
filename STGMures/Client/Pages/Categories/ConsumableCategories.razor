@@ -1,8 +1,8 @@
 ﻿@page "/consumablecategory"
 @using StgMures.Shared.DbModels;
-@inherits _RazorPageBehaviorBase
+@inherits PageBehavior
 
-@inject StgMures.Client.Services.IConsumableCategoryService categoryService
+@inject IConsumableCategoryService categoryService
 @inject MudBlazor.ISnackbar snackBar
 @inject ISetAppMenuInfos SetAppMenuInfos
 
@@ -10,13 +10,21 @@
 
 <MudCard Elevation="5" Class="gap-0 pa-0 m-0">
     <!--    <MudCardHeader >  </MudCardHeader> --> <!--Nu stiu daca voi folosi-->
-    <MudCardContent Class="gap-0 pa-0 m-0">
-        <MudGrid Class="gap-0 pa-0 m-0">
+    <MudCardContent Class="gap-0 ">
+        <MudGrid Class="gap-0 ">
             <MudItem xs="1">
                 <MudTextField Class="invisible" Disabled="true" @bind-Value="category.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="11">
-                <MudTextField Disabled="@_disabledField" @bind-Value="category.Name" HelperText="Denumire categorie" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            <MudItem xs="9">
+                <MudTextField Disabled="@SetAppMenuInfos.DisabledState" @bind-Value="category.Name" HelperText="Denumire categorie consumabile" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <MudSelect Disabled="@SetAppMenuInfos.DisabledState" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="category.MeasureUnit" HelperText="Unitate masura" Variant="Variant.Text" Margin="Margin.None">
+                    @foreach (var _option in StaticParam.ConsumableMeasureUnits)
+                    {
+                        <MudSelectItem Value="@_option" />
+                    }
+                </MudSelect>
             </MudItem>
         </MudGrid>
     </MudCardContent>
@@ -24,18 +32,19 @@
     <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
 
     <MudCardActions>
+        <!-- <AddUpdateDelete OnValidate="@ValidateAction" OnCancel="@DisableAll"/> -->
         <MudGrid>
             <MudItem xs="1">
                 <MudTooltip Text="Adauga o noua inregistrare">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="AddNewRecord">Adauga</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="AddNewRecord">Adauga</MudIconButton>
                 </MudTooltip>
 
                 <MudTooltip Text="Modifica inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="UpdateRecord">Modifica</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="UpdateRecord">Modifica</MudIconButton>
                 </MudTooltip>
 
                 <MudTooltip Text="Sterge inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="DeleteRecord">Sterge</MudIconButton>
                 </MudTooltip>
             </MudItem>
             <MudItem xs="1" />
@@ -44,10 +53,12 @@
                     <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
                 </MudTooltip>
                 <MudTooltip Text="Renuntare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Error" OnClick="DisableAll">Cancel</MudIconButton>
                 </MudTooltip>
             </MudItem>
         </MudGrid>
+
+ 
     </MudCardActions>
 </MudCard>
 <br />
@@ -60,19 +71,10 @@
         <MudSpacer />
         <MudTextField @bind-Value="searchString" Placeholder="Cautati o categorie..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
     </ToolBarContent>
-    <HeaderContent>
-        <MudTh Class="invisible">ID</MudTh>
-        <MudTh>Denumire Categorie </MudTh>
-    </HeaderContent>
     <RowTemplate>
-        <MudTd Class="invisible col-1" DataLabel="Id">@context.Id</MudTd>
-        <MudTd Class="col-11" DataLabel="Denumire">@context.Name
-            <MudIconButton Class="invisible" @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small" />
-        </MudTd>
-        <!--
-        <MudTd Class="col-1" DataLabel="">
-        </MudTd>
-        -->
+        <MudTd Class="invisible" DataLabel="Id">@context.Id</MudTd>
+        <MudTd Class="col-9" DataLabel="Denumire">@context.Name </MudTd>
+        <MudTd Class="col-2" DataLabel="U.M.">@context.MeasureUnit</MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 5, 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
@@ -85,6 +87,8 @@
 
 @code {
     // table design
+
+
     private MudTable<ConsumableCategory>? _table;
 
     protected override Task OnAfterRenderAsync(bool firstRender)
@@ -110,22 +114,19 @@
 
     protected void RowClicked(TableRowClickEventArgs<ConsumableCategory> clickedCategory)
     {
-        if (_table!.GetFilteredItemsCount() == 0)
-            EnableCurrentSelection();
-        if (_table!.SelectedItem == null)
-            return;
+        RowClicked(_table!);
         SelectCurrentItem(clickedCategory.Item.Id);
-        EnableCurrentSelection();
+        EnableActionButtons();
     }
 
 
-
+    
     private async Task ValidateAction()
     {
-        switch (_currentAction)
+        switch (CurrentAction)
         {
             case (int)_actionbtn.None:
-                ClearCurrentSelection();            // Invalid action, disable all
+                DisableAll();            // Invalid action, disable all
                 return;
             case (int)_actionbtn.Add:
                 await categoryService.AddConsumableCategory(category);
@@ -146,16 +147,20 @@
         _currentAction = 0;
         categories = categoryService.Categories;
 
-        ClearCurrentSelection();
+        DisableAll();
 
         await Task.Delay(1); // let UI refresh
     }
+    
 
     // movers
     private string searchString = "";
 
     private void SelectCurrentItem(int id)
     {
+        if (categories.Count == 0)
+            return; 
+
         category = categories.FirstOrDefault(c => c.Id == id);
     }
 

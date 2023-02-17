@@ -1,45 +1,52 @@
 ﻿@page "/DiagnosticTypes"
 
 @using StgMures.Shared.DbModels
-@inherits _RazorPageBehaviorBase
+@inherits PageBehavior
 
 @inject StgMures.Client.Services.IDiagnosticCategoryService categoryService
 @inject StgMures.Client.Services.IDiagnosticTypeService diagnosticService
 @inject MudBlazor.ISnackbar snackBar
 @inject ISetAppMenuInfos SetAppMenuInfos
 
-<!--edit card-->
 <MudCard Elevation="5">
     <MudCardContent>
         <MudGrid>
             <MudItem xs="2">
-            <MudSelect Disabled="@(!_disabledField)" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="diagnostic.DiagnosticCategoryId" HelperText="Categorie" Variant="Variant.Text" Margin="Margin.None">
-                @foreach (DiagnosticCategory _option in categories)
-                {
-                    <MudSelectItem Value="@_option.Name" />
-                }
-            </MudSelect>
+                <!-- Se pune Disabled doar in timpul AddEditDelete-->
+                <MudSelect Disabled="@(CurrentAction != 0)" ValueChanged="@( id => CategorySelected(id) )"
+                           T="int" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Text" Margin="Margin.None" Dense="true">
+                    <MudSelectItem Value="0" Disabled="true">Selectati categoria:</MudSelectItem>
+                    @foreach (DiagnosticCategory _option in categories)
+                    {
+                        <MudSelectItem Value="@_option.Id">@_option.Name</MudSelectItem>
+                    }
+                </MudSelect>
             </MudItem>
-            <MudSpacer />
-
+            <!-- MudItem xs="1"> <MudText Typo="Typo.body2">@selectedCategory.Name</MudText> </MudItem> <MudSpacer /> -->
         </MudGrid>
+
+
         <MudGrid>
             <MudItem xs="1">
-                <MudTextField Disabled="true" @bind-Value="diagnostic.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Class="invisible" Disabled="true" @bind-Value="diagnostic.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="2">
-                <MudTextField Disabled="@_disabledField" @bind-Value="diagnostic.Name" HelperText="Denumire diagnostic" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            <MudItem xs="3">
+                <MudTextField Disabled="@SetAppMenuInfos.DisabledState" @bind-Value="diagnostic.Name" HelperText="Denumire diagnostic" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="2">
-                <MudSelect Disabled="@_disabledField" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="diagnostic.ParentId" HelperText="Diagnostic parinte" Variant="Variant.Text" Margin="Margin.None">
+            <MudItem xs="3">
+                <MudSelect Disabled="@SetAppMenuInfos.DisabledState" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="diagnostic.ParentId" HelperText="Diagnostic principal" Variant="Variant.Text" Margin="Margin.None">
+                    <MudSelectItem Value="0">----------</MudSelectItem>
                     @foreach (var _option in parentDiagnostics)
                     {
-                        <MudSelectItem Value="@_option.Name" />
+                        if (_option.ParentId != 0) 
+                        {
+                            <MudSelectItem Value="@_option.ParentId" >@_option.Name </MudSelectItem>
+                        }
                     }
                 </MudSelect>
             </MudItem>
-            <MudItem xs="2">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="diagnostic.ValueFormat" HelperText="Valori posibile" Variant="Variant.Text" Margin="Margin.None">
+            <MudItem xs="1">
+                <MudSelect Disabled="@SetAppMenuInfos.DisabledState" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="diagnostic.ValueFormat" HelperText="Format" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in StaticParam.DiagnosticsMeasureUnits)
                     {
                         <MudSelectItem Value="@_option" />
@@ -47,15 +54,15 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="1">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="diagnostic.MeasureUnit" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
+                <MudSelect Disabled="@SetAppMenuInfos.DisabledState" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="diagnostic.MeasureUnit" HelperText="U.M." Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in StaticParam.DiagnosticsMeasureUnits)
                     {
                         <MudSelectItem Value="@_option" />
                     }
                 </MudSelect>
             </MudItem>
-            <MudItem xs="4">
-                <MudTextField Disabled="@_disabledField" @bind-Value="diagnostic.Note" HelperText="Observatii" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            <MudItem xs="3">
+                <MudTextField Disabled="@SetAppMenuInfos.DisabledState" @bind-Value="diagnostic.Note" HelperText="Observatii" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
         </MudGrid>
     </MudCardContent>
@@ -66,15 +73,15 @@
         <MudGrid>
             <MudItem xs="1">
                 <MudTooltip Text="Adauga o noua inregistrare">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="AddNewRecord">Adauga</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="AddNewRecord">Adauga</MudIconButton>
                 </MudTooltip>
 
                 <MudTooltip Text="Modifica inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="UpdateRecord">Modifica</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="UpdateRecord">Modifica</MudIconButton>
                 </MudTooltip>
 
                 <MudTooltip Text="Sterge inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="DeleteRecord">Sterge</MudIconButton>
                 </MudTooltip>
             </MudItem>
             <MudItem xs="1" />
@@ -83,7 +90,7 @@
                     <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
                 </MudTooltip>
                 <MudTooltip Text="Renuntare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Error" OnClick="DisableAll">Cancel</MudIconButton>
                 </MudTooltip>
             </MudItem>
         </MudGrid>
@@ -93,24 +100,31 @@
 
 
 <!--table list-->
-<MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5" Items="@diagnostics" Filter="new Func<Diagnostic, bool>(Search)" @bind-customer="diagnostic" OnRowClick="@RowClicked" T="Diagnostic">
+<MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5"
+          Items="@tableList" Filter="new Func<DiagnosticsAndParent, bool>(Search)" @bind-customer="diagnostic" OnRowClick="@RowClicked" T="DiagnosticsAndParent">
+
+ 
     <ToolBarContent>
         <MudSpacer />
         <MudTextField @bind-Value="searchString" Placeholder="Cautati un diagnostic..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
     </ToolBarContent>
+<!--
     <HeaderContent>
-        <MudTh>ID</MudTh>
+        <MudTh Class="invisible">ID</MudTh>
         <MudTh>Denumire Categorie Tratamente</MudTh>
         <MudTh>Actiuni</MudTh>
     </HeaderContent>
+-->
+    
     <RowTemplate>
-        <MudTd Class="col-1" DataLabel="Id">@context.Id</MudTd>
-        <MudTd Class="col-2" DataLabel="Tip">@context.Name</MudTd>
-        <MudTd Class="col-9" DataLabel="Denumire">@context.Name</MudTd>
-        <MudTd Class="col-1" DataLabel="">
-            <MudIconButton @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small" />
-        </MudTd>
+        <MudTd Class="col-1 invisible" DataLabel="Id">@context.Id</MudTd>
+        <MudTd Class="col-3" DataLabel="Tip">@context.Name</MudTd>
+        <MudTd Class="col-3" DataLabel="Tip">@context.ParentName</MudTd>
+        <MudTd Class="col-1" DataLabel="Tip">@context.ValueFormat</MudTd>
+        <MudTd Class="col-1" DataLabel="Tip">@context.MeasureUnit</MudTd>
+        <MudTd Class="col-3" DataLabel="Tip">@context.Note</MudTd>
     </RowTemplate>
+    
     <PagerContent>
         <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 5, 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
     </PagerContent>
@@ -125,7 +139,7 @@
 
 
     // table design
-    private MudTable<Diagnostic>? _table;
+    private MudTable<DiagnosticsAndParent>? _table;
 
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
@@ -137,31 +151,74 @@
 
     // data
     private Diagnostic diagnostic = new () ;
-    private List<Diagnostic> diagnostics = new List<Diagnostic>();          // filtered by diagnosticCategory 
-    private List<Diagnostic> parentDiagnostics = new List<Diagnostic>();    // filtered from diagnostics
-    private List<DiagnosticCategory> categories = new List<DiagnosticCategory>();
+
+    private List<Diagnostic> diagnostics = new List<Diagnostic>();          
+    private List<Diagnostic> filteredDiagnostics = new List<Diagnostic>();    // filtered from diagnosticsCategories ; 
+    private List<Diagnostic> parentDiagnostics = new List<Diagnostic>();    // filtered from diagnosticsCategories ;
+
+    //private List<Diagnostic> parentDiagnostics   = new List<Diagnostic>();    // filtered from diagnosticsCategories
+
+    private List<DiagnosticCategory> categories = new List<DiagnosticCategory>(); // select options
+    //private DiagnosticCategory  selectedDiagnosticCategory = new();               // selected option
+
+    private List<DiagnosticsAndParent> tableList = new();
+
+    private void CategorySelected(int id)
+    {
+        if (id != 0)
+        {
+            filteredDiagnostics     = diagnostics.Where(c => c.DiagnosticCategoryId == id).ToList();
+            // selectedDiagnosticCategory = categories.Where(c => c.Id == id).FirstOrDefault();
+        }
+        else
+            filteredDiagnostics = diagnostics; // .GetRange(0, consumables.Count); // no filter, copy all; or same list 
+        parentDiagnostics = filteredDiagnostics.GetRange(0, filteredDiagnostics.Count) ; 
+        parentDiagnostics.Insert(0, new Diagnostic { Id = 0, ParentId = 0, Name = "-----------" });
+
+        tableList = filteredDiagnostics.SelectMany(
+                filt => parentDiagnostics.Where(pare => pare.Id == filt.ParentId).DefaultIfEmpty(),
+                (filt, pare) => new DiagnosticsAndParent()
+                    {
+                        Id = filt.Id,
+                        Name = filt.Name,
+                        ParentId = filt.ParentId,
+                        DiagnosticCategoryId = filt.DiagnosticCategoryId,
+                        ValueFormat = filt.ValueFormat,
+                        MeasureUnit =filt.MeasureUnit,
+                        Note = filt.Note,
+                        ParentName = pare!.Name
+
+                    }).ToList();
+    }
 
 
     protected override async Task OnInitializedAsync()
     {
         SetAppMenuInfos.SetPageTitle("Tipuri de diagnostice");
+
+        await categoryService.LoadDiagnosticCategoriesAsync();
+        categories = categoryService.Categories;
+
         await diagnosticService.LoadDiagnosticsAsync();
         diagnostics = diagnosticService.Types;
+
+        CategorySelected(0);
+
         if (diagnostics.Count == 0)
-            EnableCurrentSelection();
+            EnableAll();
 
     }
 
 
 
-    protected void RowClicked(TableRowClickEventArgs<Diagnostic> clickedCategory)
+    protected void RowClicked(TableRowClickEventArgs<DiagnosticsAndParent> clickedCategory)
     {
         if (_table!.GetFilteredItemsCount() == 0)
-            EnableCurrentSelection();
+            EnableAll();
         if (_table!.SelectedItem == null)
             return;
         SelectCurrentItem(clickedCategory.Item.Id);
-        EnableCurrentSelection();
+        EnableAll();
     }
 
 
@@ -171,7 +228,7 @@
         switch (_currentAction)
         {
             case (int)_actionbtn.None:
-                ClearCurrentSelection();            // Invalid action, disable all
+                DisableAll();            // Invalid action, disable all
                 return;
             case (int)_actionbtn.Add:
                 await diagnosticService.AddDiagnostic(diagnostic);
@@ -192,7 +249,7 @@
         _currentAction = 0;
         diagnostics = diagnosticService.Types;
 
-        ClearCurrentSelection();
+        DisableAll();
 
         await Task.Delay(1); // let UI refresh
     }
@@ -205,11 +262,12 @@
         diagnostic = diagnostics.FirstOrDefault(c => c.Id == id);
     }
 
-    private bool Search(Diagnostic diagnostic)
+    private bool Search(DiagnosticsAndParent diagnostic)
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
 
-        if (diagnostic.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        if (diagnostic.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)||
+            diagnostic.ParentName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
         {
             return true;
         }

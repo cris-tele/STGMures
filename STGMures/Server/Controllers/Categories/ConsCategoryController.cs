@@ -37,6 +37,8 @@ namespace StgMures.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> AddConsumableCategory(ConsumableCategory consumableCategory)
         {
+            consumableCategory.Id = 0;
+
             _context.ConsumableCategories.Add(consumableCategory);
             try
             {
@@ -59,6 +61,7 @@ namespace StgMures.Server.Controllers
             }
 
             dbConsumableCategory.Name = consumableCategory.Name;
+            dbConsumableCategory.MeasureUnit = consumableCategory.MeasureUnit;
 
             await _context.SaveChangesAsync();
 

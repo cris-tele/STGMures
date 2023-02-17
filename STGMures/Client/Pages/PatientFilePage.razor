@@ -2,7 +2,7 @@
 
 @using StgMures.Shared.DbModels
 @inject MudBlazor.ISnackbar snackBar
-@inherits _RazorPageBehaviorBase
+@inherits PageBehavior
 
 <!--current pacient = selected patient in the patient list page-->
 @inject IPatientFileService patientFileService
@@ -89,15 +89,24 @@
                     <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
                 </MudTooltip>
             </MudItem>
-            <MudItem xs="1" />
+            <MudItem xs="1" /> <!--spacer -->
             <MudItem xs="1">
             <MudTooltip Text="Validare">
                 <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
             </MudTooltip>
             <MudTooltip Text="Renuntare">
-                <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
-        </MudTooltip>
-        </MudItem>
+                <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DisableAll">Cancel</MudIconButton>
+            </MudTooltip>
+            </MudItem>
+            <MudItem xs="1" /> <!--spacer -->
+
+            <MudTooltip Text="Operatii">
+                <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
+            </MudTooltip>
+            <MudTooltip Text="Diagnostice ATI">
+                <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
+            </MudTooltip>
+
         </MudGrid>
     </MudCardActions>
 
@@ -170,7 +179,7 @@
         await patientFileService.LoadPatientFilesAsync();
         patientsFiles = patientFileService.PatientFiles;
         if (patientsFiles.Count == 0)
-            EnableCurrentSelection();
+            EnableAll();
 
     }
 
@@ -179,11 +188,11 @@
     protected void RowClicked(TableRowClickEventArgs<PatientFile> clickedCategory)
     {
         if (_table!.GetFilteredItemsCount() == 0)
-            EnableCurrentSelection();
+            EnableAll();
         if (_table!.SelectedItem == null)
             return;
         SelectCurrentItem(clickedCategory.Item.Id);
-        EnableCurrentSelection();
+        EnableAll();
     }
 
 
@@ -193,7 +202,7 @@
         switch (_currentAction)
         {
             case (int)_actionbtn.None:
-                ClearCurrentSelection();            // Invalid action, disable all 
+                DisableAll();            // Invalid action, disable all 
                 return;
             case (int)_actionbtn.Add:
                 await patientFileService.AddPatientFile(currentPatientFile);
@@ -214,7 +223,7 @@
         _currentAction = 0;
         patientsFiles = patientFileService.PatientFiles;
 
-        ClearCurrentSelection();
+        DisableAll();
 
         await Task.Delay(1); // let UI refresh
     }

@@ -3,7 +3,8 @@
 @inject ISetAppMenuInfos SetAppMenuInfos
 @implements IDisposable
 
-<MudThemeProvider />
+<!-- <MudThemeProvider /> -->
+<MudThemeProvider Theme="@SmallFontsTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -23,7 +24,7 @@
             </Authorized>
         </AuthorizeView>
         <MudSpacer />
-        <MudText Color="Color.Default">S.T.G. Mures ATI</MudText>
+        <MudText Color="Color.Default">Spital Tg. Mures IuBCvT</MudText>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen">
         <NavMenu/>
@@ -62,5 +63,19 @@
     {
         SetAppMenuInfos.OnChange -= StateHasChanged;
     }
+
+    MudTheme SmallFontsTheme = new MudTheme()
+        {
+            Typography = new Typography()
+            {
+                Default = new Default()
+                {
+                    FontSize = "0.75rem",
+                    FontWeight = 200
+                }
+
+            }
+        };
+
 }
 

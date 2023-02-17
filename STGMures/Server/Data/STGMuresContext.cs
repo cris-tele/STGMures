@@ -80,12 +80,12 @@ public partial class StgMuresContext : DbContext
             entity.Property(e => e.ShortNote).HasMaxLength(250);
             entity.Property(e => e.SurgeryAnesthesiaId).HasColumnName("SurgeryAnesthesiaID");
             entity.Property(e => e.Value).HasMaxLength(50);
-
+/*
             entity.HasOne(d => d.Consumable).WithMany(p => p.AnesthesiaConsumables)
                 .HasForeignKey(d => d.ConsumableId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_AnesthesiaConsumable_Consumable");
-
+*/
             entity.HasOne(d => d.SurgeryAnesthesia).WithMany(p => p.AnesthesiaConsumables)
                 .HasForeignKey(d => d.SurgeryAnesthesiaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -141,11 +141,12 @@ public partial class StgMuresContext : DbContext
                 .HasForeignKey(d => d.Cecid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CECConsumable_CEC");
-
+/*
             entity.HasOne(d => d.Consumable).WithMany(p => p.CecConsumables)
                 .HasForeignKey(d => d.ConsumableId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CECConsumable_Consumable");
+*/
         });
 
         modelBuilder.Entity<Consumable>(entity =>
@@ -169,10 +170,10 @@ public partial class StgMuresContext : DbContext
                 .HasComment("SUBSTANCE;DEVICE;CONSUMABLE;");
             entity.Property(e => e.ValueFormat).HasMaxLength(50);
 
-            entity.HasOne(d => d.Category).WithMany(p => p.Consumables)
+/*            entity.HasOne(d => d.Category).WithMany(p => p.Consumables)
                 .HasForeignKey(d => d.CategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Consumable_ConsumableCategory");
+                .HasConstraintName("FK_Consumable_ConsumableCategory"); */
         });
 
         modelBuilder.Entity<ConsumableCategory>(entity =>
@@ -211,12 +212,13 @@ public partial class StgMuresContext : DbContext
             entity.Property(e => e.ValueFormat)
                 .HasMaxLength(50)
                 .HasComment("Determine the other fields usage: Note, MinAlert, MaxAlert ");
-
+/*
             entity.HasOne(d => d.DiagnosticCategory).WithMany(p => p.Diagnostics)
                 .HasForeignKey(d => d.DiagnosticCategoryId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Diagnostic_DiagnosticCategory");
-        });
+  */
+            });
 
         modelBuilder.Entity<DiagnosticCategory>(entity =>
         {
@@ -332,11 +334,12 @@ public partial class StgMuresContext : DbContext
             entity.Property(e => e.PatientId).HasColumnName("PatientID");
             entity.Property(e => e.Symptom).HasMaxLength(1000);
 
+            /*
             entity.HasOne(d => d.Diagnostic).WithMany(p => p.PatientAssocDiseases)
                 .HasForeignKey(d => d.DiagnosticId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PatientAssocDiseases_Diagnostic");
-
+            */
             entity.HasOne(d => d.Patient).WithMany(p => p.PatientAssocDiseases)
                 .HasForeignKey(d => d.PatientId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -388,16 +391,6 @@ public partial class StgMuresContext : DbContext
             entity.Property(e => e.Value)
                 .HasMaxLength(50)
                 .HasComment("Value is formated acording to diagnostic.ValueFormat");
-
-            entity.HasOne(d => d.Diagnostic).WithMany(p => p.PatientDiagnostics)
-                .HasForeignKey(d => d.DiagnosticId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PatientDiagnostic_Diagnostic");
-
-            entity.HasOne(d => d.PatientFile).WithMany(p => p.PatientDiagnostics)
-                .HasForeignKey(d => d.PatientFileId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PatientDiagnostic_PatientFile");
         });
 
         modelBuilder.Entity<PatientFile>(entity =>

@@ -6,6 +6,7 @@
         public string PageTitle { get ; set ; } = string.Empty;
         public string LoggedMedic { get; set; } = string.Empty;
         public string SelectedPatient { get; set; } = string.Empty;
+        public bool DisabledState { get; set; } = false;
 
         public void SetLoggedMedic(string loggedMedic)
         {
@@ -33,6 +34,13 @@
                 SelectedPatient = selectedPatient;
             CurrentSelectionChange();
         }
+
+        public  void SetDisabledState(bool disabled)
+        {
+            DisabledState = disabled;
+            CurrentSelectionChange();
+        }
+
 
         void CurrentSelectionChange() => OnChange?.Invoke();
     }

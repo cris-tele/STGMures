@@ -47,9 +47,9 @@ public partial class Diagnostic
 
     public string? MeasureUnit { get; set; }
 
-    public virtual DiagnosticCategory DiagnosticCategory { get; set; } = null!;
+    //public virtual DiagnosticCategory DiagnosticCategory { get; set; } = null!;
 
-    public virtual ICollection<PatientAssocDisease> PatientAssocDiseases { get; } = new List<PatientAssocDisease>();
+    //public virtual ICollection<PatientAssocDisease> PatientAssocDiseases { get; } = new List<PatientAssocDisease>();
 
-    public virtual ICollection<PatientDiagnostic> PatientDiagnostics { get; } = new List<PatientDiagnostic>();
+    //public virtual ICollection<PatientDiagnostic> PatientDiagnostics { get; } = new List<PatientDiagnostic>();
 }

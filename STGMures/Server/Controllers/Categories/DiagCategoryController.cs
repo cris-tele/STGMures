@@ -39,6 +39,7 @@ namespace StgMures.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> AddDiagnosticCategory(DiagnosticCategory diagnosticCategory)
         {
+            diagnosticCategory.Id = 0; //generated from database
             _context.DiagnosticCategories.Add(diagnosticCategory);
             try
             {

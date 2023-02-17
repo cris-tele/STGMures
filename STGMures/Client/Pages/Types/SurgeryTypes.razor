@@ -3,29 +3,29 @@
 <!-- macheta pentru ceva depanari -->
 
 @using StgMures.Shared.DbModels
-@inherits _RazorPageBehaviorBase
+@inherits PageBehavior
 @inject MudBlazor.ISnackbar snackBar
 
 @inject StgMures.Client.Services.ISurgeryTypeService surgeryService
 @inject ISetAppMenuInfos SetAppMenuInfos
 
+<!-- Basically it is an intersection table, will be used only for testing / debug purposes -->
 
 <!--edit card-->
 <MudCard Elevation="5">
-    <!--    <MudCardHeader >  </MudCardHeader> --> <!--Nu stiu daca voi folosi-->
     <MudCardContent>
         <MudGrid>
             <MudItem xs="1">
-                <MudTextField Disabled="true" @bind-Value="surgery.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Class="invisible" Disabled="true" @bind-Value="surgery.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="1">
+            <MudItem xs="2">
                 <MudTextField Disabled="true" @bind-Value="surgery.SurgicalProcedureId" HelperText="Procedura" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="1">
-                <MudTextField Disabled="true" @bind-Value="surgery.PatientSurgeryId" HelperText="Op. pacient" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            <MudItem xs="2">
+                <MudTextField Disabled="true" @bind-Value="surgery.PatientSurgeryId" HelperText="Op.pacient" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="9">
-                <MudTextField Disabled="@_disabledField" @bind-Value="surgery.Description" HelperText="Denumire categorie" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            <MudItem xs="7">
+                <MudTextField Disabled="@_disabledField" @bind-Value="surgery.Description" HelperText="Descriere/Observatii" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
         </MudGrid>
     </MudCardContent>
@@ -36,15 +36,15 @@
         <MudGrid>
             <MudItem xs="1">
                 <MudTooltip Text="Adauga o noua inregistrare">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="AddNewRecord">Adauga</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="AddNewRecord">Adauga</MudIconButton>
                 </MudTooltip>
 
                 <MudTooltip Text="Modifica inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="UpdateRecord">Modifica</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="UpdateRecord">Modifica</MudIconButton>
                 </MudTooltip>
 
                 <MudTooltip Text="Sterge inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="DeleteRecord">Sterge</MudIconButton>
                 </MudTooltip>
             </MudItem>
             <MudItem xs="1" />
@@ -53,7 +53,7 @@
                     <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
                 </MudTooltip>
                 <MudTooltip Text="Renuntare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Error" OnClick="DisableAll">Cancel</MudIconButton>
                 </MudTooltip>
             </MudItem>
         </MudGrid>
@@ -67,17 +67,17 @@
           Items="@types" Filter="new Func<Surgery, bool>(Search)" @bind-customer="surgery" OnRowClick="@RowClicked" T="Surgery">
 
     <HeaderContent>
-        <MudTh></MudTh>
-        <MudTh></MudTh>
-        <MudTh>Descriere</MudTh>
+        <MudTh Class="invisible"></MudTh>
+        <MudTh Class="col-2"></MudTh>
+        <MudTh Class="col-2" ></MudTh>
+        <MudTh Class="col-7">Descriere</MudTh>
     </HeaderContent>
 
     <RowTemplate>
-        <MudTd Class="col-1" DataLabel="Id">@context.Id</MudTd>
-        <MudTd Class="col-1" DataLabel="Denumire">@context.SurgicalProcedureId</MudTd>
-        <MudTd Class="col-1" DataLabel="">@context.PatientSurgeryId</MudTd>
-        <MudTd Class="col-9" DataLabel="">@context.Description</MudTd>
-        <MudTd Class="col-1" DataLabel="">
+        <MudTd Class="invisible" DataLabel="Id">@context.Id</MudTd>
+        <MudTd Class="col-2" DataLabel="Denumire">@context.SurgicalProcedureId</MudTd>
+        <MudTd Class="col-2" DataLabel="">@context.PatientSurgeryId</MudTd>
+        <MudTd Class="col-7" DataLabel="">@context.Description
             <MudIconButton @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small" />
         </MudTd>
     </RowTemplate>
@@ -113,7 +113,7 @@
         await surgeryService.LoadSurgeryTypesAsync();
         types = surgeryService.Types;
         if (types.Count == 0)
-            EnableCurrentSelection();
+            EnableAll();
 
     }
 
@@ -121,11 +121,11 @@
     protected void RowClicked(TableRowClickEventArgs<Surgery> clickedCategory)
     {
         if (_table!.GetFilteredItemsCount() == 0)
-            EnableCurrentSelection();
+            EnableAll();
         if (_table!.SelectedItem == null)
             return;
         SelectCurrentItem(clickedCategory.Item.Id);
-        EnableCurrentSelection();
+        EnableAll();
     }
 
 
@@ -135,7 +135,7 @@
         switch (_currentAction)
         {
             case (int)_actionbtn.None:
-                ClearCurrentSelection();            // Invalid action, disable all
+                DisableAll();            // Invalid action, disable all
                 return;
             case (int)_actionbtn.Add:
                 await surgeryService.AddSurgery(surgery);
@@ -156,7 +156,7 @@
         _currentAction = 0;
         types = surgeryService.Types;
 
-        ClearCurrentSelection();
+        DisableAll();
 
         await Task.Delay(1); // let UI refresh
     }

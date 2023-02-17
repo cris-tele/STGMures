@@ -1,0 +1,58 @@
+﻿@inherits PageBehavior
+@inject ISetAppMenuInfos SetAppMenuInfos
+
+<MudGrid>
+    <MudItem xs="1">
+        <MudTooltip Text="Adauga o noua inregistrare">
+            <MudIconButton ref="_addBtn" Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="AddNewRecord">Adauga</MudIconButton>
+        </MudTooltip>
+
+        <MudTooltip Text="Modifica inregistrarea selectata">
+            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="UpdateRecord">Modifica</MudIconButton>
+        </MudTooltip>
+
+        <MudTooltip Text="Sterge inregistrarea selectata">
+            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="DeleteRecord">Sterge</MudIconButton>
+        </MudTooltip>
+    </MudItem>
+    <MudItem xs="1">@SetActionInfo()</MudItem>
+    <MudItem xs="1">
+        <MudTooltip Text="Validare">
+            <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="OnValidate">Ok</MudIconButton>
+        </MudTooltip>
+        <MudTooltip Text="Renuntare">
+            <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Error" OnClick="OnCancel">Cancel</MudIconButton>
+        </MudTooltip>
+    </MudItem>
+</MudGrid>
+
+
+@code {
+    [Parameter]
+    public EventCallback OnValidate{ get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    public string SetActionInfo()
+    {
+        string _info = string.Empty;
+        switch (CurrentAction)
+        {
+            case (int)_actionbtn.None:
+                break;    
+            case (int)_actionbtn.Add:
+                _info = "Adaugare";
+                break;
+            case (int)_actionbtn.Edit:
+                _info = "Modificare";
+                break;
+            case (int)_actionbtn.Delete:
+                _info = "Stergere";
+                break;
+        }
+        SetAppMenuInfos.SetDisabledState(false);
+        return _info;
+    } 
+
+}

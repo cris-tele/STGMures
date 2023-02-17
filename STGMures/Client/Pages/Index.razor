@@ -1,9 +1,17 @@
 ﻿@page "/"
 
+
+<MudText Color="Color.Success">Aplicatia de evidenta si statistici pacienti ATI!</MudText>
+<p/>
+<MudText Color="Color.Error">Institutul de Urgenţă pentru Boli Cardiovasculare şi Transplant</MudText>
+<MudText Color="Color.Error">Targu Mures, Romania</MudText>
+
+<p />
+
+
 <AuthorizeView>
     <Authorized>
-        <p />
-        <h6>@context.User.Identity!.Name  </h6>
+        <MudText>Utilizator: </MudText><MudText>@context.User.Identity!.Name  </MudText>
     </Authorized>
     <NotAuthorized>
         <Login></Login>

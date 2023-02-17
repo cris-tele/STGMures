@@ -38,7 +38,8 @@ namespace StgMures.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> AddTreatmentCategory(TreatmentCategory treatmentCategory)
         {
-             _context.TreatmentCategories.Add(treatmentCategory);
+            treatmentCategory.Id = 0; 
+            _context.TreatmentCategories.Add(treatmentCategory);
             try
             {
                 await _context.SaveChangesAsync();

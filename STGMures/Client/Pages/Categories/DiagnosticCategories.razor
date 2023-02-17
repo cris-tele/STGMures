@@ -1,7 +1,7 @@
 ﻿@page "/DiagnosticCategories"
 
 @using StgMures.Shared.DbModels
-@inherits _RazorPageBehaviorBase
+@inherits PageBehavior
 
 @inject StgMures.Client.Services.IDiagnosticCategoryService categoryService
 @inject MudBlazor.ISnackbar snackBar
@@ -14,10 +14,10 @@
     <MudCardContent >
         <MudGrid>
             <MudItem xs="1">
-                <MudTextField Disabled="true" @bind-Value="category.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Class="invisible"  Disabled="true" @bind-Value="category.Id" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="2">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="category.Type" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
+                <MudSelect Disabled="@SetAppMenuInfos.DisabledState" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="category.Type" HelperText="Grupa de diagnostice" Variant="Variant.Text" Margin="Margin.None">
                 @foreach (var _option in StaticParam.TypeOfDiagnosticCategories)
                 {
                     <MudSelectItem Value="@_option" />
@@ -25,7 +25,7 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="8">
-                <MudTextField Disabled="@_disabledField" @bind-Value="category.Name" HelperText="Denumire categorie" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@SetAppMenuInfos.DisabledState" @bind-Value="category.Name" HelperText="Denumire categorie diagnostice" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
         </MudGrid>
     </MudCardContent>
@@ -36,15 +36,15 @@
         <MudGrid>
             <MudItem xs="1">
                 <MudTooltip Text="Adauga o noua inregistrare">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="AddNewRecord">Adauga</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="AddNewRecord">Adauga</MudIconButton>
                 </MudTooltip>
 
                 <MudTooltip Text="Modifica inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="UpdateRecord">Modifica</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="UpdateRecord">Modifica</MudIconButton>
                 </MudTooltip>
 
                 <MudTooltip Text="Sterge inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="DeleteRecord">Sterge</MudIconButton>
                 </MudTooltip>
             </MudItem>
             <MudItem xs="1" />
@@ -53,7 +53,7 @@
                     <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
                 </MudTooltip>
                 <MudTooltip Text="Renuntare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Error" OnClick="DisableAll">Cancel</MudIconButton>
                 </MudTooltip>
             </MudItem>
         </MudGrid>
@@ -70,16 +70,15 @@
         <MudTextField @bind-Value="searchString" Placeholder="Cautati o categorie..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>ID</MudTh>
-        <MudTh>Denumire Categorie Tratamente</MudTh>
-        <MudTh>Actiuni</MudTh>
+        <MudTh Class="invisible">ID</MudTh>
+        <MudTh Class="col-2">Grupa de diagnostice</MudTh>
+        <MudTh Class="col-9">Denumire categorie</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd Class="col-1" DataLabel="Id">@context.Id</MudTd>
-        <MudTd Class="col-2" DataLabel="Tip">@context.Type</MudTd>
-        <MudTd Class="col-9" DataLabel="Denumire">@context.Name</MudTd>
-        <MudTd Class="col-1" DataLabel="">
-            <MudIconButton @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small"  />
+        <MudTd Class="invisible">@context.Id</MudTd>     
+        <MudTd Class="col-2"    >@context.Type</MudTd>
+        <MudTd Class="col-9"    >@context.Name
+            <MudIconButton Class="invisible" @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small"  />
         </MudTd>
     </RowTemplate>
     <PagerContent>
@@ -116,7 +115,7 @@
         await categoryService.LoadDiagnosticCategoriesAsync();
         categories = categoryService.Categories;
         if (categories.Count == 0)
-            EnableCurrentSelection();
+            EnableAll();
 
     }
 
@@ -124,22 +123,19 @@
 
     protected void RowClicked(TableRowClickEventArgs<DiagnosticCategory> clickedCategory)
     {
-        if (_table!.GetFilteredItemsCount() == 0)
-            EnableCurrentSelection();
-        if (_table!.SelectedItem == null)
-            return;
+        RowClicked(_table!);
         SelectCurrentItem(clickedCategory.Item.Id);
-        EnableCurrentSelection();
+        EnableActionButtons();
     }
 
 
 
     private async Task ValidateAction()
     {
-        switch (_currentAction)
+        switch (CurrentAction)
         {
             case (int)_actionbtn.None:
-                ClearCurrentSelection();            // Invalid action, disable all 
+                DisableAll();            // Invalid action, disable all 
                 return;
             case (int)_actionbtn.Add:
                 await categoryService.AddDiagnosticCategory(category);
@@ -160,7 +156,7 @@
         _currentAction = 0;
         categories = categoryService.Categories;
 
-        ClearCurrentSelection();
+        DisableAll();
 
         await Task.Delay(1); // let UI refresh
     }

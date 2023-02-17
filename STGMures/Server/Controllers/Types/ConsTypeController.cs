@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace StgMures.Server.Controllers
 {
@@ -38,6 +40,15 @@ namespace StgMures.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> AddConsumable(Consumable consumable)
         {
+            consumable.Id = 0;
+            var consumableCategory = await _context.ConsumableCategories
+                  .FirstOrDefaultAsync(c => c.Id == consumable.CategoryId);
+            if (consumableCategory is null)
+            {
+                return NotFound("""Categoria nu exista.""");
+            }
+            // consumable.Category = consumableCategory;
+
             _context.Consumables.Add(consumable);
             try
             {
@@ -53,13 +64,28 @@ namespace StgMures.Server.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateConsumable(Consumable consumable)
         {
-            var dbConsumable = await _context.Consumables.FirstOrDefaultAsync(p => p.Id == consumable.Id);
+            var dbConsumable = await _context.Consumables
+                .FirstOrDefaultAsync(p => p.Id == consumable.Id);
             if (dbConsumable == null)
+            {
+                return NotFound("""Consumabil nu exista.""");
+            }
+            var consumableCategory = await _context.ConsumableCategories
+                .FirstOrDefaultAsync(c => c.Id == consumable.CategoryId);
+
+            if (consumableCategory is null)
             {
                 return NotFound("""Categoria nu exista.""");
             }
 
-            dbConsumable.Name = consumable.Name;
+            dbConsumable.CategoryId= consumable.CategoryId; // nu ar trebui sa poata fi schimbat
+
+            dbConsumable.Name       = consumable.Name;
+            dbConsumable.Design     = consumable.Design;
+            dbConsumable.ValueFormat= consumable.ValueFormat;
+            dbConsumable.Type       = consumable.Type;
+            dbConsumable.MeasureUnit= consumable.MeasureUnit;
+            // dbConsumable.Category   = consumableCategory;
 
             await _context.SaveChangesAsync();
 
@@ -90,7 +116,13 @@ namespace StgMures.Server.Controllers
                 return NotFound("""Categoria nu exista.""");
             }
 
+            dbConsumable.CategoryId = consumable.CategoryId; // nu ar trebui sa poata fi schimbat
             dbConsumable.Name = consumable.Name;
+            dbConsumable.Design = consumable.Design;
+            dbConsumable.ValueFormat = consumable.ValueFormat;
+            dbConsumable.Type = consumable.Type;
+            dbConsumable.MeasureUnit = consumable.MeasureUnit;
+
             //dbConsumable.isDeleted = 1;
 
 

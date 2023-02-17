@@ -1,48 +1,54 @@
-1. Patient File		
-	page	ok
-	service	ok
-	controller	ok
-2. Patient surgery 
-	page	ok
-	service ok
-	controller ok
-3. Surgery Anesthesia 
+Pacienti
+	scos id, test app
+Patient file page:
+	fara nume, prenume - se pun in header
+	add separator 
+	redesign primary / secondary
+Boli asociate
+	fara id,
+	service 
+	controller
+	test
+Operatii pacient:
+	nu e facuta!
+	fisa si data - de vazut ce e cu ele, ca arata naspa
+
+Anestezii -  nu e facuta!
 	page	schita
 	service
 	controller
-4. CEC
-	page	
-	service
-	controller
-5. Patient Treatments
-	page	
-	service
-	controller
-6. CEC consumables
-	page	
-	service
-	controller
-7. Anesthesia consumables
-	page	
-	service
-	controller
-8. Patient dayly treatment
-	page	
+Tratamente
+	are eroro, nu e finalizata
 	service
 	controller
 
-9. Database Views
+CEC
+	page	
+	service
+	controller
+CEC consumables
+	page	
+	service
+	controller
+Anesthesia consumables
+	page	
+	service
+	controller
+Patient dayly treatment ?
+	page	
+	service
+	controller
 
-10. New controllers / page redesign
+	Test
 
-11. Full database redesign
+New controllers / page redesign
 
-12. Populate database with real data 
+Populate database with real data 
 
-13. Test
+Test
 
-14. Publish
+Publish
 
-15. Graphics
+Graphics
 
-16. Prod
+Prod

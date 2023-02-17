@@ -19,5 +19,5 @@ public partial class ConsumableCategory
     /// </summary>
     public string? MeasureUnit { get; set; }
 
-    public virtual ICollection<Consumable> Consumables { get; } = new List<Consumable>();
+    //public virtual ICollection<Consumable> Consumables { get; } = new List<Consumable>();
 }

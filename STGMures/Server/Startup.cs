@@ -39,6 +39,11 @@ namespace StgMures.Server
                 c.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
+
             services.AddScoped<IAuthRepository, AuthRepository>();
             
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -46,7 +51,7 @@ namespace StgMures.Server
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuerSigningKey = true,
+                        ValidateIssuerSigningKey = false,
                         IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
                             Configuration.GetSection("AppSettings:Token").Value)),
                         ValidateIssuer = false,

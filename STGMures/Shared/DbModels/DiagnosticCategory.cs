@@ -22,5 +22,5 @@ public partial class DiagnosticCategory
     /// </summary>
     public string Type { get; set; } = null!;
 
-    public virtual ICollection<Diagnostic> Diagnostics { get; } = new List<Diagnostic>();
+    // public virtual ICollection<Diagnostic> Diagnostics { get; } = new List<Diagnostic>();
 }

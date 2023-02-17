@@ -6,7 +6,7 @@ namespace StgMures.Server.Controllers
     [Route("api/[controller]")]
     [ApiController]
     // [Authorize]
-    public class TreatTypeController : Controller
+    public class TreatTypeController : ControllerBase
     {
         private readonly StgMuresContext _context;
 

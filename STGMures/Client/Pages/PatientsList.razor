@@ -1,6 +1,6 @@
 ﻿@page "/PatientsList"
 @using StgMures.Shared.DbModels;
-@inherits _RazorPageBehaviorBase
+@inherits PageBehavior
 @inject IPatientListService patientListService
 @inject MudBlazor.ISnackbar snackBar
 @inject ISetAppMenuInfos SetAppMenuInfos
@@ -79,7 +79,7 @@
                     <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
                 </MudTooltip>
                 <MudTooltip Text="Renuntare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ClearCurrentSelection">Cancel</MudIconButton>
+                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DisableAll">Cancel</MudIconButton>
                 </MudTooltip>
             </MudItem>
         </MudGrid>
@@ -156,7 +156,7 @@
         if (_patientsList.Count() == 0)
         {
 
-            EnableCurrentSelection();
+            EnableAll();
 
         }
     }
@@ -166,12 +166,12 @@
     protected void RowClicked(TableRowClickEventArgs<Patient> clickedPatient)
     {
         if (_table!.GetFilteredItemsCount() == 0)
-            EnableCurrentSelection();
+            EnableAll();
         if (_table!.SelectedItem == null)
             return;
         SelectCurrentItem(clickedPatient.Item.Id);
         SetAppMenuInfos.SetSelectedPatient(clickedPatient.Item.FirstName + " " + clickedPatient.Item.LastName);
-        EnableCurrentSelection();
+        EnableAll();
     }
 
 
@@ -181,7 +181,7 @@
         switch (_currentAction)
         {
             case (int)_actionbtn.None:
-                ClearCurrentSelection();            // Invalid action, disable all 
+                DisableAll();            // Invalid action, disable all 
                 return;
             case (int)_actionbtn.Add:
                 await patientListService.AddPatient(_currentPatient);
@@ -202,7 +202,7 @@
         _currentAction = 0;
         _patientsList = patientListService.Patients;
 
-        ClearCurrentSelection();
+        DisableAll();
 
         await Task.Delay(1); // let UI refresh
     }

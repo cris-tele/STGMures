@@ -37,13 +37,13 @@ namespace StgMures.Client.Services
         public async Task<DiagnosticCategory> GetDiagnosticCategory(int id) //GET
         {
             var response = await _http
-                .GetFromJsonAsync<ServiceResponse<DiagnosticCategory>>("api/DiagCategory");
+                .GetFromJsonAsync<ServiceResponse<DiagnosticCategory>>($"api/DiagCategory/{id}");
             return response.Data;
         }
 
         public async Task UpdateDiagnosticCategory(DiagnosticCategory DiagnosticCategory) // PUT
         {
-            await _http.PutAsJsonAsync("api/DiagCategory", DiagnosticCategory);
+            await _http.PutAsJsonAsync($"api/DiagCategory/{DiagnosticCategory.Id}", DiagnosticCategory);
             await LoadDiagnosticCategoriesAsync();
         }
 

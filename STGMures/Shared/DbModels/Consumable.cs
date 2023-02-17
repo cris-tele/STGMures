@@ -30,9 +30,9 @@ public partial class Consumable
     /// </summary>
     public string? MeasureUnit { get; set; }
 
-    public virtual ICollection<AnesthesiaConsumable> AnesthesiaConsumables { get; } = new List<AnesthesiaConsumable>();
+    //public virtual ICollection<AnesthesiaConsumable> AnesthesiaConsumables { get; } = new List<AnesthesiaConsumable>();
 
-    public virtual ConsumableCategory Category { get; set; } = null!;
+    // public virtual ConsumableCategory Category { get; set; } = null!;
 
-    public virtual ICollection<CecConsumable> CecConsumables { get; } = new List<CecConsumable>();
+    //public virtual ICollection<CecConsumable> CecConsumables { get; } = new List<CecConsumable>();
 }

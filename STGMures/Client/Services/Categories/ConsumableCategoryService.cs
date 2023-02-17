@@ -1,4 +1,5 @@
-﻿using StgMures.Shared;
+﻿
+using StgMures.Shared;
 using StgMures.Shared.DbModels;
 using System.Net.Http.Json;
 
@@ -42,7 +43,7 @@ namespace StgMures.Client.Services
 
         public async Task UpdateConsumableCategory(ConsumableCategory ConsumableCategory) // PUT
         {
-            await _http.PutAsJsonAsync("api/ConsCategory", ConsumableCategory);
+            await _http.PutAsJsonAsync($"api/ConsCategory/{ConsumableCategory.Id}", ConsumableCategory);
             await LoadConsumableCategoriesAsync();
         }
 
