@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using System.Web;
 
 namespace StgMures.Server
 {
@@ -19,8 +20,13 @@ namespace StgMures.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var defaultConnection = Configuration.GetConnectionString("DefaultConnection");
+            if (string.IsNullOrEmpty(defaultConnection))
+            { 
+                defaultConnection = $"{Environment.MachineName}"+ "\\SQLEXPRESS; Database=StgMures; User Id=STGUser; Password=!STGUser# ; Encrypt=False";    // add manually on error reading
+            }
             services.AddDbContext<StgMuresContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(defaultConnection));
             services.AddControllersWithViews();
             services.AddRazorPages();
 
@@ -42,18 +48,24 @@ namespace StgMures.Server
             services.Configure<IISServerOptions>(options =>
             {
                 options.AllowSynchronousIO = true;
+
             });
 
             services.AddScoped<IAuthRepository, AuthRepository>();
-            
+
+            var token = Configuration.GetSection("AppSettings:Token").Value;
+            if (string.IsNullOrEmpty(token))
+            {
+                token = "Private token for Targu Mures Children Hospital";    // if cannot read for unknown reasons
+            }
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
-                    {
+                    {   
+                        
                         ValidateIssuerSigningKey = false,
-                        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
-                            Configuration.GetSection("AppSettings:Token").Value)),
+                        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes( token )),
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };

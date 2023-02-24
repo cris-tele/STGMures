@@ -1,4 +1,5 @@
 ﻿@page "/PatientTreatmentPage"
+@page "/PatientTreatmentPage/{PatientId:int}"
 
 @using StgMures.Shared.DbModels
 @inherits PageBehavior
@@ -31,19 +32,19 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="1">
-                <MudNumericField Disabled="@_disabledField" @bind-Value="patienttreatment.NoOfDays" HelperText="Nr.Zile" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
+                <MudNumericField Disabled="@_disabledField" HideSpinButtons="true" @bind-Value="patienttreatment.NoOfDays" HelperText="Nr.Zile" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
             </MudItem>
             <MudItem xs="1">
                 <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.WeekSchema" HelperText="Schema" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="1">
-                <MudNumericField Disabled="@_disabledField" @bind-Value="patienttreatment.Dosage" HelperText="Dozaj" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
+                <MudNumericField Disabled="@_disabledField" HideSpinButtons="true" @bind-Value="patienttreatment.Dosage" HelperText="Dozaj" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
             </MudItem>
             <MudItem xs="1">
-                <MudNumericField Disabled="@_disabledField" @bind-Value="patienttreatment.DosageQtty" HelperText="Nr.Doze" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
+                <MudNumericField Disabled="@_disabledField" HideSpinButtons="true" @bind-Value="patienttreatment.DosageQtty" HelperText="Nr.Doze" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
             </MudItem>
             <MudItem xs="1">
-                <MudNumericField Disabled="@_disabledField" @bind-Value="patienttreatment.DosageTotal" HelperText="Dozaj Total" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
+                <MudNumericField Disabled="@_disabledField" HideSpinButtons="true" @bind-Value="patienttreatment.DosageTotal" HelperText="Dozaj Total" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
             </MudItem>
             <MudItem xs="3">    <!-- se ia din tratament, se poate schimba ? -->
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="patienttreatment.Administration" HelperText="Mod administrare" Variant="Variant.Text" Margin="Margin.None">
@@ -95,7 +96,8 @@
 
 
 @code {
-    /*<button type="submit" class="btn btn-info "> Inregistreaza</button> */
+    [Parameter]
+    public int? PatientId { get; set; }
 
     PatientTreatment patienttreatment = new PatientTreatment();
     List<Treatment> treatments = new();
@@ -134,7 +136,6 @@
     protected override async Task OnInitializedAsync()
     {
         SetAppMenuInfos.SetPageTitle("Tratamente Pacient");
-        // SetAppMenuInfos.SetSelectedPatient(_currentPatient!.FirstName + " " + _currentPatient!.LastName);   // trebuie sa fie un pacient selectat. Daca nu e, ar trebui sa oblig alegerea unui pacient
 
         await base.OnInitializedAsync();
     }

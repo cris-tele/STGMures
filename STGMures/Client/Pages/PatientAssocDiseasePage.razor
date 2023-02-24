@@ -1,4 +1,5 @@
 ﻿@page "/PatientAssocDiseasePage"
+@page "/PatientAssocDiseasePage/{PatientID:int}"
 
 @using StgMures.Shared.DbModels
 @inherits PageBehavior
@@ -101,6 +102,8 @@
 
 
 @code {
+    [Parameter]
+    public int? PatientId { get; set; }
 
     private MudTable<PatientAssocDisease>? _table;
 
@@ -121,6 +124,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (PatientId == 0)
+        {
+            snackBar.Add("Nici un pacient selectat", Severity.Warning);
+            // ar trebui sa cer sa aleaga un pacient, dar probabil nu voi lasa doar navigarea din lista
+        }
+
         SetAppMenuInfos.SetPageTitle("Boli asociate");
         SetAppMenuInfos.SetSelectedPatient(patient!.FirstName + " " + patient!.LastName);   // trebuie sa fie un pacient selectat. Daca nu e, ar trebui sa oblig alegerea unui pacient
         await diseasesService.LoadPatientAssocDiseasesAsync();

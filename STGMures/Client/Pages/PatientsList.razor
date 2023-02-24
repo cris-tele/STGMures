@@ -82,7 +82,26 @@
                     <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DisableAll">Cancel</MudIconButton>
                 </MudTooltip>
             </MudItem>
+            <MudSpacer />
+
+            <MudItem xs="1">
+            <MudTooltip Text="Fisa Pacient">
+                    <MudButton EndIcon="@Icons.Material.Filled.Description" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="NavigateToPatientFile">Fisa</MudButton>
+            </MudTooltip>
+            </MudItem>
+            <MudItem xs="1">
+                <MudTooltip Text="Boli Asociate Pacient">
+                <MudButton EndIcon="@Icons.Material.Filled.MedicalInformation" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="NavigateToAssocDiseases">Boli</MudButton>
+            </MudTooltip>
+            </MudItem>
+            <MudItem xs="1">
+                <MudTooltip Text="Tratamente Pacient">
+                    <MudButton EndIcon="@Icons.Material.Filled.Biotech" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="NavigateToTreatments">Tratamente</MudButton>
+                </MudTooltip>
+            </MudItem>
+
         </MudGrid>
+
     </MudCardActions>
 
 </MudCard>
@@ -226,4 +245,40 @@
     }
 
 
+    void NavigateToPatientFile(MouseEventArgs e)
+    {
+        if (_currentPatient.Id == 0)
+        {
+            snackBar.Add("Nici un pacient selectat", Severity.Error);
+            NavigationManager.NavigateTo("PatientFilePage");
+        }
+        else
+            NavigationManager.NavigateTo($"PatientFilePage/{_currentPatient.Id}");
+
+    }
+
+    void NavigateToAssocDiseases(MouseEventArgs e)
+    {
+        if (_currentPatient.Id == 0)
+        {
+            snackBar.Add("Nici un pacient selectat", Severity.Error);
+            NavigationManager.NavigateTo("PatientAssocDiseasePage");
+        }
+        else
+            NavigationManager.NavigateTo($"PatientFilePage/{_currentPatient.Id}");
+
+    }
+    void NavigateToTreatments(MouseEventArgs e)
+    {
+        if (_currentPatient.Id == 0)
+        {
+            snackBar.Add("Nici un pacient selectat", Severity.Error);
+            NavigationManager.NavigateTo("PatientTreatmentPage");
+        }
+        else
+            NavigationManager.NavigateTo($"PatientTreatmentPage/{_currentPatient.Id}");
+
+    }
+
+    
 }

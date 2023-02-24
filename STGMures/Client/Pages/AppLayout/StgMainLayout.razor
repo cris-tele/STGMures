@@ -4,12 +4,12 @@
 @implements IDisposable
 
 <!-- <MudThemeProvider /> -->
-<MudThemeProvider Theme="@SmallFontsTheme" />
+<MudThemeProvider Theme="SmallFontsTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar>
+    <MudAppBar Dense="true" Style="@($"background:{Colors.Blue.Lighten3}")" >
 
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <!-- _currentPageTitle -->
@@ -17,9 +17,9 @@
         <AuthorizeView>
             <Authorized>
             <MudSpacer />
-                <MudButton StartIcon="@Icons.Material.Filled.MedicalServices" Color="Color.Error" Variant="Variant.Text">@context.User.Identity!.Name </MudButton>
+                <MudButton StartIcon="@Icons.Material.Filled.HealthAndSafety" Color="Color.Success" Variant="Variant.Text">@context.User.Identity!.Name </MudButton> <!-- detalii doctor-->
             <MudSpacer />
-                <MudButton StartIcon="@Icons.Material.Outlined.MedicalInformation" Color="Color.Error" Variant="Variant.Text">@SetAppMenuInfos.SelectedPatient</MudButton>
+                <MudButton StartIcon="@Icons.Material.Filled.PersonalInjury" Color="Color.Info" Variant="Variant.Text">@SetAppMenuInfos.SelectedPatient</MudButton> <!-- detalii pacient-->
             <MudSpacer />
             </Authorized>
         </AuthorizeView>
@@ -29,7 +29,7 @@
     <MudDrawer @bind-Open="@_drawerOpen">
         <NavMenu/>
     </MudDrawer>
-    <MudMainContent>
+    <MudMainContent >
         <MudContainer MaxWidth="MaxWidth.ExtraLarge">
             @Body
         </MudContainer>
@@ -64,14 +64,27 @@
         SetAppMenuInfos.OnChange -= StateHasChanged;
     }
 
-    MudTheme SmallFontsTheme = new MudTheme()
+    public MudTheme SmallFontsTheme = new MudTheme()
         {
             Typography = new Typography()
             {
                 Default = new Default()
                 {
-                    FontSize = "0.75rem",
-                    FontWeight = 200
+                    FontSize = "0.875rem",
+                    FontWeight = 400,
+                    LineHeight = 1.2
+                },
+                Body1 = new Body1()
+                {
+                    FontSize = "0.875rem",
+                    FontWeight = 400,
+                    LineHeight = 1.2
+                },
+                Body2 = new Body2()
+                {
+                    FontSize = "0.750rem",
+                    FontWeight = 300,
+                    LineHeight = 1
                 }
 
             }

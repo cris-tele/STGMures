@@ -32,7 +32,8 @@ namespace StgMures.Client.Pages
                 return; // no selection
 
             if (t!.GetFilteredItemsCount() == 0)
-                EnableFields();
+                ItemsCount = 0;
+
             EnableActionButtons();
         }
 

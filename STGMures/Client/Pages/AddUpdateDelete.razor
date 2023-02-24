@@ -4,7 +4,7 @@
 <MudGrid>
     <MudItem xs="1">
         <MudTooltip Text="Adauga o noua inregistrare">
-            <MudIconButton ref="_addBtn" Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="AddNewRecord">Adauga</MudIconButton>
+            <MudIconButton Disabled="@(_disabledBtn || ItemCount != 0)" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="AddNewRecord">Adauga</MudIconButton>
         </MudTooltip>
 
         <MudTooltip Text="Modifica inregistrarea selectata">
@@ -33,6 +33,11 @@
 
     [Parameter]
     public EventCallback OnCancel { get; set; }
+
+    [Parameter]
+    public  int ItemCount {get;set;}
+
+    private bool _disabledAddBtn = false;
 
     public string SetActionInfo()
     {

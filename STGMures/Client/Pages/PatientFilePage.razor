@@ -1,4 +1,5 @@
 ﻿@page "/PatientFilePage"
+@page "/PatientFilePage/{PatientId:int}"
 
 @using StgMures.Shared.DbModels
 @inject MudBlazor.ISnackbar snackBar
@@ -21,53 +22,59 @@
 <MudCard Elevation="5" >
 <!--    <MudCardHeader >  </MudCardHeader> --> <!--Nu stiu daca voi folosi-->
     <MudCardContent >
-        <MudGrid >
-            <MudItem xs="1" >
-            <MudAutocomplete  Disabled="_disabledField" @bind-Value="currentPatientFile.FileNumber" HelperText="Numar fisa" Variant="Variant.Text" Margin="Margin.None"></MudAutocomplete> <!-- pentru inceput va fi doar o fisa -->
-            </MudItem>
-            <MudItem xs="1">
-                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.FileDate" HelperText="Din data" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-            </MudItem>
-            <MudSpacer/>
-            <MudItem xs="1">
-                <MudTextField  Style="visibility:hidden" Disabled="true" @bind-Value="_currentPatient.Id" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-            </MudItem>
-            <MudItem xs="2">
-                <MudTextField Disabled="true" @bind-Value="_currentPatient.LastName" HelperText="Nume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-            </MudItem>
-            <MudItem xs="2">
-                <MudTextField Disabled="true" @bind-Value="_currentPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-            </MudItem>
-        </MudGrid>
 
-        <MudGrid>
-            <MudItem xs="1" />
+        <MudPaper Class="d-flex justify-space-between flex-grow-1 gap-4" Elevation="5">
+            <MudPaper>
+                <MudInputLabel >Nr. Fisa:
+                    <MudAutocomplete Disabled="_disabledField" @bind-Value="currentPatientFile.FileNumber" Variant="Variant.Text" Class="m-0"  Margin="Margin.Dense"></MudAutocomplete> <!-- pentru inceput va fi doar o fisa -->
+                </MudInputLabel>
+            </MudPaper>
 
-            <MudItem Elevation="5" xs="3" title="Pacient">
-                <MudTextField Disabled="_disabledField" @bind-Value="currentPatientFile.Height" HelperText="Inaltime" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-                <MudTextField Disabled="_disabledField" @bind-Value="currentPatientFile.Weight" HelperText="Greutate" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-                <MudTextField Label="" Disabled="@_disabledField" @bind-Value="currentPatientFile.Bmi" HelperText="B.M.I" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-                <MudTextField Disabled="@_disabledField" @bind-Value="currentPatientFile.Bsa" HelperText="B.S.A" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-            </MudItem>
+            <MudPaper  >
+                <MudInputLabel >Inaltime:</MudInputLabel>
+                    <MudTextField   Disabled="_disabledField" @bind-Value="currentPatientFile.Height" HelperText="cm" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudInputLabel >Greutate:</MudInputLabel>
+                    <MudTextField   Disabled="_disabledField" @bind-Value="currentPatientFile.Weight" HelperText="kg" Variant="Variant.Text" Margin="Margin.Dense" ></MudTextField>
+            </MudPaper>
 
-            <MudItem  xs="1" />
+            <MudPaper >
+                <MudInputLabel>B.M.I:</MudInputLabel>
+                <MudTextField Disabled="@_disabledField" @bind-Value="currentPatientFile.Bmi" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+                <MudInputLabel>B.S.A:</MudInputLabel>
+                <MudTextField Disabled="@_disabledField" @bind-Value="currentPatientFile.Bsa" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+            </MudPaper>
 
-            <MudItem Elevation="5" xs="3" title="ATI" >
-                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.HospitalAdmissionDate" HelperText="Data Internarii in Spital" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.AtiTakeOverDate" HelperText="Data Internarii ATI" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.WardTransferDate" HelperText="Data transfer pe sectie" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.AtiRetakeOverDate" HelperText="Data reinternarii ATI" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.WardRetransferDate" HelperText="Data retransfer pe sectie" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-            </MudItem>
+            <MudPaper >
+                <MudInputLabel>Data Internarii ATI:</MudInputLabel>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.AtiTakeOverDate" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+                <MudInputLabel>Data reinternarii ATI:</MudInputLabel>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.AtiRetakeOverDate" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+                <MudInputLabel>Nr. Zile ATI:</MudInputLabel>
+                <MudNumericField Disabled="true" HideSpinButtons="true"  @bind-Value="currentPatientFile.Atidays" Variant="Variant.Text" Margin="Margin.Dense"></MudNumericField>
+            </MudPaper>
 
-            <MudItem Elevation="5" xs="3" title="ZILE">
-                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.DischargeDate" HelperText="Data reinternarii ATI" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-                <MudDatePicker Disabled="true" @bind-Value="currentPatientFile.WardDays" HelperText="Nr. Zile pe sectie" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-                <MudDatePicker Disabled="true" @bind-Value="currentPatientFile.Atidays" HelperText="Nr. Zile ATI" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-                <MudTextField Disabled="@_disabledField" @bind-Value="currentPatientFile.AnotherHospitalAdmission" HelperText="Tranferat de la un alt spital" Variant="Variant.Text" Margin="Margin.None" Lines="2"></MudTextField>
-            </MudItem>
+            <MudPaper >
+                <MudInputLabel>Transfer pe sectie:</MudInputLabel>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.WardTransferDate" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+                <MudInputLabel>Retransfer pe sectie:</MudInputLabel>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.WardRetransferDate"  Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+                <MudInputLabel>Nr. Zile sectie:</MudInputLabel>
+                <MudNumericField Disabled="true" HideSpinButtons="true" @bind-Value="currentPatientFile.WardDays" Variant="Variant.Text" Margin="Margin.Dense"></MudNumericField>
+            </MudPaper>
 
-        </MudGrid>
+            <MudPaper >
+                <MudInputLabel>Internare in Spital:</MudInputLabel>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.HospitalAdmissionDate" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+                <MudInputLabel>Externare:</MudInputLabel>
+                <MudDatePicker Disabled="_disabledField" @bind-Value="currentPatientFile.DischargeDate" Variant="Variant.Text" Margin="Margin.Dense"></MudDatePicker>
+            </MudPaper>
+    
+            <MudPaper >
+                <MudInputLabel>Transfer alt spital:</MudInputLabel>
+                <MudTextField Disabled="@_disabledField" @bind-Value="currentPatientFile.AnotherHospitalAdmission" Variant="Variant.Outlined" Margin="Margin.Dense" Lines="5"></MudTextField>
+            </MudPaper>
+
+        </MudPaper>
 
 
     </MudCardContent>
@@ -98,24 +105,75 @@
                 <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DisableAll">Cancel</MudIconButton>
             </MudTooltip>
             </MudItem>
-            <MudItem xs="1" /> <!--spacer -->
+            <MudSpacer/> <!--spacer -->
 
-            <MudTooltip Text="Operatii">
-                <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
+            <!-- butoane detalii -->
+            <MudItem xs="1">
+            <MudTooltip Text="Diagnostic ">
+                    <MudButton EndIcon="@Icons.Material.Filled.DeviceThermostat" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Diagnostic</MudButton>
             </MudTooltip>
-            <MudTooltip Text="Diagnostice ATI">
-                <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
+            </MudItem>
+            <MudItem xs="1">
+                <MudTooltip Text="ATI">
+                    <MudButton EndIcon="@Icons.Material.Filled.AirlineSeatFlat" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">ATI</MudButton>
             </MudTooltip>
-
+            </MudItem>
+            <MudItem xs="1">
+                <MudTooltip Text="Operatie ">
+                    <MudButton EndIcon="@Icons.Material.Filled.PrecisionManufacturing" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Operatie</MudButton>
+                </MudTooltip>
+            </MudItem>
+            <MudItem xs="1">
+                <MudTooltip Text="Circuit Extra Corporal">
+                    <MudButton EndIcon="@Icons.Material.Filled.VolunteerActivism" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">CEC</MudButton>
+                </MudTooltip>
+            </MudItem>
+            <MudItem xs="1">
+                <MudTooltip Text="Anestezie">
+                    <MudButton EndIcon="@Icons.Material.Filled.Vaccines" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Anestezie</MudButton>
+                </MudTooltip>
+            </MudItem>
         </MudGrid>
     </MudCardActions>
 
-
 </MudCard>
 <br />
-<!-- butoane detalii -->
-<MudCard Elevation="5" >
-</MudCard>
+
+<MudTabs Outlined="true">
+    <MudTabPanel Text="Diagnostic Primar">
+        <StgMures.Client.Pages.Categories.ConsumableCategories></StgMures.Client.Pages.Categories.ConsumableCategories>
+        <!-- <MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5" Items="@patientsFiles" @bind-customer="currentPatientFile" OnRowClick="@RowClicked" T="PatientFile"> -->
+        <!-- NU e cazul, vor fi 2-3 fise max
+            <ToolBarContent>
+                <MudSpacer />
+                <MudTextField @bind-Value="searchString" Placeholder="Cautati o categorie..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.currentPatientFile" IconSize="Size.Small" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Nr.Fisa</MudTh>
+                <MudTh>Data Fisa</MudTh>
+                <MudTh>Data Internarii</MudTh>
+                <MudTh>Data Externarii</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd Class="col-1" DataLabel="Id">@context.FileNumber</MudTd>
+                <MudTd Class="col-2" DataLabel="Tip">@context.FileDate</MudTd>
+                <MudTd Class="col-9" DataLabel="Denumire">@context.HospitalAdmissionDate</MudTd>
+                <MudTd Class="col-9" DataLabel="Denumire">@context.DischargeDate</MudTd>
+            </RowTemplate>
+        -->
+        <!--fara pager,ca nu sunt atat de multe-->
+        <!--
+        <PagerContent>
+            <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 5, 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
+        </PagerContent>
+        -->
+        <!-- </MudTable> -->
+    </MudTabPanel>
+    <MudTabPanel Text="Diagnostic Secundar">
+        <StgMures.Client.Pages.Categories.DiagnosticCategories></StgMures.Client.Pages.Categories.DiagnosticCategories>
+
+    </MudTabPanel>
+</MudTabs>
 
 
 <!--table list-->
@@ -154,11 +212,13 @@
 
 
 @code {
+
+    [Parameter]
+    public int? PatientId { get; set; }     
     // card design 
     private Patient _currentPatient = new Patient();
     private PatientFile currentPatientFile = new PatientFile();
  
-
 
     // table design
     private MudTable<PatientFile>? _table;  // deocamdata afisez lista de fise ale pacientului; 
@@ -173,6 +233,11 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (PatientId == 0)
+        {
+            snackBar.Add("Nici un pacient selectat", Severity.Warning);
+            // ar trebui sa cer sa aleaga un pacient, dar probabil nu voi lasa doar navigarea din lista
+        }
         SetAppMenuInfos.SetPageTitle("Fisa Pacient");
         SetAppMenuInfos.SetSelectedPatient(_currentPatient!.FirstName + " " + _currentPatient!.LastName);   // trebuie sa fie un pacient selectat. Daca nu e, ar trebui sa oblig alegerea unui pacient
 

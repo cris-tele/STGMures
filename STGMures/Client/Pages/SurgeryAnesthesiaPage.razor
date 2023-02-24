@@ -37,7 +37,7 @@
                 <MudTextField Disabled="@_disabledField" @bind-Value="anesthesia.Date" HelperText="Data anestezie" Format="dd/mm/yyyy" InputType="InputType.DateTimeLocal" Variant="Variant.Text" Margin="Margin.None" T="DateTime"></MudTextField>
             </MudItem>
             <MudItem xs="2">
-                <MudNumericField Disabled="@_disabledField" @bind-Value="anesthesia.Duration" HelperText="Durata" Format="N2" Variant="Variant.Text" Margin="Margin.None" T="int"></MudNumericField>
+                    <MudNumericField Disabled="@_disabledField" HideSpinButtons="true" @bind-Value="anesthesia.Duration" HelperText="Durata" Format="N2" Variant="Variant.Text" Margin="Margin.None" T="int"></MudNumericField>
             </MudItem>
             <MudItem xs="4">
                     <MudTextField Disabled="@_disabledField" @bind-Value="anesthesia.Name" HelperText="Descriere" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
