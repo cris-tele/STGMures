@@ -12,24 +12,22 @@
 
 
 <!-- Usually, a patient has only one observation file-->
-<!-- But, we a dealing with heart desease type of diagnostoics, and there are too many case when-->
-<!-- - The patient stays in hospital for a long periood of time (cases of one year of hospitalisation ) -->
+<!-- But, we a dealing with heart desease types of diagnostics, and there are too many case when:                                                       -->
+<!-- - The patient stays in hospital for a long periood of time (cases of one year of hospitalisation )                                                 -->
 <!-- - Or, more frequently, the patient comes back after a period of years, for another surgery or another treatment scheme, complete investigations... -->
-<!-- So, one patient can have more than one file, and also the medical history is important -->
-<!-- The last one must be the "default" but the medical team can select and older one -->
+<!-- So, one patient can have more than one file, and also the medical history is important                                                             -->
+<!-- The last one must be the "default" one but the medical team can view/edit and older one                                                            -->
 
 <!--edit card-->
 <MudCard Elevation="5" >
-<!--    <MudCardHeader >  </MudCardHeader> --> <!--Nu stiu daca voi folosi-->
     <MudCardContent >
-
         <MudPaper Class="d-flex justify-space-between flex-grow-1 gap-4" Elevation="5">
-            <MudPaper>
+            <MudPaper >
                 <MudInputLabel >Nr. Fisa:
                     <MudAutocomplete Disabled="_disabledField" @bind-Value="currentPatientFile.FileNumber" Variant="Variant.Text" Class="m-0"  Margin="Margin.Dense"></MudAutocomplete> <!-- pentru inceput va fi doar o fisa -->
                 </MudInputLabel>
             </MudPaper>
-
+            
             <MudPaper  >
                 <MudInputLabel >Inaltime:</MudInputLabel>
                     <MudTextField   Disabled="_disabledField" @bind-Value="currentPatientFile.Height" HelperText="cm" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>

@@ -7,63 +7,115 @@
 @inject IPatientSurgeryService patientSurgeryService
 @inject ISetAppMenuInfos SetAppMenuInfos
 
-
+<!-- Presumption: a patient file refers only one surgery. Create a new patient file , one for each surgery procedure-->
+<!-- will be rezised after first version -->
 <!--edit card-->
-<MudCard Elevation="5">
-    <MudCardContent>
-        <MudGrid>
-            <MudItem xs="1">
-                <MudAutocomplete Disabled="true" @bind-Value="_currentPatientFile.FileNumber" HelperText="Numar fisa" Variant="Variant.Text" Margin="Margin.None"></MudAutocomplete> 
-            </MudItem>
-            <MudItem xs="1">
-                <MudDatePicker Disabled="true" @bind-Value="_currentPatientFile.FileDate" HelperText="Din data" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-            </MudItem>
-            <MudSpacer />
-            <MudItem xs="1">
-                <MudTextField Style="visibility:hidden" Disabled="true" @bind-Value="_currentPatient.Id" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-            </MudItem>
-            <MudItem xs="2">
-                <MudTextField Disabled="true" @bind-Value="_currentPatient.LastName" HelperText="Nume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-            </MudItem>
-            <MudItem xs="2">
-                <MudTextField Disabled="true" @bind-Value="_currentPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-            </MudItem>
-        </MudGrid>
+<MudCard Elevation="5" >
+    <MudItem xs="1">
+        <MudAutocomplete Disabled="true" @bind-Value="_currentSurgery.PatientFileId" Label="Numar fisa" Variant="Variant.Text" Margin="Margin.None"></MudAutocomplete>
+    </MudItem>
 
-        <MudGrid>
-            <MudItem xs="1" />
+    <MudText> Operatie</MudText>
+    <MudGrid>
+        <!--Class="border" de studiat-->
+        <MudItem xs="1">
+            <!-- blanc-->            
+        </MudItem>
+        <MudItem xs="1">
+            <MudTextField Disabled="@_disabledField" @bind-Value="_currentSurgery.Date"  Label="Data Operatiei" Format="dd/mm/yyyy" InputType="InputType.DateTimeLocal" Variant="Variant.Text" Margin="Margin.None" T="DateTime"></MudTextField>
+        </MudItem>
+        <MudItem xs="2">
+            <MudTextField Disabled="true" @bind-Value="_currentSurgery.IncisionType" Label="Tip Incizie" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+        </MudItem>
+        <MudItem xs="1">
+            <MudNumericField Disabled="true" HideSpinButtons="true" @bind-Value="_currentSurgery.Duration" Variant="Variant.Text" Margin="Margin.Dense"  Label="Durata operatie" HelperText="(min)"></MudNumericField>
+        </MudItem>
+        <MudItem xs="1">
+            <MudNumericField Disabled="true" HideSpinButtons="true" @bind-Value="_currentSurgery.CecDuration" Variant="Variant.Text" Margin="Margin.Dense" Label="Durata C.E.C." HelperText="(min)"></MudNumericField>
+        </MudItem>
+        <MudItem xs="1">
+            <MudNumericField Disabled="true" HideSpinButtons="true" @bind-Value="_currentSurgery.AorticClampDuration" Variant="Variant.Text" Margin="Margin.Dense" Label="Clamp Aortic" HelperText="(min)"></MudNumericField>
+        </MudItem>
+        <MudItem xs="1">
+            <MudCheckBox Disabled="@_disabledField" @bind-Checked="_currentSurgery.Reoperation"  Label="Reoperat" LabelPosition="LabelPosition.Start"></MudCheckBox>
+        </MudItem>
+        <MudItem xs="1">
+            <MudTextField Disabled="@_disabledField" @bind-Value="_currentSurgery.ReoperationDate" Label="Reoperat" Format="dd/mm/yyyy" InputType="InputType.DateTimeLocal" Variant="Variant.Text" Margin="Margin.None" T="DateTime?"></MudTextField>
+        </MudItem>
+    </MudGrid>
+    
+    <MudDivider  DividerType="DividerType.Inset" />
+    <MudText> C.E.C </MudText>
 
-            <MudItem Elevation="5" xs="3" title="Pacient">
-                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatientFile.Height" HelperText="Inaltime" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatientFile.Weight" HelperText="Greutate" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-                <MudTextField Label="" Disabled="@_disabledField" @bind-Value="_currentPatientFile.Bmi" HelperText="B.M.I" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-                <MudTextField Disabled="@_disabledField" @bind-Value="_currentPatientFile.Bsa" HelperText="B.S.A" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-            </MudItem>
+    <MudGrid>
+        <MudItem xs="1">
+            <!-- blanc-->
+        </MudItem>
+        <MudItem xs="1">
+            <MudNumericField Disabled="_disabledField" HideSpinButtons="true" @bind-Value="_currentCec.BypasDuration" Variant="Variant.Text" Margin="Margin.Dense" HelperText="(min)"></MudNumericField>
+        </MudItem>
+        <MudItem xs="1">
+            <MudNumericField Disabled="_disabledField" HideSpinButtons="true" @bind-Value="_currentCec.BypasTemperature" Variant="Variant.Text" Margin="Margin.Dense" HelperText="Celsius"></MudNumericField>
+        </MudItem>
+        <MudItem xs="1">
+            <MudNumericField Disabled="_disabledField" HideSpinButtons="true" @bind-Value="_currentCec.BypasTemperatureTop" Variant="Variant.Text" Margin="Margin.Dense" HelperText="Celsius"></MudNumericField>
+        </MudItem>
+        <MudItem xs="1">
+            <MudNumericField Disabled="_disabledField" HideSpinButtons="true" @bind-Value="_currentCec.AorticClampingDuration" Variant="Variant.Text" Margin="Margin.Dense" HelperText="(min)"></MudNumericField>
+        </MudItem>
+        <MudItem xs="1">
+            <MudNumericField Disabled="_disabledField" HideSpinButtons="true" @bind-Value="_currentCec.AorticClampingTemperature" Variant="Variant.Text" Margin="Margin.Dense" HelperText="Celsius"></MudNumericField>
+        </MudItem>
+        <MudItem xs="1">
+            <MudNumericField Disabled="_disabledField" HideSpinButtons="true" @bind-Value="_currentCec.AorticClampingTemperatureTop" Variant="Variant.Text" Margin="Margin.Dense" HelperText="Celsius"></MudNumericField>
+        </MudItem>
+        <MudItem xs="1">
+            <MudNumericField Disabled="_disabledField" HideSpinButtons="true" @bind-Value="_currentCec.Flow" Variant="Variant.Text" Margin="Margin.Dense" HelperText="(min)"></MudNumericField>
+        </MudItem>
+        <MudItem xs="1">
+            <MudNumericField Disabled="_disabledField" HideSpinButtons="true" @bind-Value="_currentCec.Priming" Variant="Variant.Text" Margin="Margin.Dense" HelperText="(min)"></MudNumericField>
+        </MudItem>
+        <MudItem xs="1">
+            <MudTextField Disabled="true" @bind-Value="_currentCec.Oxigenator" Label="Oxigenator" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+        </MudItem>
+        <MudItem xs="1">
+            <MudCheckBox Disabled="@_disabledField" @bind-Checked="_currentCec.Muff" Label="MUFF" LabelPosition="LabelPosition.Start"></MudCheckBox>
+        </MudItem>
+        <MudItem xs="1">
+            <MudCheckBox Disabled="@_disabledField" @bind-Checked="_currentCec.Ultrafiltering" Label="Ultra" LabelPosition="LabelPosition.Start"></MudCheckBox>
+        </MudItem>
+    </MudGrid>
+    <MudGrid>
+        <MudItem xs="1">
+            <!-- blanc-->
+        </MudItem>
+        <MudItem xs="11">
+            <MudTextField Disabled="@_disabledField" @bind-Value="_currentCec.Note" Lines="2" Label="Observatii"></MudTextField>
+        </MudItem>
+    </MudGrid>
 
-            <MudItem xs="1" />
+    <MudDivider DividerType="DividerType.Inset" />
 
-            <MudItem Elevation="5" xs="3" title="ATI">
-                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.HospitalAdmissionDate" HelperText="Data Internarii in Spital" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.AtiTakeOverDate" HelperText="Data Internarii ATI" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.WardTransferDate" HelperText="Data transfer pe sectie" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.AtiRetakeOverDate" HelperText="Data reinternarii ATI" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.WardRetransferDate" HelperText="Data retransfer pe sectie" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-            </MudItem>
-
-            <MudItem Elevation="5" xs="3" title="ZILE">
-                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatientFile.DischargeDate" HelperText="Data reinternarii ATI" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-                <MudDatePicker Disabled="true" @bind-Value="_currentPatientFile.WardDays" HelperText="Nr. Zile pe sectie" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-                <MudDatePicker Disabled="true" @bind-Value="_currentPatientFile.Atidays" HelperText="Nr. Zile ATI" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
-                <MudTextField Disabled="@_disabledField" @bind-Value="_currentPatientFile.AnotherHospitalAdmission" HelperText="Tranferat de la un alt spital" Variant="Variant.Text" Margin="Margin.None" Lines="2"></MudTextField>
-            </MudItem>
-
-        </MudGrid>
-
-
-    </MudCardContent>
-
+    <MudText> Anestezia </MudText>
+    <MudGrid>
+        <MudItem xs="1">
+            <!-- blanc-->
+        </MudItem>
+        <MudItem xs="1">
+            <MudTextField Disabled="@_disabledField" @bind-Value="_currentAnesthesia.Date" Label="Data" Format="dd/mm/yyyy" InputType="InputType.DateTimeLocal" Variant="Variant.Text" Margin="Margin.None" T="DateTime"></MudTextField>
+        </MudItem>
+        <MudItem xs="1">
+            <MudNumericField Disabled="true" HideSpinButtons="true" @bind-Value="_currentAnesthesia.Duration" Variant="Variant.Text" Margin="Margin.Dense" HelperText="(min)"></MudNumericField>
+        </MudItem>
+        <MudItem xs="1">
+            <MudCheckBox Disabled="@_disabledField" @bind-Checked="_currentAnesthesia.Type" Label="Reoperare" LabelPosition="LabelPosition.Start"></MudCheckBox>
+        </MudItem>
+        <MudItem xs="7">
+            <MudTextField Disabled="@_disabledField" @bind-Value="_currentAnesthesia.Name" Label="Observatii"></MudTextField>
+        </MudItem>
+    </MudGrid>
+    <p></p>
     <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
-
     <MudCardActions>
         <MudGrid>
             <MudItem xs="1">
@@ -91,12 +143,17 @@
         </MudGrid>
     </MudCardActions>
 
-
 </MudCard>
 <br />
-<!-- butoane detalii -->
-<MudCard Elevation="5">
-</MudCard>
+
+<MudTabs Outlined="true">
+    <MudTabPanel Text="Proceduri operatorii">
+    </MudTabPanel>
+    <MudTabPanel Text="Consumabile C.E.C">
+    </MudTabPanel>
+    <MudTabPanel Text="Consumabile Anestezie">
+    </MudTabPanel>
+</MudTabs>
 
 
 <!--table list-->
@@ -121,7 +178,10 @@
 @code {
     // card design
     private Patient _currentPatient = new Patient();
-    private PatientFile _currentPatientFile = new PatientFile();
+    private PatientSurgery _currentSurgery = new ();        
+    private Cec _currentCec = new();                        // one-to-one Surgery
+    private SurgeryAnesthesium _currentAnesthesia = new();  // one-to-one Surgery
+
     private List<Patient> _patientsList = new List<Patient>();
 
 

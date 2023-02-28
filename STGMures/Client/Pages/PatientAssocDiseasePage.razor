@@ -19,11 +19,14 @@
 
     <MudCardContent>
         <MudGrid>
+            <!--
             <MudItem xs="1">
-                <MudTextField Disabled="true" @bind-Value="disease.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField  Disabled="true" @bind-Value="disease.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="2">
-                <MudSelect Disabled="@_disabledField" T="int" @bind-Value="disease.DiagnosticId" AnchorOrigin="Origin.BottomCenter" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
+            -->
+            <MudItem xs="3">
+                <MudSelect Disabled="@_disabledField" T="int" @bind-Value="disease.DiagnosticId" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Text" Margin="Margin.None">
+                    <MudSelectItem Value="0" Disabled="true">Selectati boala asociata / diagnosticul</MudSelectItem>
                     @foreach (var _option in diagnostics)
                     {
                         <MudSelectItem Value="@_option">@_option.Name</MudSelectItem>
@@ -31,10 +34,12 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="8">
-                <MudTextField Disabled="@_disabledField" @bind-Value="disease.Symptom" HelperText="Denumire categorie" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="disease.Symptom" Label="Descriere / simptom" Variant="Variant.Text" Margin="Margin.None"  DisableUnderLine=true Lines="2"></MudTextField>
             </MudItem>
-            <MudItem xs="8">
-                <MudTextField Disabled="@_disabledField" @bind-Value="disease.IntraSurgery" HelperText="Denumire categorie" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            <MudItem xs="1">
+                <MudTooltip Text="Mod determinare">
+                    <MudCheckBox Disabled="@_disabledField" @bind-Checked="disease.IntraSurgery" Label="Intraoperator" LabelPosition="LabelPosition.Start" ></MudCheckBox>
+                </MudTooltip>
             </MudItem>
         </MudGrid>
     </MudCardContent>
@@ -74,23 +79,10 @@
 <!--table list-->
 <MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5"
           Items="@diseases" Filter="new Func<PatientAssocDisease, bool>(Search)" @bind-customer="disease" OnRowClick="@RowClicked" T="PatientAssocDisease">
-    <ToolBarContent>
-        <MudSpacer />
-        <MudTextField @bind-Value="searchString" Placeholder="Cautati o categorie..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
-    </ToolBarContent>
-    <HeaderContent>
-        <MudTh>ID</MudTh>
-        <MudTh>Denumire Procedura</MudTh>
-        <MudTh>Apartine de Procedura</MudTh>
-        <MudTh>Actiuni</MudTh>
-    </HeaderContent>
     <RowTemplate>
-        <MudTd Class="col-1" DataLabel="Id">@context.Id</MudTd>
-        <MudTd Class="col-9" DataLabel="Denumire">@context.DiagnosticId</MudTd>
-        <MudTd Class="col-2" DataLabel="">@context.Symptom</MudTd>
-        <MudTd Class="col-1" DataLabel="">
-            <MudIconButton @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small" />
-        </MudTd>
+        <MudTd Class="col-3" DataLabel="Denumire">@context.DiagnosticId</MudTd>
+        <MudTd Class="col-8" DataLabel="">@context.Symptom</MudTd>
+        <MudTd Class="col-1" DataLabel=""><MudCheckBox Checked="@context.IntraSurgery"></MudCheckBox></MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 5, 10, 25, 50 , int.MaxValue})"> R</MudTablePager>

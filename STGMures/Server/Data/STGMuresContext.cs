@@ -441,7 +441,7 @@ public partial class StgMuresContext : DbContext
 
             entity.Property(e => e.Id).ValueGeneratedOnAdd().HasColumnName("ID");
             entity.Property(e => e.AorticClampDuration).HasComment("Minutes");
-            entity.Property(e => e.Cecduration)
+            entity.Property(e => e.CecDuration)
                 .HasComment("Minutes")
                 .HasColumnName("CECDuration");
             entity.Property(e => e.Complications).HasMaxLength(1000);

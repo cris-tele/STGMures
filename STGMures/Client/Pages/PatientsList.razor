@@ -10,13 +10,15 @@
 <MudCard Elevation="5">
     <MudCardContent >
         <MudGrid >
+            <!--
             <MudItem xs="1">
-                <MudTextField Disabled="true" @bind-Value="_currentPatient.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Style="visibility:hidden" Disabled="true" @bind-Value="_currentPatient.Id" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="1">
+            -->
+            <MudItem xs="2">
                 <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.LastName" HelperText="Nume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="1">
+            <MudItem xs="2">
                 <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="1">
@@ -50,8 +52,8 @@
             <MudItem xs="1">
                 <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.Cnp" HelperText="C.N.P" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="4">
-                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.Note" Label="Observatii" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            <MudItem xs="3">
+                <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.Note" HelperText="Observatii" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
         </MudGrid>
         </MudCardContent>
@@ -116,29 +118,15 @@
         <MudSpacer />
         <MudTextField @bind-Value="searchString" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" ></MudTextField>
     </ToolBarContent>
-    <HeaderContent>
-        <MudTh>Nume</MudTh>
-        <MudTh>Prenume</MudTh>
-        <MudTh>Data Nasterii</MudTh>
-        <MudTh>Sex</MudTh>
-        <MudTh>Gr.Sg.Pacient</MudTh>
-        <MudTh>Gr.Sg.Mama</MudTh>
-        <MudTh>C.N.P.</MudTh>
-        <MudTh>Observatii</MudTh>
-
-    </HeaderContent>
     <RowTemplate>
-        <MudTd Class="col-1" DataLabel="Nume">@context.LastName</MudTd>
-        <MudTd Class="col-1" DataLabel="Prenume">@context.FirstName</MudTd>
+        <MudTd Class="col-2" DataLabel="Nume">@context.LastName</MudTd>
+        <MudTd Class="col-2" DataLabel="Prenume">@context.FirstName</MudTd>
         <MudTd Class="col-1" DataLabel="Data Nasterii">@context.BirthDate.ToString("MM/dd/yyyy")</MudTd>
-        <MudTd Class="col-1" DataLabel="Sez">@context.Sex</MudTd>
+        <MudTd Class="col-1" DataLabel="Sex">@context.Sex</MudTd>
         <MudTd Class="col-1" DataLabel="Gr.Sange">@context.BloodGroup</MudTd>
         <MudTd Class="col-1" DataLabel="Gr.Sg.Mama">@context.MotherBloodGroup</MudTd>
-        <MudTd Class="col-4" DataLabel="Observatii">@context.Note</MudTd>
-
-        <MudTd Class="col-1" DataLabel="">
-            <MudIconButton @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small"  />
-        </MudTd>
+        <MudTd Class="col-1">@context.Cnp</MudTd>
+        <MudTd Class="col-3" DataLabel="Observatii">@context.Note</MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 5, 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
@@ -146,7 +134,6 @@
     </PagerContent>
 
 </MudTable>
-
 
 
 

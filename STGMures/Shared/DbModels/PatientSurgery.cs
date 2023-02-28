@@ -31,7 +31,7 @@ public partial class PatientSurgery
     /// <summary>
     /// Minutes
     /// </summary>
-    public int? Cecduration { get; set; }
+    public int? CecDuration { get; set; }
 
     /// <summary>
     /// Minutes
