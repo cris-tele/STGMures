@@ -1,4 +1,7 @@
 ﻿@inherits LayoutComponentBase
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
 
 @inject ISetAppMenuInfos SetAppMenuInfos
 @implements IDisposable
@@ -21,10 +24,10 @@
             <MudSpacer />
                 <MudButton StartIcon="@Icons.Material.Filled.PersonalInjury" Color="Color.Info" Variant="Variant.Text">@SetAppMenuInfos.SelectedPatient</MudButton> <!-- detalii pacient-->
             <MudSpacer />
+            <MudSpacer />
+            <MudLink  title="Logout (iesire) din aplicatie" OnClick="@(() =>Logout())">Logout</MudLink>
             </Authorized>
         </AuthorizeView>
-        <MudSpacer />
-        <MudText Color="Color.Default">Spital Tg. Mures IuBCvT</MudText>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen">
         <NavMenu/>
@@ -37,14 +40,13 @@
 </MudLayout>
 
 @code {
-    /*
-    [Parameter]
-    public string PRMMedicName { get; set; } = string.Empty;
-    [Parameter]
-    public string PRMPatientName { get; set; } = string.Empty;
-    [Parameter]
-    public string PRMPageTitle { get; set; } = string.Empty;
-*/
+
+    private async void Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        await AuthStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("/");
+    }
 
 
     protected override async Task OnInitializedAsync()

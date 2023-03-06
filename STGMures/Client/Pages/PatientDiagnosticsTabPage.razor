@@ -1,0 +1,198 @@
+﻿@page "/PatientDiagnosticsTabPage"
+@using StgMures.Shared.DbModels;
+@inherits PageBehavior
+
+@inject IConsumableCategoryService categoryService
+@inject MudBlazor.ISnackbar snackBar
+@inject ISetAppMenuInfos SetAppMenuInfos
+
+
+
+<MudCard Elevation="5" Class="gap-0 pa-0 m-0">
+    <MudCardContent Class="gap-0 ">
+        <MudGrid Class="gap-0 ">
+            <MudItem xs="3"> <!-- selectare diagnostic -->
+                <MudSelect Disabled="@SetAppMenuInfos.DisabledState" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="patientDiagnostic.DiagnosticId" HelperText="Diagnostic" Variant="Variant.Text" Margin="Margin.None">
+                    @foreach (var _option in diagnostics)
+                    {
+                        <MudSelectItem Value="@_option.Id">@_option.Name </MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="3"> <!-- selectare diagnostic: face acelasi lucru ca si prima optiune, ajuta doar la detalierea primeia -->
+                <MudSelect Disabled="@SetAppMenuInfos.DisabledState" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="patientDiagnostic.DiagnosticId" HelperText="Optiune" Variant="Variant.Text" Margin="Margin.None">
+                    <MudSelectItem Value="0"> </MudSelectItem>  <!-- blanck -->
+                    @foreach (var _option in diagnosticOptions)
+                    {
+                        <MudSelectItem Value="@_option.Id">@_option.Name </MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="1">
+                <MudTextField Disabled="@_disabledField" @bind-Value="patientDiagnostic.Date" HelperText="Data" Format="yyyy-MM-dd" InputType="InputType.Date" Variant="Variant.Text" Culture="@CultureInfo.GetCultureInfo("ro-RO")"></MudTextField>
+            </MudItem>
+            <MudItem xs="1">
+                 <MudTextField Disabled="@SetAppMenuInfos.DisabledState" @bind-Value="diagnostic.Name" HelperText="Valoare" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            </MudItem>
+            <MudItem xs="1">
+                <MudTooltip Text="Mod determinare">
+                    <MudCheckBox Disabled="@_disabledField" @bind-Checked="patientDiagnostic.IntraSurgery" Label="Intraoperator" LabelPosition="LabelPosition.Start"></MudCheckBox>
+                </MudTooltip>
+            </MudItem>
+            <MudItem xs="3">
+                <MudTextField Disabled="@SetAppMenuInfos.DisabledState" @bind-Value="patientDiagnostic.ShortNote" HelperText="Nota" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+
+    <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
+
+    <MudCardActions>
+        <!--         <AddUpdateDelete OnValidate="@ValidateAction" OnCancel="@DisableAll" ItemCount="@categories.Count"/> -->
+        <MudGrid>
+            <MudItem xs="1">
+                <MudTooltip Text="Adauga o noua inregistrare">
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="AddNewRecord">Adauga</MudIconButton>
+                </MudTooltip>
+
+                <MudTooltip Text="Modifica inregistrarea selectata">
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="UpdateRecord">Modifica</MudIconButton>
+                </MudTooltip>
+
+                <MudTooltip Text="Sterge inregistrarea selectata">
+                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="DeleteRecord">Sterge</MudIconButton>
+                </MudTooltip>
+            </MudItem>
+            <MudItem xs="1" />
+            <MudItem xs="1">
+                <MudTooltip Text="Validare">
+                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
+                </MudTooltip>
+                <MudTooltip Text="Renuntare">
+                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Error" OnClick="DisableAll">Cancel</MudIconButton>
+                </MudTooltip>
+            </MudItem>
+        </MudGrid>
+
+    </MudCardActions>
+</MudCard>
+<br />
+
+
+<!--table list-->
+<MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5"
+          Items="@patientDiagnostics" Filter="new Func<PatientDiagnostic, bool>(Search)" @bind-customer="patientDiagnostic" OnRowClick="@RowClicked" T="PatientDiagnostic">
+    <RowTemplate>
+        <MudTd Class="invisible" DataLabel="Id">@context.DiagnosticId</MudTd>
+        <MudTd Class="col-9" DataLabel="Denumire">@context.Date</MudTd>
+        <MudTd Class="col-2" DataLabel="U.M.">@context.Value</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
+    </PagerContent>
+
+</MudTable>
+
+
+
+
+@code {
+    // table design
+
+
+    private MudTable<PatientDiagnostic>? _table;
+
+    private PatientDiagnostic patientDiagnostic = new();    
+    private List<PatientDiagnostic> patientDiagnostics = new();
+    private List<Diagnostic> diagnostics = new();
+    private List<Diagnostic> diagnosticOptions = new(); 
+    
+    private Diagnostic diagnostic = new();
+    
+
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            _table!.SetRowsPerPage(10);
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+
+    // data
+
+    protected override async Task OnInitializedAsync()
+    {
+        // SetAppMenuInfos.SetPageTitle("Categorii de consumabile"); tab page-ul nu schimba denumirea paginii principale
+        await categoryService.LoadConsumableCategoriesAsync();
+        // categories = categoryService.Categories;
+    }
+
+
+
+    protected void RowClicked(TableRowClickEventArgs<PatientDiagnostic> clickedCategory)
+    {
+        RowClicked(_table!);
+        SelectCurrentItem(clickedCategory.Item.Id);
+        EnableActionButtons();
+    }
+
+
+
+    private async Task ValidateAction()
+    {
+        switch (CurrentAction)
+        {
+            case (int)_actionbtn.None:
+                DisableAll();            // Invalid action, disable all
+                return;
+            case (int)_actionbtn.Add:
+                //await categoryService.AddConsumableCategory(category);
+                snackBar.Add("Inregistrare adaugata", Severity.Success);
+                break;
+            case (int)_actionbtn.Edit:
+                //await categoryService.UpdateConsumableCategory(category);
+                snackBar.Add("Inregistrare modificata", Severity.Success);
+                break;
+            case (int)_actionbtn.Delete:
+                if (patientDiagnostic.Id == 0)               // Invalid selection
+                    return;
+                //await categoryService.DeleteConsumableCategory(category.Id);
+                snackBar.Add("Inregistrare stearsa", Severity.Success);
+                break;
+        }
+
+        _currentAction = 0;
+        //categories = categoryService.Categories;
+
+        DisableAll();
+
+        await Task.Delay(1); // let UI refresh
+    }
+
+
+    // movers
+    private string searchString = "";
+
+    private void SelectCurrentItem(int id)
+    {
+        if (patientDiagnostics.Count == 0)
+            return;
+
+        patientDiagnostic = patientDiagnostics.FirstOrDefault(c => c.Id == id);
+    }
+
+    private bool Search(PatientDiagnostic category)
+    {
+        if (string.IsNullOrWhiteSpace(searchString)) return true;
+        // incomplet    
+        if (category.ShortNote.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        return false;
+    }
+
+}
+

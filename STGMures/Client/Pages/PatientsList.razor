@@ -21,18 +21,19 @@
             <MudItem xs="2">
                 <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.FirstName" HelperText="Prenume" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="1">
-                <MudDatePicker Disabled="_disabledField" @bind-Value="_currentPatient.BirthDate" HelperText="Data Nasterii" Variant="Variant.Text" Margin="Margin.None"></MudDatePicker>
+            <MudItem xs="2">
+                <!--@Convert.ToDateTime(_currentPatient.BirthDate).ToString("dd/MM/yyyy") @bind-Value="_currentPatient.BirthDate" @_currentPatient.BirthDate.ToString("dd/MM/yyyy")-->
+                <MudTextField Disabled="@_disabledField" @bind-Value="_currentPatient.BirthDate" HelperText="Data Nasterii" Format="yyyy-MM-dd" InputType="InputType.Date" Variant="Variant.Text" Culture="@roRo"></MudTextField>
             </MudItem>
-            <MudItem xs="1">
+            <MudItem xs="2">
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="_currentPatient.Sex" HelperText="Sex" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in StaticParam.Genders)
-                    {
+                    { 
                         <MudSelectItem Value="@_option" />
                     }
                 </MudSelect>
             </MudItem>
-            <MudItem xs="1">
+            <MudItem xs="2">
                 <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="_currentPatient.BloodGroup" HelperText="Gr.Sangvina" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in StaticParam.BloodGroup)
                     {
@@ -52,7 +53,10 @@
             <MudItem xs="1">
                 <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.Cnp" HelperText="C.N.P" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="3">
+            </MudGrid>
+            <MudGrid>
+
+            <MudItem xs="12">
                 <MudTextField Disabled="_disabledField" @bind-Value="_currentPatient.Note" HelperText="Observatii" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
         </MudGrid>
@@ -115,21 +119,20 @@
           Items="@_patientsList" Filter="new Func<Patient, bool>(Search)" @bind-customer="_currentPatient" OnRowClick="@RowClicked" T="Patient">
     <ToolBarContent>
         <MudSpacer />
-        <MudSpacer />
         <MudTextField @bind-Value="searchString" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" ></MudTextField>
     </ToolBarContent>
     <RowTemplate>
         <MudTd Class="col-2" DataLabel="Nume">@context.LastName</MudTd>
         <MudTd Class="col-2" DataLabel="Prenume">@context.FirstName</MudTd>
-        <MudTd Class="col-1" DataLabel="Data Nasterii">@context.BirthDate.ToString("MM/dd/yyyy")</MudTd>
-        <MudTd Class="col-1" DataLabel="Sex">@context.Sex</MudTd>
-        <MudTd Class="col-1" DataLabel="Gr.Sange">@context.BloodGroup</MudTd>
+        <MudTd Class="col-2" DataLabel="Data Nasterii">@context.BirthDate.ToString("dd/MM/yyyy")</MudTd>
+        <MudTd Class="col-2" DataLabel="Sex">@context.Sex</MudTd>
+        <MudTd Class="col-2" DataLabel="Gr.Sange">@context.BloodGroup</MudTd>
         <MudTd Class="col-1" DataLabel="Gr.Sg.Mama">@context.MotherBloodGroup</MudTd>
         <MudTd Class="col-1">@context.Cnp</MudTd>
-        <MudTd Class="col-3" DataLabel="Observatii">@context.Note</MudTd>
+        <!-- <MudTd Class="col-3" DataLabel="Observatii">@context.Note</MudTd> -->
     </RowTemplate>
     <PagerContent>
-        <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 5, 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
+        <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
 
     </PagerContent>
 
@@ -146,11 +149,12 @@
     // data
     private Patient _currentPatient = new Patient() ;
     private List<Patient> _patientsList = new List<Patient>();
+    CultureInfo roRo = CultureInfo.GetCultureInfo("ro-RO");
 
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
         if(firstRender)
-            _table.SetRowsPerPage(5);
+            _table.SetRowsPerPage(10);
         return base.OnAfterRenderAsync(firstRender);
     }
 

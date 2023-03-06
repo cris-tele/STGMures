@@ -1,5 +1,5 @@
 ﻿@page "/PatientAssocDiseasePage"
-@page "/PatientAssocDiseasePage/{PatientID:int}"
+@page "/PatientAssocDiseasePage/{PatientID:int}"    
 
 @using StgMures.Shared.DbModels
 @inherits PageBehavior
@@ -85,7 +85,7 @@
         <MudTd Class="col-1" DataLabel=""><MudCheckBox Checked="@context.IntraSurgery"></MudCheckBox></MudTd>
     </RowTemplate>
     <PagerContent>
-        <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 5, 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
+        <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
     </PagerContent>
 
 </MudTable>
@@ -110,7 +110,7 @@
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            _table!.SetRowsPerPage(5);
+            _table!.SetRowsPerPage(10);
         return base.OnAfterRenderAsync(firstRender);
     }
 

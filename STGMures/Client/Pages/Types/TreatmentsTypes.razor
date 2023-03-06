@@ -13,52 +13,62 @@
     <MudCardContent>
         <MudGrid>
             <MudItem xs="4">
-                <MudSelect Disabled="@(!_disabledField)" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.TreatmentCategoryId" HelperText="Tratament din categoria" Variant="Variant.Outlined" Margin="Margin.None">
+                <MudSelect Disabled="@(!_disabledField)" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.TreatmentCategoryId" HelperText="Tratament din categoria" Variant="Variant.Text" Margin="Margin.None">
+                    <MudSelectItem Value="0" Disabled="true">Selectati categoria:</MudSelectItem>
+
                     @foreach (TreatmentCategory _option in categories)
                     {
                         <MudSelectItem Value="@_option.Id" >@_option.Name</MudSelectItem>
                     }
                 </MudSelect>
             </MudItem>
-            <MudSpacer />
-
+            <!--<MudSpacer /> -->
         </MudGrid>
+
         <MudGrid>
+
             <MudItem xs="1">
-                <MudTextField Disabled="true" @bind-Value="treatment.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Class="invisible" Disabled="true" @bind-Value="treatment.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="2">
-                <MudTextField Disabled="@_disabledField" @bind-Value="treatment.Name" HelperText="Denumire treatment" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+
+            <MudItem xs="3">
+                <MudTextField Disabled="@_disabledField" @bind-Value="treatment.Name" HelperText="Denumire tratament" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="2">
+            <MudItem xs="3">
                 <MudSelect Disabled="@_disabledField" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.ParentId" HelperText="Tratament principal" Variant="Variant.Text" Margin="Margin.None">
-                    @foreach (var _option in parentDiagnostics)
+                    <MudSelectItem Value="0">----------</MudSelectItem> <!-- id= 0 : inseamna ca este principal, nu are un parinte-->
+                    @foreach (var _option in parentTreatments)
                     {
                         <MudSelectItem Value="@_option.Name" />
                     }
                 </MudSelect>
             </MudItem>
-            <MudItem xs="2">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.ValueFormat" HelperText="Valori posibile" Variant="Variant.Text" Margin="Margin.None">
+            <MudItem xs="1">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.ValueFormat" HelperText="Format" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in StaticParam.FieldFormat)
                     {
                         <MudSelectItem Value="@_option" />
                     }
                 </MudSelect>
             </MudItem>
-            <MudItem xs="1">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.AdministrationMethod" HelperText="ID" Variant="Variant.Text" Margin="Margin.None">
+            <MudItem xs="2">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.AdministrationMethod" HelperText="Mod Administrare" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in StaticParam.TreatmentAdministrationMethod)
                     {
                         <MudSelectItem Value="@_option" />
                     }
                 </MudSelect>
             </MudItem>
-            <!--
-            <MudItem xs="4">
-                <MudTextField Disabled="@_disabledField" @bind-Value="treatment.Note" HelperText="Observatii" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            
+            <MudItem xs="2">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.Type" HelperText="Tip tratament / utilizare" Variant="Variant.Text" Margin="Margin.None">
+                @foreach (var _option in StaticParam.TreatmentType)
+                {
+                    <MudSelectItem Value="@_option" />
+                }
+                </MudSelect>
             </MudItem>
-            -->
+            
         </MudGrid>
     </MudCardContent>
 
@@ -95,26 +105,32 @@
 
 
 <!--table list-->
-<MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5" Items="@treatments" Filter="new Func<Treatment, bool>(Search)" @bind-customer="treatment" OnRowClick="@RowClicked" T="Treatment">
+<MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5" 
+    Items="@tableList" Filter="new Func<TreatmentsAndParent, bool>(Search)" @bind-customer="treatment" OnRowClick="@RowClicked" T="TreatmentsAndParent">
     <ToolBarContent>
-        <MudSpacer />
-        <MudTextField @bind-Value="searchString" Placeholder="Cautati un treatment..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
+        <!-- <MudTextField @bind-Value="searchString" Placeholder="Cautati un tratament..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField> -->
     </ToolBarContent>
+<!--
     <HeaderContent>
+
         <MudTh>ID</MudTh>
         <MudTh>Denumire Categorie Tratamente</MudTh>
         <MudTh>Actiuni</MudTh>
     </HeaderContent>
+-->
+
+
     <RowTemplate>
-        <MudTd Class="col-1" DataLabel="Id">@context.Id</MudTd>
-        <MudTd Class="col-2" DataLabel="Tip">@context.Name</MudTd>
-        <MudTd Class="col-9" DataLabel="Denumire">@context.Name</MudTd>
-        <MudTd Class="col-1" DataLabel="">
-            <MudIconButton @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small" />
-        </MudTd>
+        <MudTd Class="col-1 invisible" DataLabel="Id">@context.Id</MudTd>
+        <MudTd Class="col-3" DataLabel="Tip">@context.Name</MudTd>
+        <MudTd Class="col-3" DataLabel="Tip">@context.ParentName</MudTd>
+        <MudTd Class="col-1" DataLabel="Tip">@context.ValueFormat</MudTd>
+        <MudTd Class="col-2" DataLabel="Tip">@context.AdministrationMethod</MudTd>
+        <MudTd Class="col-2" DataLabel="Tip">@context.Type</MudTd>
     </RowTemplate>
+
     <PagerContent>
-        <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 5, 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
+        <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
     </PagerContent>
 
 </MudTable>
@@ -127,20 +143,24 @@
 
 
     // table design
-    private MudTable<Treatment>? _table;
+    private MudTable<TreatmentsAndParent>? _table;
 
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            _table.SetRowsPerPage(5);
+            _table.SetRowsPerPage(10);
         return base.OnAfterRenderAsync(firstRender);
     }
 
 
     // data
-    private Treatment treatment = new();
-    private List<Treatment> treatments = new List<Treatment>();          // filtered by diagnosticCategory
-    private List<Treatment> parentDiagnostics = new List<Treatment>();    // filtered from treatments
+    private Treatment treatment = new();                                    // current selected item
+    private List<Treatment> treatments = new List<Treatment>();          // all
+    private List<Treatment> filteredTreatments = new List<Treatment>();    // parents
+    private List<Treatment> parentTreatments = new List<Treatment>();    // parents
+    private List<TreatmentsAndParent> tableList = new ();                // shown
+
+
     private List<TreatmentCategory> categories = new List<TreatmentCategory>();
 
 
@@ -151,12 +171,11 @@
         treatments = treatmentService.Types;
         if (treatments.Count == 0)
             EnableAll();
-
     }
 
 
 
-    protected void RowClicked(TableRowClickEventArgs<Treatment> clickedCategory)
+    protected void RowClicked(TableRowClickEventArgs<TreatmentsAndParent> clickedCategory)
     {
         if (_table!.GetFilteredItemsCount() == 0)
             EnableAll();
@@ -207,7 +226,7 @@
         treatment = treatments.FirstOrDefault(c => c.Id == id);
     }
 
-    private bool Search(Treatment treatment)
+    private bool Search(TreatmentsAndParent treatment)
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
 
@@ -217,5 +236,34 @@
         }
         return false;
     }
+
+    private void CategorySelected(int id)
+    {
+        if (id != 0)
+        {
+            filteredTreatments = treatments.Where(c => c.TreatmentCategoryId == id).ToList();
+            // selectedDiagnosticCategory = categories.Where(c => c.Id == id).FirstOrDefault();
+        }
+        else
+            filteredTreatments = treatments; // .GetRange(0, consumables.Count); // no filter, copy all; or same list
+        parentTreatments = filteredTreatments.GetRange(0, filteredTreatments.Count);
+        parentTreatments.Insert(0, new Treatment { Id = 0, ParentId = 0, Name = "-----------" });
+
+        tableList = filteredTreatments.SelectMany(
+                filt => parentTreatments.Where(pare => pare.Id == filt.ParentId).DefaultIfEmpty(),
+                (filt, pare) => new TreatmentsAndParent()
+                    {
+                        Id = filt.Id,
+                        Name = filt.Name,
+                        ParentId = filt.ParentId,
+                        TreatmentCategoryId = filt.TreatmentCategoryId,
+                        ValueFormat = filt.ValueFormat,
+                        Type = filt.Type,
+                        AdministrationMethod = filt.AdministrationMethod,
+                        ParentName = pare!.Name
+
+                    }).ToList();
+    }
+
 
 }

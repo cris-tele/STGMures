@@ -21,9 +21,7 @@ namespace StgMures.Server
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
-                    .UseIIS()
                     .UseStartup<Startup>();
-                    
                 });
     }
 }

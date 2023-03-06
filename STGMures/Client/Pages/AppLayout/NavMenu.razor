@@ -3,50 +3,46 @@
 @inject NavigationManager NavigationManager
 
 <MudNavMenu Dense="true" Style="@($"color:{Colors.LightGreen.Darken4}; background:{Colors.Blue.Lighten3}")">
-    <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
+    <MudNavLink IconColor="Color.Inherit" Icon="@Icons.Material.Filled.Home" Href="/" Match="NavLinkMatch.All" title="Institutul de Urgenţă pentru Boli Cardiovasculare şi Transplant Targu Mures - ATI">ATI I.U.B.Cv.T</MudNavLink>
     <AuthorizeView>
         <Authorized>
-            <MudNavLink Href="PatientsList"             Match="NavLinkMatch.Prefix">Pacienti</MudNavLink>
-            <MudNavLink Href="PatientFilePage"          Match="NavLinkMatch.Prefix">Fisa Pacient</MudNavLink>
-            <MudNavLink Href="PatientAssocDiseasePage"  Match="NavLinkMatch.Prefix">Boli Asociate</MudNavLink> <!--<span class="oi oi-eyedropper"></span>-->
-            <MudNavLink Href="PatientSurgeryPage"       Match="NavLinkMatch.Prefix">Operatii pacient</MudNavLink> <!--<span class="oi oi-eyedropper"></span>-->
-            <MudNavLink Href="SurgeryAnesthesiaPage"    Match="NavLinkMatch.Prefix">Anestezii</MudNavLink> <!--<span class="oi oi-eyedropper"></span>-->
-            <MudNavLink Href="PatientTreatmentPage"     Match="NavLinkMatch.Prefix">Tratament</MudNavLink> <!--<span class="oi oi-eyedropper"></span>-->
+            <MudNavLink Href="PatientsList"             Match="NavLinkMatch.Prefix">Lista Pacienti</MudNavLink>
+            <MudNavLink Href="PatientFilePage"          Match="NavLinkMatch.Prefix">Fisa Pacient</MudNavLink> 
+            <MudNavLink Href="PatientAssocDiseasePage"  Match="NavLinkMatch.Prefix">Boli Asociate</MudNavLink>          <!--<span class="oi oi-eyedropper"></span>-->
+            <MudNavLink Href="PatientSurgeryPage"       Match="NavLinkMatch.Prefix">Operatii pacient</MudNavLink>    
+            <MudNavLink Href="SurgeryAnesthesiaPage"    Match="NavLinkMatch.Prefix">Anestezii</MudNavLink>         
+            <MudNavLink Href="PatientTreatmentPage"     Match="NavLinkMatch.Prefix">Tratament</MudNavLink>          
             
-            <MudNavGroup Title="Setari" Expanded="false" >
+            <MudNavGroup Title="Nomenclatoare" Expanded="false" >
 
-                <MudNavGroup Title="Tipuri" Expanded="false">
+                <MudNavGroup Title="Consumabile" Expanded="false">
                     <MudNavLink Href="ConsumableTypes" Match="NavLinkMatch.Prefix">Tipuri de Consumabile</MudNavLink>
+                    <MudNavLink Href="consumablecategory" Match="NavLinkMatch.Prefix">Categorii de Consumabile</MudNavLink>
+                </MudNavGroup>
+                <MudNavGroup Title="Diagnostice" Expanded="false">
                     <MudNavLink Href="DiagnosticTypes" Match="NavLinkMatch.Prefix">Tipuri de Diagnostice </MudNavLink>
-                    <MudNavLink Href="SurgeryTypes" Match="NavLinkMatch.Prefix">Tipuri de Proceduri Chirurgicale</MudNavLink>
-                    <MudNavLink Href="TreatmentsTypes" Match="NavLinkMatch.Prefix">Tipuri de Tratamente</MudNavLink>
+                    <MudNavLink Href="DiagnosticCategories" Match="NavLinkMatch.Prefix">Categorii de Diagnostice</MudNavLink>
+                </MudNavGroup>
+                <MudNavGroup Title="Proceduri Chirurgicale" Expanded="false">
+                    <MudNavLink Href="SurgeryTypes" Match="NavLinkMatch.Prefix">Tipuri de Proceduri</MudNavLink>
+                    <MudNavLink Href="SurgicalProcedures" Match="NavLinkMatch.Prefix">Categorii de Proceduri</MudNavLink>
                 </MudNavGroup>
 
-                <MudNavGroup Title="Categorii" Expanded="false">
-                    <MudNavLink Href="consumablecategory" Match="NavLinkMatch.Prefix">Categorii de Consumabile</MudNavLink>
-                    <MudNavLink Href="DiagnosticCategories" Match="NavLinkMatch.Prefix">Categorii de Diagnostice</MudNavLink>
-                    <MudNavLink Href="SurgicalProcedures" Match="NavLinkMatch.Prefix">Categorii de Proceduri Chirurgicale</MudNavLink>
+                <MudNavGroup Title="Tratamente" Expanded="false">
+                    <MudNavLink Href="TreatmentsTypes" Match="NavLinkMatch.Prefix">Tipuri de Tratamente</MudNavLink>
                     <MudNavLink Href="treatmentcategory" Match="NavLinkMatch.Prefix">Categorii de Tratamente</MudNavLink>
                 </MudNavGroup>
             </MudNavGroup>
 
-            <MudDivider DividerType="DividerType.Middle" /> <!--Separator-->
-            <MudNavLink OnClick="@(() =>Logout())">Logout</MudNavLink>
 
         </Authorized>
         <NotAuthorized>
-            <MudNavLink href="register" title="Inregistrare utilizator"><span class="oi oi-pencil"></span> </MudNavLink>
+            <MudNavLink href="register" title="Inregistrare utilizator"><span class="oi oi-pencil">Inregistrare</span> </MudNavLink>
         </NotAuthorized>
     </AuthorizeView>
 </MudNavMenu>
 
 
 @code {
-    private async void Logout()
-    {
-        await LocalStorage.RemoveItemAsync("authToken");
-        await AuthStateProvider.GetAuthenticationStateAsync();
-        NavigationManager.NavigateTo("/");
-    }
    
 }

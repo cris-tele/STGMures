@@ -27,9 +27,11 @@
 
 
         <MudGrid>
-            <MudItem xs="1">
+
+            <MudItem xs="1">    <!-- folosit pe post de spacer, doar pt aliniere -->
                 <MudTextField Class="invisible" Disabled="true" @bind-Value="diagnostic.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
+
             <MudItem xs="3">
                 <MudTextField Disabled="@SetAppMenuInfos.DisabledState" @bind-Value="diagnostic.Name" HelperText="Denumire diagnostic" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
@@ -47,7 +49,7 @@
             </MudItem>
             <MudItem xs="1">
                 <MudSelect Disabled="@SetAppMenuInfos.DisabledState" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="diagnostic.ValueFormat" HelperText="Format" Variant="Variant.Text" Margin="Margin.None">
-                    @foreach (var _option in StaticParam.DiagnosticsMeasureUnits)
+                    @foreach (var _option in StaticParam.FieldFormat)
                     {
                         <MudSelectItem Value="@_option" />
                     }
@@ -126,7 +128,7 @@
     </RowTemplate>
     
     <PagerContent>
-        <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 5, 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
+        <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
     </PagerContent>
 
 </MudTable>
@@ -144,7 +146,7 @@
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            _table.SetRowsPerPage(5);
+            _table.SetRowsPerPage(10);
         return base.OnAfterRenderAsync(firstRender);
     }
 

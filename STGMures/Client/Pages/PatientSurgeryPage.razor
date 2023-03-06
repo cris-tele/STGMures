@@ -1,4 +1,6 @@
 ﻿@page "/PatientSurgeryPage"
+@page "/PatientSurgeryPage/{PatientID:int}" 
+
 
 @using StgMures.Shared.DbModels
 @inject MudBlazor.ISnackbar snackBar
@@ -150,8 +152,10 @@
     <MudTabPanel Text="Proceduri operatorii">
     </MudTabPanel>
     <MudTabPanel Text="Consumabile C.E.C">
+        <SurgeriesCECs/>
     </MudTabPanel>
     <MudTabPanel Text="Consumabile Anestezie">
+        <SurgeryAnesthesiaPage/>
     </MudTabPanel>
 </MudTabs>
 
