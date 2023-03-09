@@ -4,23 +4,27 @@
 
 @inject IConsumableCategoryService categoryService
 @inject MudBlazor.ISnackbar snackBar
-@inject ISetAppMenuInfos SetAppMenuInfos
+@inject ISetAppMenuInfos AppMenu
 
 
 
 <MudCard Elevation="5" Class="gap-0 pa-0 m-0">
     <MudCardContent Class="gap-0 ">
         <MudGrid Class="gap-0 ">
-            <MudItem xs="3"> <!-- selectare diagnostic -->
-                <MudSelect Disabled="@SetAppMenuInfos.DisabledState" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="patientDiagnostic.DiagnosticId" HelperText="Diagnostic" Variant="Variant.Text" Margin="Margin.None">
+            <MudItem xs="1">
+                <MudTextField Disabled="@_disabledField" @bind-Value="patientDiagnostic.Date" HelperText="Data diagnostic" Format="yyyy-MM-dd" InputType="InputType.Date" Variant="Variant.Text" Culture="@CultureInfo.GetCultureInfo("ro-RO")"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <!-- selectare diagnostic -->
+                <MudSelect Disabled="@_enabledOrDisabled" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="patientDiagnostic.DiagnosticId" HelperText="Diagnostic" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in diagnostics)
                     {
                         <MudSelectItem Value="@_option.Id">@_option.Name </MudSelectItem>
                     }
                 </MudSelect>
             </MudItem>
-            <MudItem xs="3"> <!-- selectare diagnostic: face acelasi lucru ca si prima optiune, ajuta doar la detalierea primeia -->
-                <MudSelect Disabled="@SetAppMenuInfos.DisabledState" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="patientDiagnostic.DiagnosticId" HelperText="Optiune" Variant="Variant.Text" Margin="Margin.None">
+            <MudItem xs="2"> <!-- selectare diagnostic: face acelasi lucru ca si prima optiune, ajuta doar la detalierea primeia -->
+                <MudSelect Disabled="@_enabledOrDisabled" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="patientDiagnostic.DiagnosticId" HelperText="Optiune" Variant="Variant.Text" Margin="Margin.None">
                     <MudSelectItem Value="0"> </MudSelectItem>  <!-- blanck -->
                     @foreach (var _option in diagnosticOptions)
                     {
@@ -28,20 +32,22 @@
                     }
                 </MudSelect>
             </MudItem>
-
-            <MudItem xs="1">
-                <MudTextField Disabled="@_disabledField" @bind-Value="patientDiagnostic.Date" HelperText="Data" Format="yyyy-MM-dd" InputType="InputType.Date" Variant="Variant.Text" Culture="@CultureInfo.GetCultureInfo("ro-RO")"></MudTextField>
+            <MudItem xs="2">
+                <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="diagnostic.Name" HelperText="Denumire specifica" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="1">
-                 <MudTextField Disabled="@SetAppMenuInfos.DisabledState" @bind-Value="diagnostic.Name" HelperText="Valoare" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                 <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="diagnostic.Name" HelperText="Valoare" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            </MudItem>
+            <MudItem xs="1">
+                <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="patientDiagnostic.ShortNote" HelperText="Unitate masura" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="patientDiagnostic.ShortNote" HelperText="Observatii" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="1">
                 <MudTooltip Text="Mod determinare">
-                    <MudCheckBox Disabled="@_disabledField" @bind-Checked="patientDiagnostic.IntraSurgery" Label="Intraoperator" LabelPosition="LabelPosition.Start"></MudCheckBox>
+                    <MudCheckBox Disabled="@_enabledOrDisabled" @bind-Checked="patientDiagnostic.IntraSurgery" Label="Intra operator" LabelPosition="LabelPosition.Start"></MudCheckBox>
                 </MudTooltip>
-            </MudItem>
-            <MudItem xs="3">
-                <MudTextField Disabled="@SetAppMenuInfos.DisabledState" @bind-Value="patientDiagnostic.ShortNote" HelperText="Nota" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
         </MudGrid>
     </MudCardContent>
@@ -99,6 +105,8 @@
 
 @code {
     // table design
+    private bool _enabledOrDisabled = false;
+    private AddUpdateDelete? crudObj;
 
 
     private MudTable<PatientDiagnostic>? _table;
@@ -124,7 +132,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // SetAppMenuInfos.SetPageTitle("Categorii de consumabile"); tab page-ul nu schimba denumirea paginii principale
+        // AppMenu.SetPageTitle("Categorii de consumabile"); tab page-ul nu schimba denumirea paginii principale
         await categoryService.LoadConsumableCategoriesAsync();
         // categories = categoryService.Categories;
     }

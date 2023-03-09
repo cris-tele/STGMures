@@ -1,25 +1,23 @@
 ﻿@page "/consumablecategory"
-@using StgMures.Shared.DbModels;
-@inherits PageBehavior
+
 
 @inject IConsumableCategoryService categoryService
 @inject MudBlazor.ISnackbar snackBar
-@inject ISetAppMenuInfos SetAppMenuInfos
+@inject ISetAppMenuInfos AppMenu
 
 
 
 <MudCard Elevation="5" Class="gap-0 pa-0 m-0">
-    <!--    <MudCardHeader >  </MudCardHeader> --> <!--Nu stiu daca voi folosi-->
     <MudCardContent Class="gap-0 ">
         <MudGrid Class="gap-0 ">
             <MudItem xs="1">
                 <MudTextField Class="invisible" Disabled="true" @bind-Value="category.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="9">
-                <MudTextField Disabled="@SetAppMenuInfos.DisabledState" @bind-Value="category.Name" HelperText="Denumire categorie consumabile" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="category.Name" HelperText="Denumire categorie consumabile" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="2">
-                <MudSelect Disabled="@SetAppMenuInfos.DisabledState" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="category.MeasureUnit" HelperText="Unitate masura" Variant="Variant.Text" Margin="Margin.None">
+                <MudSelect Disabled="@_enabledOrDisabled" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="category.MeasureUnit" HelperText="Unitate masura" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in StaticParam.ConsumableMeasureUnits)
                     {
                         <MudSelectItem Value="@_option" />
@@ -32,32 +30,7 @@
     <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
 
     <MudCardActions>
-        <!--         <AddUpdateDelete OnValidate="@ValidateAction" OnCancel="@DisableAll" ItemCount="@categories.Count"/> -->
-        <MudGrid>
-            <MudItem xs="1">
-                <MudTooltip Text="Adauga o noua inregistrare">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="AddNewRecord">Adauga</MudIconButton>
-                </MudTooltip>
-
-                <MudTooltip Text="Modifica inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="UpdateRecord">Modifica</MudIconButton>
-                </MudTooltip>
-
-                <MudTooltip Text="Sterge inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="DeleteRecord">Sterge</MudIconButton>
-                </MudTooltip>
-            </MudItem>
-            <MudItem xs="1" />
-            <MudItem xs="1">
-                <MudTooltip Text="Validare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
-                </MudTooltip>
-                <MudTooltip Text="Renuntare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Error" OnClick="DisableAll">Cancel</MudIconButton>
-                </MudTooltip>
-            </MudItem>
-        </MudGrid>
-
+        <AddUpdateDelete @ref="crudObj" OnValidate="@ValidateAction" ItemsCount="@GetTableItems()" @bind-CRUDStatus=_enabledOrDisabled />
     </MudCardActions>
 </MudCard>
 <br />
@@ -87,8 +60,11 @@
 @code {
     // table design
 
+    private bool _enabledOrDisabled = false;
 
     private MudTable<ConsumableCategory>? _table;
+
+    private AddUpdateDelete? crudObj;
 
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
@@ -104,53 +80,58 @@
 
     protected override async Task OnInitializedAsync()
     {
-        SetAppMenuInfos.SetPageTitle("Categorii de consumabile");
+        AppMenu.SetPageTitle("Categorii de consumabile");
         await categoryService.LoadConsumableCategoriesAsync();
         categories = categoryService.Categories;
+        if (_table!.GetFilteredItemsCount() == 0)
+            crudObj!.EnableActionsBtn();
     }
 
-
+    private int GetTableItems()
+    {
+        if (category is null || category.Id == 0 || _table is null)
+            return 0;  // no selection
+        return _table.GetFilteredItemsCount();
+    }
 
     protected void RowClicked(TableRowClickEventArgs<ConsumableCategory> clickedCategory)
     {
-        RowClicked(_table!);
+        crudObj!.EnableActionsBtn();
+        crudObj!.RowClicked(_table!);
         SelectCurrentItem(clickedCategory.Item.Id);
-        EnableActionButtons();
     }
 
 
-    
     private async Task ValidateAction()
     {
-        switch (CurrentAction)
+        if (crudObj is null)    // ? Not defined ?
+            return;
+
+        switch (crudObj.CurrentAction)
         {
-            case (int)_actionbtn.None:
-                DisableAll();            // Invalid action, disable all
+            case ActionState.Read:
                 return;
-            case (int)_actionbtn.Add:
+            case ActionState.Add:
                 await categoryService.AddConsumableCategory(category);
                 snackBar.Add("Inregistrare adaugata", Severity.Success);
                 break;
-            case (int)_actionbtn.Edit:
+            case ActionState.Edit:
                 await categoryService.UpdateConsumableCategory(category);
                 snackBar.Add("Inregistrare modificata", Severity.Success);
                 break;
-            case (int)_actionbtn.Delete:
-                if (category.Id == 0)               // Invalid selection
-                    return;
+            case ActionState.Delete:
                 await categoryService.DeleteConsumableCategory(category.Id);
                 snackBar.Add("Inregistrare stearsa", Severity.Success);
+                category.Id = 0;
                 break;
         }
 
-        _currentAction = 0;
         categories = categoryService.Categories;
-
-        DisableAll();
-
+        SelectCurrentItem(category.Id);
+        crudObj.DisableEditableFields();
         await Task.Delay(1); // let UI refresh
     }
-    
+
 
     // movers
     private string searchString = "";
@@ -160,7 +141,14 @@
         if (categories.Count == 0)
             return; 
 
-        category = categories.FirstOrDefault(c => c.Id == id);
+        var search = categories.FirstOrDefault(c => c.Id == id);
+        if (search is null)
+        {
+            Console.WriteLine("Not found");
+            category.Id = 0;    
+        }
+        else
+            category = search;
     }
 
     private bool Search(ConsumableCategory category)

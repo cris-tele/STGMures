@@ -24,7 +24,7 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="2">
-                <MudSelect Disabled="@_disabledField" T="int?" AnchorOrigin="Origin.BottomCenter" @bind-Value="patienttreatment.PatientDiagnosticId" HelperText="Diagnostic" Variant="Variant.Text" Margin="Margin.None">
+                <MudSelect Disabled="@_disabledField" T="int?" AnchorOrigin="Origin.BottomCenter" @bind-Value="patienttreatment.PatientDiagnosticId" HelperText="Pentru diagnosticul" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in patientDiagnostics)
                     {
                         <MudSelectItem Value="@_option.ShortNote" />    <!-- trebuie un select, sa iau denumirea-->
@@ -60,6 +60,49 @@
                 <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Observatii" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
         </MudItem>
         </MudGrid>
+        <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
+
+        <MudText>Tratamente zilnice </MudText>
+        <MudGrid>
+            <MudItem xs="2">
+                <MudText>Data</MudText>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Dozaj" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Cantitate" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Observatii" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <MudText>Data</MudText>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Dozaj" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Cantitate" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Observatii" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <MudText>Data</MudText>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Dozaj" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Cantitate" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Observatii" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <MudText>Data</MudText>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Dozaj" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Cantitate" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Observatii" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <MudText>Data</MudText>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Dozaj" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Cantitate" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Observatii" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+            </MudItem>
+            <MudItem xs="2">
+                <MudText>Data</MudText>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Dozaj" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Cantitate" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.Note" HelperText="Observatii" Variant="Variant.Outlined" Margin="Margin.None"></MudTextField>
+            </MudItem>
+        </MudGrid>
+
+
     </MudCardContent>
 
     <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
@@ -91,7 +134,6 @@
         </MudGrid>
     </MudCardActions>
 </MudCard>
-<br />
 
 
 

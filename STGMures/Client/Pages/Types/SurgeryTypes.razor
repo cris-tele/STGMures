@@ -1,31 +1,34 @@
 ﻿@page "/SurgeryTypes"
 
-<!-- macheta pentru ceva depanari -->
+<!-- inherits may be used because there is only one table on page -->
+@inherits AddUpdateDelete
 
-@using StgMures.Shared.DbModels
-@inherits PageBehavior
 @inject MudBlazor.ISnackbar snackBar
 
 @inject StgMures.Client.Services.ISurgeryTypeService surgeryService
-@inject ISetAppMenuInfos SetAppMenuInfos
+@inject StgMures.Client.Services.ISurgicalProcedureService procedureService
+@inject ISetAppMenuInfos AppMenu
 
 <!-- Basically it is an intersection table, will be used only for testing / debug purposes -->
 
 <!--edit card-->
 <MudCard Elevation="5">
     <MudCardContent>
+
         <MudGrid>
             <MudItem xs="1">
                 <MudTextField Class="invisible" Disabled="true" @bind-Value="surgery.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
+<!--
             <MudItem xs="2">
                 <MudTextField Disabled="true" @bind-Value="surgery.SurgicalProcedureId" HelperText="Procedura" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="2">
                 <MudTextField Disabled="true" @bind-Value="surgery.PatientSurgeryId" HelperText="Op.pacient" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
+-->
             <MudItem xs="7">
-                <MudTextField Disabled="@_disabledField" @bind-Value="surgery.Description" HelperText="Descriere/Observatii" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="surgery.Description" HelperText="Descriere/Observatii" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
         </MudGrid>
     </MudCardContent>
@@ -33,30 +36,7 @@
     <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
 
     <MudCardActions>
-        <MudGrid>
-            <MudItem xs="1">
-                <MudTooltip Text="Adauga o noua inregistrare">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="AddNewRecord">Adauga</MudIconButton>
-                </MudTooltip>
-
-                <MudTooltip Text="Modifica inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="UpdateRecord">Modifica</MudIconButton>
-                </MudTooltip>
-
-                <MudTooltip Text="Sterge inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="DeleteRecord">Sterge</MudIconButton>
-                </MudTooltip>
-            </MudItem>
-            <MudItem xs="1" />
-            <MudItem xs="1">
-                <MudTooltip Text="Validare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
-                </MudTooltip>
-                <MudTooltip Text="Renuntare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Error" OnClick="DisableAll">Cancel</MudIconButton>
-                </MudTooltip>
-            </MudItem>
-        </MudGrid>
+        <AddUpdateDelete @ref="crudObj" OnValidate="@ValidateAction" ItemsCount="@GetTableItems()" @bind-CRUDStatus=_enabledOrDisabled />
     </MudCardActions>
 </MudCard>
 <br />
@@ -64,7 +44,7 @@
 
 <!--table list-->
 <MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5"
-          Items="@types" Filter="new Func<Surgery, bool>(Search)" @bind-customer="surgery" OnRowClick="@RowClicked" T="Surgery">
+          Items="@surgeries" Filter="new Func<Surgery, bool>(Search)" @bind-customer="surgery" OnRowClick="@RowClicked" T="Surgery">
 
     <HeaderContent>
         <MudTh Class="invisible"></MudTh>
@@ -74,10 +54,10 @@
     </HeaderContent>
 
     <RowTemplate>
-        <MudTd Class="invisible" DataLabel="Id">@context.Id</MudTd>
-        <MudTd Class="col-2" DataLabel="Denumire">@context.SurgicalProcedureId</MudTd>
-        <MudTd Class="col-2" DataLabel="">@context.PatientSurgeryId</MudTd>
-        <MudTd Class="col-7" DataLabel="">@context.Description
+        <MudTd Class="invisible" >@context.Id</MudTd>
+        <MudTd Class="col-2" >@context.SurgicalProcedureId</MudTd>
+        <MudTd Class="col-2" >@context.PatientSurgeryId</MudTd>
+        <MudTd Class="col-7" >@context.Description
             <MudIconButton @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small" />
         </MudTd>
     </RowTemplate>
@@ -91,10 +71,16 @@
 
 
 @code {
+    private bool _enabledOrDisabled = false;
+    private AddUpdateDelete? crudObj;
+
     private MudTable<Surgery>? _table;
+
     private Surgery surgery = new () ;
-    private List<Surgery> types = new List<Surgery>();
-    private List<SurgicalProcedure> procedures = new List<SurgicalProcedure>();
+    private List<Surgery> surgeries = new List<Surgery>();
+    private List<Surgery> filteredSurgeries = new();    // filtered from diagnosticsCategories ;
+
+    private List<SurgicalProcedureAndParent> surgicalProcedures = new();    //
 
 
 
@@ -108,44 +94,65 @@
 
     protected override async Task OnInitializedAsync()
     {
-        SetAppMenuInfos.SetPageTitle("Tipuri de proceduri chirurgicale / operatii");
+        AppMenu.SetPageTitle("Tipuri de proceduri chirurgicale / operatii");
 
         await surgeryService.LoadSurgeryTypesAsync();
-        types = surgeryService.Types;
-        if (types.Count == 0)
-            EnableAll();
+        surgeries = surgeryService.Types;
+        await procedureService.LoadSurgicalProceduresAsync();
+
+        if (_table!.GetFilteredItemsCount() == 0)
+            crudObj!.EnableActionsBtn();
+    }
+
+    private void InitializeLists()
+    {
+        var surgicalProcs = procedureService.SurgicalProcedures;
+
+        var parentInfo = surgicalProcs.Select(proc => new ParentProcInfo()     // just because circular table,
+                {
+                    Id = proc.Id,
+                    Name = proc.Name
+                }).ToList();
+
+//      parentInfo.Insert(0, new ParentProcInfo { Id = 0, Name = "-----------" });
+
+        surgicalProcedures = surgicalProcs.SelectMany(
+                proc => parentInfo.Where(pare => pare.Id == proc.ParentId).DefaultIfEmpty(),
+                (proc, pare) => new SurgicalProcedureAndParent()
+                    {
+                        Id = proc.Id,
+                        Name = proc.Name,
+                        ParentId = proc.ParentId,
+                        ParentName = pare!.Name
+                    }).ToList();
 
     }
 
 
-    protected void RowClicked(TableRowClickEventArgs<Surgery> clickedCategory)
+    protected void RowClicked(TableRowClickEventArgs<Surgery> clickedRow)
     {
-        if (_table!.GetFilteredItemsCount() == 0)
-            EnableAll();
-        if (_table!.SelectedItem == null)
-            return;
-        SelectCurrentItem(clickedCategory.Item.Id);
-        EnableAll();
+        crudObj!.EnableActionsBtn();
+        crudObj!.RowClicked(_table!);
+        SelectCurrentItem(clickedRow.Item.Id);
     }
 
 
 
     private async Task ValidateAction()
     {
-        switch (_currentAction)
+        switch (crudObj.CurrentAction)
         {
-            case (int)_actionbtn.None:
-                DisableAll();            // Invalid action, disable all
+            case ActionState.Read:
                 return;
-            case (int)_actionbtn.Add:
+            case ActionState.Add:
                 await surgeryService.AddSurgery(surgery);
                 snackBar.Add("Inregistrare adaugata", Severity.Success);
                 break;
-            case (int)_actionbtn.Edit:
+            case ActionState.Edit:
                 await surgeryService.UpdateSurgery(surgery);
                 snackBar.Add("Inregistrare modificata", Severity.Success);
                 break;
-            case (int)_actionbtn.Delete:
+            case ActionState.Delete:
                 if (surgery.Id == 0)               // Invalid selection
                     return;
                 await surgeryService.DeleteSurgery(surgery.Id);
@@ -153,10 +160,12 @@
                 break;
         }
 
-        _currentAction = 0;
-        types = surgeryService.Types;
+        InitializeLists();
 
-        DisableAll();
+        SelectCurrentItem(surgery.Id);
+        crudObj.DisableEditableFields();
+        surgeries = surgeryService.Types;
+
 
         await Task.Delay(1); // let UI refresh
     }
@@ -166,7 +175,7 @@
 
     private void SelectCurrentItem(int id)
     {
-        surgery = types.FirstOrDefault(c => c.Id == id);
+        surgery = surgeries.FirstOrDefault(c => c.Id == id);
     }
 
     private bool Search(Surgery surgery)
@@ -178,6 +187,12 @@
             return true;
         }
         return false;
+    }
+    private int GetTableItems()
+    {
+        if (surgery is null || surgery.Id == 0 || _table is null)
+            return 0;  // no selection
+        return _table.GetFilteredItemsCount();
     }
 
 }

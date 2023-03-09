@@ -3,7 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthStateProvider
 
-@inject ISetAppMenuInfos SetAppMenuInfos
+@inject ISetAppMenuInfos AppMenu
 @implements IDisposable
 
 <!-- <MudThemeProvider /> -->
@@ -16,13 +16,13 @@
 
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <!-- _currentPageTitle -->
-        <MudElement>@SetAppMenuInfos.PageTitle</MudElement>
+        <MudElement>@AppMenu.PageTitle</MudElement>
         <AuthorizeView>
             <Authorized>
             <MudSpacer />
                 <MudButton StartIcon="@Icons.Material.Filled.HealthAndSafety" Color="Color.Success" Variant="Variant.Text">@context.User.Identity!.Name </MudButton> <!-- detalii doctor-->
             <MudSpacer />
-                <MudButton StartIcon="@Icons.Material.Filled.PersonalInjury" Color="Color.Info" Variant="Variant.Text">@SetAppMenuInfos.SelectedPatient</MudButton> <!-- detalii pacient-->
+                <MudButton StartIcon="@Icons.Material.Filled.PersonalInjury" Color="Color.Info" Variant="Variant.Text">@AppMenu.PatientName</MudButton> <!-- detalii pacient-->
             <MudSpacer />
             <MudSpacer />
             <MudLink  title="Logout (iesire) din aplicatie" OnClick="@(() =>Logout())">Logout</MudLink>
@@ -51,7 +51,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        SetAppMenuInfos.OnChange += StateHasChanged;
+        AppMenu.OnChange += StateHasChanged;
         await Task.Delay(1); // let UI refresh
     }
 
@@ -63,7 +63,7 @@
 
     public void Dispose()
     {
-        SetAppMenuInfos.OnChange -= StateHasChanged;
+        AppMenu.OnChange -= StateHasChanged;
     }
 
     public MudTheme SmallFontsTheme = new MudTheme()

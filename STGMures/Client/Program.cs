@@ -7,6 +7,14 @@ using MudBlazor.Services;
 
 namespace StgMures.Client
 {
+    public static class ActionState
+    {
+        public const int Read = 0;
+        public const int Add = 1;   // Create
+        public const int Edit = 2;   // Update
+        public const int Delete = 3;
+    };
+
     public class Program
     {
         public static async Task Main(string[] args)

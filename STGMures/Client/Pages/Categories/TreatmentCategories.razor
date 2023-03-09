@@ -1,10 +1,8 @@
 ﻿@page "/treatmentcategory"
-@using StgMures.Shared.DbModels
-@inherits PageBehavior
 
 @inject StgMures.Client.Services.ITreatmentCategoryService categoryService
 @inject MudBlazor.ISnackbar snackBar
-@inject ISetAppMenuInfos SetAppMenuInfos
+@inject ISetAppMenuInfos AppMenu
 
 <!--edit card-->
 <MudCard Elevation="5">
@@ -14,7 +12,7 @@
                 <MudTextField Class="invisible" Disabled="true" @bind-Value="category.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
         <MudItem xs="11">
-                <MudTextField Disabled="@SetAppMenuInfos.DisabledState" @bind-Value="category.Name" HelperText="Denumire categorie tratamente" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="category.Name" HelperText="Denumire categorie tratamente" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
         </MudGrid>
     </MudCardContent>
@@ -22,30 +20,7 @@
     <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
 
     <MudCardActions>
-        <MudGrid>
-            <MudItem xs="1">
-                <MudTooltip Text="Adauga o noua inregistrare">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="AddNewRecord">Adauga</MudIconButton>
-                </MudTooltip>
-
-                <MudTooltip Text="Modifica inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="UpdateRecord">Modifica</MudIconButton>
-                </MudTooltip>
-
-                <MudTooltip Text="Sterge inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="DeleteRecord">Sterge</MudIconButton>
-                </MudTooltip>
-            </MudItem>
-            <MudItem xs="1" />
-            <MudItem xs="1">
-                <MudTooltip Text="Validare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
-                </MudTooltip>
-                <MudTooltip Text="Renuntare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Error" OnClick="DisableAll">Cancel</MudIconButton>
-                </MudTooltip>
-            </MudItem>
-        </MudGrid>
+        <AddUpdateDelete @ref="crudObj" OnValidate="@ValidateAction" ItemsCount="@GetTableItems()" @bind-CRUDStatus=_enabledOrDisabled />
     </MudCardActions>
 </MudCard>
 <br />
@@ -78,14 +53,16 @@
 
 
 @code {
+    private bool _enabledOrDisabled = false;
 
-    // table design
+    private AddUpdateDelete? crudObj;
+
     private MudTable<TreatmentCategory>? _table;
 
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            _table.SetRowsPerPage(10);
+            _table!.SetRowsPerPage(10);
         return base.OnAfterRenderAsync(firstRender);
     }
 
@@ -96,53 +73,56 @@
 
     protected override async Task OnInitializedAsync()
     {
-        SetAppMenuInfos.SetPageTitle("Categorii de Tratamente");
+        AppMenu.SetPageTitle("Categorii de Tratamente");
         await categoryService.LoadTreatmentCategoriesAsync();
         categories = categoryService.Categories;
+        if (_table!.GetFilteredItemsCount() == 0)
+            crudObj!.EnableActionsBtn();
     }
 
+    private int GetTableItems()
+    {
+        if (category is null || category.Id == 0 || _table is null)
+            return 0;  // no selection
+        return _table.GetFilteredItemsCount();
+    }
 
 
     protected void RowClicked(TableRowClickEventArgs<TreatmentCategory> clickedCategory)
     {
-        if (_table!.GetFilteredItemsCount() == 0)
-            EnableAll();
-        if (_table!.SelectedItem == null)
-            return;
+        crudObj!.EnableActionsBtn();
+        crudObj!.RowClicked(_table!);
         SelectCurrentItem(clickedCategory.Item.Id);
-        EnableAll();
     }
-
 
 
     private async Task ValidateAction()
     {
-        switch (CurrentAction)
+        if (crudObj is null)    // ? Not defined ?
+            return;
+
+        switch (crudObj.CurrentAction)
         {
-            case (int)_actionbtn.None:
-                DisableAll();            // Invalid action, disable all 
+            case ActionState.Read:
                 return ;
-            case (int)_actionbtn.Add:
+            case ActionState.Add:
                 await categoryService.AddTreatmentCategory(category);
                 snackBar.Add("Inregistrare adaugata", Severity.Success);
                 break;
-            case (int)_actionbtn.Edit:
+            case ActionState.Edit:
                 await categoryService.UpdateTreatmentCategory(category);
                 snackBar.Add("Inregistrare modificata", Severity.Success);
                 break;
-            case (int)_actionbtn.Delete:
-                if (category.Id == 0)               // Invalid selection
-                    return;
+            case ActionState.Delete:
                 await categoryService.DeleteTreatmentCategory(category.Id);
                 snackBar.Add("Inregistrare stearsa", Severity.Success);
+                category.Id = 0;
                 break;
         }
 
-        _currentAction = 0;
-        categories = categoryService.Categories;    
-
-        DisableAll();
-        
+        categories = categoryService.Categories;
+        SelectCurrentItem(category.Id);
+        crudObj.DisableEditableFields();
         await Task.Delay(1); // let UI refresh
     }
 
@@ -151,7 +131,16 @@
 
     private void SelectCurrentItem(int id)
     {
-        category = categories.FirstOrDefault(c => c.Id == id);
+        if (categories.Count == 0)
+            return;
+        var search = categories.FirstOrDefault(c => c.Id == id);
+        if (search is null)
+        {
+            Console.WriteLine("Not found");
+            category.Id = 0;
+        }
+        else
+            category = search;
     }
 
     private bool Search(TreatmentCategory category)

@@ -13,4 +13,13 @@ namespace StgMures.Shared.Dto
         public string ParentName { get; set; } = null!;
 
     }
+    public partial class ParentProcInfo //used by surgicalprocedure.razor
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; } = null!;
+
+    }
+
+
 }

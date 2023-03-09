@@ -1,33 +1,39 @@
-﻿@inherits PageBehavior
-@inject ISetAppMenuInfos SetAppMenuInfos
+﻿@inject MudBlazor.ISnackbar snackBar
+
+<!-- Management of the Add Update Delete Buttons -->
+
+<!-- It passes back the Status Enable/Disable for the corresponding fields -->
+<!-- we may have multiple Add Update Delete buttons on a razor page, so it has to change the defined parameter  -->
+
 
 <MudGrid>
     <MudItem xs="1">
         <MudTooltip Text="Adauga o noua inregistrare">
-            <MudIconButton Disabled="@(_disabledBtn || ItemCount != 0)" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="AddNewRecord">Adauga</MudIconButton>
+            <MudIconButton Disabled="@(_actionBtnState)" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="AddNewRecord">Adauga</MudIconButton>
         </MudTooltip>
 
         <MudTooltip Text="Modifica inregistrarea selectata">
-            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="UpdateRecord">Modifica</MudIconButton>
+            <MudIconButton Disabled="@_actionBtnState" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="UpdateRecord">Modifica</MudIconButton>
         </MudTooltip>
 
         <MudTooltip Text="Sterge inregistrarea selectata">
-            <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="DeleteRecord">Sterge</MudIconButton>
+            <MudIconButton Disabled="@_actionBtnState" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="DeleteRecord">Sterge</MudIconButton>
         </MudTooltip>
     </MudItem>
-    <MudItem xs="1">@SetActionInfo()</MudItem>
+    <MudItem xs="1">@DisplayActionInfo()</MudItem>
     <MudItem xs="1">
         <MudTooltip Text="Validare">
-            <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="OnValidate">Ok</MudIconButton>
+            <MudIconButton Disabled="@_validationBtnState" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="OnValidate">Ok</MudIconButton>
         </MudTooltip>
         <MudTooltip Text="Renuntare">
-            <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Error" OnClick="OnCancel">Cancel</MudIconButton>
+            <MudIconButton Disabled="@_validationBtnState" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Error" OnClick="CancelCrudActions">Cancel</MudIconButton>
         </MudTooltip>
     </MudItem>
 </MudGrid>
 
 
 @code {
+
     [Parameter]
     public EventCallback OnValidate{ get; set; }
 
@@ -35,29 +41,144 @@
     public EventCallback OnCancel { get; set; }
 
     [Parameter]
-    public  int ItemCount {get;set;}
+    public int ItemsCount { get; set; } = 0;
 
-    private bool _disabledAddBtn = false;
+    [Parameter]
+    public bool CRUDStatus { get; set; } = false;   // two way binding (out parameter)   
 
-    public string SetActionInfo()
+    // [Parameter]         // don't know if I will really use it 
+    public int CurrentAction { get; set; } = ActionState.Read;        // two way binding
+
+    [Parameter]
+    public EventCallback<bool> CRUDStatusChanged { get; set; }
+
+    static private bool DISABLED = true;
+    static private bool ENABLED  = false;
+
+
+    protected bool _actionBtnState       = DISABLED;       // Add Update Delete are initially disabled
+    protected bool _validationBtnState   = DISABLED;   // Also Ok and Cancel buttons
+
+    public string DisplayActionInfo()
     {
         string _info = string.Empty;
+
+
         switch (CurrentAction)
         {
-            case (int)_actionbtn.None:
+            case ActionState.Read:
                 break;    
-            case (int)_actionbtn.Add:
+            case ActionState.Add:
                 _info = "Adaugare";
                 break;
-            case (int)_actionbtn.Edit:
+            case ActionState.Edit:
                 _info = "Modificare";
                 break;
-            case (int)_actionbtn.Delete:
+            case ActionState.Delete:
                 _info = "Stergere";
                 break;
         }
-        SetAppMenuInfos.SetDisabledState(false);
+
         return _info;
     } 
+
+    async Task UpdateCRUDStatus()
+    {
+        await CRUDStatusChanged.InvokeAsync(CRUDStatus);
+    }
+
+    protected async void EnableEditableFields() 
+    {
+        CRUDStatus = ENABLED;
+        await UpdateCRUDStatus();
+    }
+    public async void DisableEditableFields() 
+    {
+        CRUDStatus = DISABLED;
+        await UpdateCRUDStatus();
+
+    }
+
+    public void EnableActionsBtn() // EnableAll()
+    {
+        _actionBtnState = ENABLED;          // enable choices ADD/Edit/Delete butons
+        _validationBtnState = DISABLED;     // TOGGLE
+    }
+
+    public void DisableActionsBtn() // EnableAll()
+    {
+        _actionBtnState = DISABLED;          // enable choices ADD/Edit/Delete butons
+        _validationBtnState = DISABLED;       // TOGGLE
+        if (CurrentAction > 0)
+            _validationBtnState = ENABLED;       // TOGGLE
+
+    }
+
+
+    protected void EnableAllFields() // EnableAll()
+    {
+        EnableEditableFields();         // enable all editable fields
+        _actionBtnState = ENABLED;          // enable choices ADD/Edit/Delete butons        
+        _validationBtnState = ENABLED;  // disable validations: a choice must be made        
+    }
+
+    public void AddNewRecord()
+    {
+        CurrentAction = ActionState.Add;
+        EnableEditableFields();
+        _actionBtnState = DISABLED;         // disable future actions
+        _validationBtnState = ENABLED;  // disable validations: a choice must be made
+    }
+    public void UpdateRecord()
+    {
+        if (ItemsCount == 0)
+        {
+            snackBar.Add("Nici o inregistrare selectata", Severity.Error);
+            return;
+        }
+
+        CurrentAction = (int)ActionState.Edit;
+
+        EnableEditableFields();
+        _actionBtnState = DISABLED;         // disable future actions
+        _validationBtnState = ENABLED;      // disable validations: a choice must be made
+    }
+
+    public void DeleteRecord()
+    {
+        if (ItemsCount == 0)
+        {
+            snackBar.Add("Nici o inregistrare selectata", Severity.Error);
+            return;
+        }
+
+        CurrentAction = (int)ActionState.Delete;
+
+        DisableEditableFields();            // NO need to enable fields, may try to modify
+        _actionBtnState = DISABLED;         // disable future actions
+        _validationBtnState = ENABLED;      // disable validations: a choice must be made
+    }
+
+    public void CancelCrudActions()
+    {
+        CurrentAction = ActionState.Read;
+        DisplayActionInfo();
+        DisableEditableFields();            // NO need to enable fields, may try to modify
+        EnableActionsBtn();                 // try again
+    }
+
+    public void RowClicked<T>(MudTable<T> t)
+    {
+        if (CurrentAction != (int)ActionState.Read)
+            return;     // don't change selection in the middle
+
+        if (t!.SelectedItem == null)
+            return; // no selection
+
+        if (t!.GetFilteredItemsCount() == 0)
+            ItemsCount = 0;
+
+        EnableActionsBtn();
+    }
 
 }

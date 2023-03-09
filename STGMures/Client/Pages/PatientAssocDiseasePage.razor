@@ -7,7 +7,7 @@
 
 @inject StgMures.Client.Services.IPatientAssocDiseaseService diseasesService
 @inject StgMures.Client.Services.IDiagnosticTypeService diagnosticService
-@inject ISetAppMenuInfos SetAppMenuInfos
+@inject ISetAppMenuInfos AppMenu
 
 
 <!-- A patient can be in the hospital for a heart desease (a very serios physical and psihological trauma), -->
@@ -116,14 +116,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (PatientId == 0)
+        if (PatientId is null || PatientId == 0)
         {
-            snackBar.Add("Nici un pacient selectat", Severity.Warning);
+            AppMenu.SetPatientName("Nici un pacient selectat");   // trebuie sa fie un pacient selectat. Daca nu e, ar trebui sa oblig alegerea unui pacient
+//            snackBar.Add("Nici un pacient selectat", Severity.Warning);
             // ar trebui sa cer sa aleaga un pacient, dar probabil nu voi lasa doar navigarea din lista
         }
+        else
+            AppMenu.SetPatientName(patient!.FirstName + " " + patient!.LastName);   // trebuie sa fie un pacient selectat. Daca nu e, ar trebui sa oblig alegerea unui pacient
+        AppMenu.SetPageTitle("Boli asociate");
 
-        SetAppMenuInfos.SetPageTitle("Boli asociate");
-        SetAppMenuInfos.SetSelectedPatient(patient!.FirstName + " " + patient!.LastName);   // trebuie sa fie un pacient selectat. Daca nu e, ar trebui sa oblig alegerea unui pacient
         await diseasesService.LoadPatientAssocDiseasesAsync();
         diseases = diseasesService.PatientAssocDiseases;
         if (diseases.Count == 0)

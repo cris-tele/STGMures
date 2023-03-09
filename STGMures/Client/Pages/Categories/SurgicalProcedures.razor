@@ -1,8 +1,7 @@
 ﻿@page "/SurgicalProcedures"
 
-@inherits PageBehavior
 @inject MudBlazor.ISnackbar snackBar
-@inject ISetAppMenuInfos SetAppMenuInfos
+@inject ISetAppMenuInfos AppMenu
 
 @inject StgMures.Client.Services.ISurgicalProcedureService procedureService
 
@@ -15,11 +14,11 @@
                 <MudTextField Class="invisible" Disabled="true" @bind-Value="tableItem.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="6">
-                <MudTextField Disabled="@SetAppMenuInfos.DisabledState" @bind-Value="tableItem.Name" HelperText="Denumire procedura chirurgicala" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="tableItem.Name" HelperText="Denumire procedura chirurgicala" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="5">
-                <!--!!!!!!!!!!!!!!!!!!!!  -->
-                <MudSelect Disabled="@SetAppMenuInfos.DisabledState" T="int" @bind-Value="tableItem.ParentId" AnchorOrigin="Origin.BottomCenter" HelperText="Optiune pentru procedura" Variant="Variant.Text" Margin="Margin.None">
+                <MudSelect Disabled="@_enabledOrDisabled" T="int" @bind-Value="tableItem.ParentId" AnchorOrigin="Origin.BottomCenter" HelperText="Optiune pentru procedura" Variant="Variant.Text" Margin="Margin.None">
+                    <MudSelectItem Value="0"> </MudSelectItem>  <!-- blank -->
                     @foreach (var _option in parentInfo)
                     {
                         <MudSelectItem Value="@_option.Id">@_option.Name</MudSelectItem>
@@ -32,30 +31,7 @@
     <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
 
     <MudCardActions>
-        <MudGrid>
-            <MudItem xs="1">
-                <MudTooltip Text="Adauga o noua inregistrare">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="AddNewRecord">Adauga</MudIconButton>
-                </MudTooltip>
-
-                <MudTooltip Text="Modifica inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="UpdateRecord">Modifica</MudIconButton>
-                </MudTooltip>
-
-                <MudTooltip Text="Sterge inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Primary" OnClick="DeleteRecord">Sterge</MudIconButton>
-                </MudTooltip>
-            </MudItem>
-            <MudItem xs="1" />
-            <MudItem xs="1">
-                <MudTooltip Text="Validare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
-                </MudTooltip>
-                <MudTooltip Text="Renuntare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Error" OnClick="DisableAll">Cancel</MudIconButton>
-                </MudTooltip>
-            </MudItem>
-        </MudGrid>
+        <AddUpdateDelete @ref="crudObj" OnValidate="@ValidateAction" ItemsCount="@GetTableItems()" @bind-CRUDStatus=_enabledOrDisabled />
     </MudCardActions>
 </MudCard>
 <br />
@@ -90,37 +66,32 @@
 
 
 @code {
+    private bool _enabledOrDisabled = false;
+    private AddUpdateDelete? crudObj;
+
     private List<SurgicalProcedure> procedures = new List<SurgicalProcedure>();  // from database
     private MudTable<SurgicalProcedureAndParent>? _table;
-    
+
     private SurgicalProcedureAndParent tableItem = new() ;
     List<ParentProcInfo> parentInfo = new();
     List<SurgicalProcedureAndParent> tableList = new();
 
-    private class ParentProcInfo
-    {
-        public int Id { get; set; }
-
-        public string Name { get; set; } = null!;
-
-    }
 
     // data
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            _table.SetRowsPerPage(10);
+            _table!.SetRowsPerPage(10);
         return base.OnAfterRenderAsync(firstRender);
     }
 
     protected override async Task OnInitializedAsync()
     {
-        SetAppMenuInfos.SetPageTitle("Categorii de proceduri chirurgicale");
+        AppMenu.SetPageTitle("Categorii de proceduri chirurgicale");
         await procedureService.LoadSurgicalProceduresAsync();
         InitializeLists();
-        if (procedures.Count == 0)
-            EnableAll();
-
+        if (_table!.GetFilteredItemsCount() == 0)
+            crudObj!.EnableActionsBtn();
     }
 
     private void InitializeLists()
@@ -147,17 +118,27 @@
 
     }
 
+    private int GetTableItems()
+    {
+        if (tableItem is null || tableItem.Id == 0 || _table is null)
+            return 0;  // no selection
+        return _table.GetFilteredItemsCount();
+    }
+
     protected void RowClicked(TableRowClickEventArgs<SurgicalProcedureAndParent> clickedRow)
     {
-        RowClicked(_table);
+        crudObj!.EnableActionsBtn();
+        crudObj!.RowClicked(_table!);
         SelectCurrentItem(clickedRow.Item.Id);
-        EnableAll();
     }
 
 
 
     private async Task ValidateAction()
     {
+        if (crudObj is null)    // ? Not defined ?
+            return;
+
         SurgicalProcedure _procedure = new SurgicalProcedure
             {
                 Id = tableItem.Id,
@@ -165,32 +146,29 @@
                 ParentId = tableItem.ParentId
             };
 
-        switch (CurrentAction)
+        switch (crudObj.CurrentAction)
         {
-            case (int)_actionbtn.None:
-                DisableAll();            // Invalid action, disable all
+            case ActionState.Read:
                 return;
-            case (int)_actionbtn.Add:
+            case ActionState.Add:
                 await procedureService.AddSurgicalProcedure(_procedure);
                 snackBar.Add("Inregistrare adaugata", Severity.Success);
                 break;
-            case (int)_actionbtn.Edit:
+            case ActionState.Edit:
                 await procedureService.UpdateSurgicalProcedure(_procedure);
                 snackBar.Add("Inregistrare modificata", Severity.Success);
                 break;
-            case (int)_actionbtn.Delete:
-                if (_procedure.Id == 0)               // Invalid selection
-                    return;
+            case ActionState.Delete:
                 await procedureService.DeleteSurgicalProcedure(_procedure.Id);
                 snackBar.Add("Inregistrare stearsa", Severity.Success);
+                _procedure.Id = 0;
                 break;
         }
 
-        _currentAction = 0;
-        // 
         InitializeLists();
 
-        DisableAll();
+        SelectCurrentItem(_procedure.Id);
+        crudObj.DisableEditableFields();
 
         await Task.Delay(1); // let UI refresh
     }
@@ -200,7 +178,16 @@
 
     private void SelectCurrentItem(int id)
     {
-        tableItem = tableList.FirstOrDefault(c => c.Id == id);
+        var search = tableList.FirstOrDefault(c => c.Id == id);
+
+        if (search is null)
+        {
+            Console.WriteLine("Not found");
+            tableItem.Id = 0;
+        }
+        else
+            tableItem = search;
+
     }
 
     private bool Search(SurgicalProcedureAndParent tableItem)

@@ -3,7 +3,7 @@
 @inherits PageBehavior
 @inject IPatientListService patientListService
 @inject MudBlazor.ISnackbar snackBar
-@inject ISetAppMenuInfos SetAppMenuInfos
+@inject ISetAppMenuInfos AppMenu
 @inject NavigationManager NavigationManager
 
 
@@ -160,7 +160,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        SetAppMenuInfos.SetPageTitle("Lista Pacientilor");
+        AppMenu.SetPageTitle("Lista Pacientilor");
         await patientListService.LoadPatientsAsync();
         _patientsList = patientListService.Patients;
         if (_patientsList.Count() == 0)
@@ -180,7 +180,8 @@
         if (_table!.SelectedItem == null)
             return;
         SelectCurrentItem(clickedPatient.Item.Id);
-        SetAppMenuInfos.SetSelectedPatient(clickedPatient.Item.FirstName + " " + clickedPatient.Item.LastName);
+        AppMenu.SetPatientName(clickedPatient.Item.FirstName + " " + clickedPatient.Item.LastName);
+        AppMenu.SelectedPatient = clickedPatient.Item;
         EnableAll();
     }
 

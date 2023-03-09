@@ -1,5 +1,6 @@
 ﻿@page "/PatientSurgeryPage"
-@page "/PatientSurgeryPage/{PatientID:int}" 
+@page "/PatientSurgeryPage/{ParentPageName}"
+@page "/PatientSurgeryPage/{PatientID:int}"
 
 
 @using StgMures.Shared.DbModels
@@ -7,7 +8,7 @@
 @inherits PageBehavior
 
 @inject IPatientSurgeryService patientSurgeryService
-@inject ISetAppMenuInfos SetAppMenuInfos
+@inject ISetAppMenuInfos AppMenu
 
 <!-- Presumption: a patient file refers only one surgery. Create a new patient file , one for each surgery procedure-->
 <!-- will be rezised after first version -->
@@ -181,6 +182,11 @@
 
 @code {
     // card design
+    [Parameter]
+    public int? PatientId { get; set; } 
+    [Parameter]
+    public string? ParentPageName { get; set; } = string.Empty;
+
     private Patient _currentPatient = new Patient();
     private PatientSurgery _currentSurgery = new ();        
     private Cec _currentCec = new();                        // one-to-one Surgery
@@ -199,8 +205,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        SetAppMenuInfos.SetPageTitle("Operatii Pacient");
-        // SetAppMenuInfos.SetSelectedPatient(_currentPatient!.FirstName + " " + _currentPatient!.LastName);   // trebuie sa fie un pacient selectat. Daca nu e, ar trebui sa oblig alegerea unui pacient
+        AppMenu.SetPageTitle("Operatii Pacient");
+        if (PatientId is null || PatientId == 0)
+        {
+            AppMenu.SetPatientName("Nici un pacient selectat");   // trebuie sa fie un pacient selectat. Daca nu e, ar trebui sa oblig alegerea unui pacient
+                                                                  // ar trebui sa cer sa aleaga un pacient, dar probabil nu voi lasa doar navigarea din lista
+        }
+        else
+            AppMenu.SetPatientName(_currentPatient!.FirstName + " " + _currentPatient!.LastName);   // trebuie sa fie un pacient selectat. Daca nu e, ar trebui sa oblig alegerea unui pacient
+
+        // AppMenu.SetSelectedPatient(_currentPatient!.FirstName + " " + _currentPatient!.LastName);   // trebuie sa fie un pacient selectat. Daca nu e, ar trebui sa oblig alegerea unui pacient
 
         await patientSurgeryService.LoadPatientSurgeriesAsync();
         surgeries = patientSurgeryService.PatientSurgeries;

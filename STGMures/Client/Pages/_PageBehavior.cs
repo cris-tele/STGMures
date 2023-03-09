@@ -45,7 +45,7 @@ namespace StgMures.Client.Pages
             _disabledBtn        = true;               // disable actions
             _disabledBtnValid   = true;               // disable validations
              StateHasChanged();
-            _appMenuInfos.SetDisabledState(_disabledField);
+//            _appMenuInfos.SetDisabledState(_disabledField);
         }
 
         protected void EnableActionButtons() // DisableAll()
@@ -57,7 +57,7 @@ namespace StgMures.Client.Pages
             _disabledField = true;               // disable editing
             _disabledBtnValid = true;               // disable validations
 
-            _appMenuInfos.SetDisabledState(_disabledField);
+//            _appMenuInfos.SetDisabledState(_disabledField);
             StateHasChanged();
 
         }
@@ -68,7 +68,7 @@ namespace StgMures.Client.Pages
             _disabledBtn = false;              // enable choices ADD/Edit/Delete butons 
             _disabledBtnValid   = true;               // disable validations: a choice must be made 
 
-            _appMenuInfos.SetDisabledState(_disabledField);
+//            _appMenuInfos.SetDisabledState(_disabledField);
 
         }
 
@@ -77,7 +77,7 @@ namespace StgMures.Client.Pages
             _disabledField = false;              // enable all editable fields
             _disabledBtn = false;              // enable choices ADD/Edit/Delete butons 
             _disabledBtnValid = true;               // disable validations: a choice must be made 
-            _appMenuInfos.SetDisabledState(_disabledField);
+//            _appMenuInfos.SetDisabledState(_disabledField);
             // StateHasChanged();
         }
 
@@ -88,7 +88,7 @@ namespace StgMures.Client.Pages
             _disabledField = false;              // enable all editable fields
             _disabledBtnValid = false;
             _disabledBtn = true; // disable future actions
-            _appMenuInfos.SetDisabledState(_disabledField);
+//            _appMenuInfos.SetDisabledState(_disabledField);
             StateHasChanged();
         }
         protected void UpdateRecord()
@@ -97,7 +97,7 @@ namespace StgMures.Client.Pages
 
             _disabledBtn = true;
             _disabledBtnValid = false;
-            _appMenuInfos.SetDisabledState(_disabledField);
+//            _appMenuInfos.SetDisabledState(_disabledField);
         }
 
         protected void DeleteRecord()
@@ -106,7 +106,7 @@ namespace StgMures.Client.Pages
 
             _disabledBtn = true;
             _disabledBtnValid = false;
-            _appMenuInfos.SetDisabledState(_disabledField);
+//            _appMenuInfos.SetDisabledState(_disabledField);
             // StateHasChanged();
         }
 

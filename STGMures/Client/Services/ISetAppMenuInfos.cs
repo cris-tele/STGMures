@@ -1,19 +1,20 @@
-﻿namespace StgMures.Client.Services
+﻿using StgMures.Shared.DbModels;
+
+namespace StgMures.Client.Services
 {
     public interface ISetAppMenuInfos
     {
         event Action OnChange;
-        string PageTitle { get; set; }
-        string LoggedMedic { get; set; }
 
-        bool DisabledState { get; set; }
-        string SelectedPatient { get; set; }
+        public string   PageTitle { get; set; } 
+        public string   MedicName { get; set; } 
+        public string   PatientName { get; set; } 
+        public Patient  SelectedPatient { get; set; } 
+        public Medic    LoggedMedic { get; set; } 
 
-        void SetPageTitle(string title);
-        void SetLoggedMedic(string loggedMedic);    
-        void SetSelectedPatient(string selectedPatient);
-
-        void SetDisabledState(bool disabled);
+        public void SetPageTitle(string title);
+        public void SetLoggedMedicName(string loggedMedic);
+        public void SetPatientName(string selectedPatient);
 
     }
 }

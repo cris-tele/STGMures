@@ -1,19 +1,24 @@
-﻿namespace StgMures.Client.Services
+﻿using StgMures.Shared.DbModels;
+
+namespace StgMures.Client.Services
 {
     public class SetAppMenuInfos : ISetAppMenuInfos
     {
         public event Action? OnChange;
-        public string PageTitle { get ; set ; } = string.Empty;
-        public string LoggedMedic { get; set; } = string.Empty;
-        public string SelectedPatient { get; set; } = string.Empty;
-        public bool DisabledState { get; set; } = false;
+        public string   PageTitle { get ; set ; } = string.Empty;
+        public string   MedicName { get; set; } = string.Empty;
+        public string   PatientName { get; set; } = string.Empty;
 
-        public void SetLoggedMedic(string loggedMedic)
+        public Patient  SelectedPatient { get; set; } = new();
+
+        public Medic    LoggedMedic { get; set; } = new();
+
+        public void SetLoggedMedicName(string loggedMedic)
         {
             if (string.IsNullOrEmpty(loggedMedic))
-                LoggedMedic = " --- ";
+                MedicName = " ";
             else
-            LoggedMedic = loggedMedic;
+                MedicName = loggedMedic;
             CurrentSelectionChange();
         }
 
@@ -26,21 +31,14 @@
             CurrentSelectionChange();
         }
 
-        public void SetSelectedPatient(string selectedPatient)
+        public void SetPatientName(string selectedPatient)
         {
             if (string.IsNullOrEmpty(selectedPatient))
-                SelectedPatient = "Unknoun patient";
-            else 
-                SelectedPatient = selectedPatient;
+                PatientName = "Unknown patient";
+            else
+                PatientName = selectedPatient;
             CurrentSelectionChange();
         }
-
-        public  void SetDisabledState(bool disabled)
-        {
-            DisabledState = disabled;
-            CurrentSelectionChange();
-        }
-
 
         void CurrentSelectionChange() => OnChange?.Invoke();
     }
