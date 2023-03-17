@@ -49,7 +49,7 @@ namespace StgMures.Server.Controllers
             return Ok(await _context.Surgeries.ToListAsync());
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateDiagnostic(Surgery surgery)
         {
             var dbDiagnostic = await _context.Surgeries.FirstOrDefaultAsync(p => p.Id == surgery.Id);

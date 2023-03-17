@@ -23,7 +23,9 @@ public partial class PatientAssocDisease
     /// </summary>
     public bool? IntraSurgery { get; set; }
 
+    /*
     public virtual Diagnostic Diagnostic { get; set; } = null!;
 
     public virtual Patient Patient { get; set; } = null!;
+    */
 }

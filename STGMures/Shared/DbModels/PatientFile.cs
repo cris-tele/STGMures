@@ -56,9 +56,11 @@ public partial class PatientFile
 
     public DateTime? WardRetransferDate { get; set; }
 
+    /*
     public virtual Patient Patient { get; set; } = null!;
 
     public virtual ICollection<PatientDiagnostic> PatientDiagnostics { get; } = new List<PatientDiagnostic>();
 
     public virtual ICollection<PatientSurgery> PatientSurgeries { get; } = new List<PatientSurgery>();
+    */
 }

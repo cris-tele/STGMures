@@ -61,7 +61,7 @@ namespace StgMures.Server.Controllers
             return Ok(await _context.Consumables.ToListAsync());
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateConsumable(Consumable consumable)
         {
             var dbConsumable = await _context.Consumables
@@ -85,7 +85,6 @@ namespace StgMures.Server.Controllers
             dbConsumable.ValueFormat= consumable.ValueFormat;
             dbConsumable.Type       = consumable.Type;
             dbConsumable.MeasureUnit= consumable.MeasureUnit;
-            // dbConsumable.Category   = consumableCategory;
 
             await _context.SaveChangesAsync();
 

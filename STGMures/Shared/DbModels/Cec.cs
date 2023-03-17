@@ -46,7 +46,9 @@ public partial class Cec
 
     public string? Note { get; set; }
 
+    /*
     public virtual ICollection<CecConsumable> CecConsumables { get; } = new List<CecConsumable>();
 
     public virtual PatientSurgery PatientSurgery { get; set; } = null!;
+    */
 }

@@ -33,5 +33,7 @@ public partial class Medic
 
     public bool IsDeleted { get; set; }
 
+    /*
     public virtual ICollection<MedicPatient> MedicPatients { get; } = new List<MedicPatient>();
+    */
 }

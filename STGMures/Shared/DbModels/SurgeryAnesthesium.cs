@@ -26,7 +26,9 @@ public partial class SurgeryAnesthesium
     /// </summary>
     public string Type { get; set; } = null!;
 
+    /*
     public virtual ICollection<AnesthesiaConsumable> AnesthesiaConsumables { get; } = new List<AnesthesiaConsumable>();
 
     public virtual PatientSurgery PatientSurgery { get; set; } = null!;
+    */
 }

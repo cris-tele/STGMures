@@ -9,10 +9,10 @@
 <MudCard Elevation="5">
     <MudCardContent>
         <MudGrid>
-            <MudItem xs="2">
-                <MudSelect Disabled="@(CurrentAction != 0)" ValueChanged="@( id => CategorySelected(id) )"
+            <MudItem xs="3">
+                <MudSelect ValueChanged="@( id => CategorySelected(id) )"
                            T="int" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Text" Margin="Margin.None" Dense="true">
-                    <MudSelectItem Value="0" Disabled="true">Selectati categoria</MudSelectItem>
+                    <MudSelectItem Value="0">Selectati grupa/categoria</MudSelectItem>
                     @foreach (DiagnosticCategory _option in categories)
                     {
                         <MudSelectItem Value="@_option.Id">@_option.Name</MudSelectItem>
@@ -33,12 +33,12 @@
             </MudItem>
             <MudItem xs="3">
                 <MudSelect Disabled="@_enabledOrDisabled" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="diagnostic.ParentId" HelperText="Diagnostic principal" Variant="Variant.Text" Margin="Margin.None">
-                    <MudSelectItem Value="0">----------</MudSelectItem>
+                    <!--  <MudSelectItem Value="0">----------</MudSelectItem> -->
                     @foreach (var _option in parentDiagnostics)
                     {
-                        if (_option.ParentId != 0) 
+                        if (_option.ParentId == 0)  // add all without being a child
                         {
-                            <MudSelectItem Value="@_option.ParentId" >@_option.Name </MudSelectItem>
+                            <MudSelectItem Value="@_option.Id" >@_option.Name </MudSelectItem>
                         }
                     }
                 </MudSelect>
@@ -139,9 +139,10 @@
 
     private void CategorySelected(int id)
     {
+
         if (id != 0)
         {
-            filteredDiagnostics     = diagnostics.Where(c => c.DiagnosticCategoryId == id).ToList();
+            filteredDiagnostics = diagnostics.Where(c => c.DiagnosticCategoryId == id).ToList();
             var selected = categories.Where(c => c.Id == id).FirstOrDefault();
             if (selected is not null)
                 selectedDiagnosticCategory = selected;
@@ -149,24 +150,52 @@
                 selectedDiagnosticCategory.Id = 0;
         }
         else
+        {
             filteredDiagnostics = diagnostics; // .GetRange(0, consumables.Count); // no filter, copy all; or same list 
-        parentDiagnostics = filteredDiagnostics.GetRange(0, filteredDiagnostics.Count) ; 
-        parentDiagnostics.Insert(0, new Diagnostic { Id = 0, ParentId = 0, Name = "-----------" });
+        }
+        parentDiagnostics = filteredDiagnostics.GetRange(0, filteredDiagnostics.Count) ; // copy
+        Diagnostic emptyDiadnostic = new Diagnostic { Id = 0, ParentId = 0, DiagnosticCategoryId = 0, Name = ""};
+        parentDiagnostics.Insert(0, emptyDiadnostic);  // se pune una in mudselect
+        if (filteredDiagnostics.Count >0)
+            try
+            {
+                tableList = filteredDiagnostics.SelectMany(
+                        filt => parentDiagnostics.Where(pare => pare.Id == filt.ParentId).DefaultIfEmpty(emptyDiadnostic),
+                        (filt, pare) => new DiagnosticsAndParent()
+                        {
+                            Id = filt.Id,
+                            Name = filt.Name,
+                            ParentId = filt.ParentId,
+                            DiagnosticCategoryId = filt.DiagnosticCategoryId,
+                                ValueFormat = filt.ValueFormat, //string.IsNullOrEmpty(filt.ValueFormat) ? string.Empty : filt.ValueFormat,
+                                MeasureUnit = filt.MeasureUnit, // string.IsNullOrEmpty(filt.MeasureUnit) ? string.Empty : filt.MeasureUnit,
+                                Note = filt.Note, // string.IsNullOrEmpty(filt.Note) ? string.Empty : filt.Note,
+                                MinAlertValue = filt.MinAlertValue, //string.IsNullOrEmpty(filt.MinAlertValue) ? string.Empty : filt.MinAlertValue,
+                                MaxAlertValue = filt.MaxAlertValue, // string.IsNullOrEmpty(filt.MaxAlertValue) ? string.Empty : filt.MaxAlertValue,
+                            ParentName = pare?.Name
+                        }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Exception x = ex;
+            }
 
-        tableList = filteredDiagnostics.SelectMany(
-                filt => parentDiagnostics.Where(pare => pare.Id == filt.ParentId).DefaultIfEmpty(),
-                (filt, pare) => new DiagnosticsAndParent()
-                    {
-                        Id = filt.Id,
-                        Name = filt.Name,
-                        ParentId = filt.ParentId,
-                        DiagnosticCategoryId = filt.DiagnosticCategoryId,
-                        ValueFormat = filt.ValueFormat,
-                        MeasureUnit =filt.MeasureUnit,
-                        Note = filt.Note,
-                        ParentName = pare!.Name
+        // selection changes -> reinitialise editable fields
+        if (diagnostic is not null)
+        {
+            diagnostic.Id = 0;
+            diagnostic.DiagnosticCategoryId= 0;
+            diagnostic.ValueFormat = string.Empty;
+            diagnostic.MeasureUnit = string.Empty;
+            diagnostic.Name = string.Empty;
+            diagnostic.Note = string.Empty;
+        }
+        else
+        {
+            diagnostic = new();
+        }
 
-                    }).ToList();
+
     }
 
 
@@ -180,7 +209,8 @@
         await diagnosticService.LoadDiagnosticsAsync();
         diagnostics = diagnosticService.Types;
 
-        CategorySelected(0);
+        if (diagnostics.Count > 0)
+            CategorySelected(0);
 
         if (_table!.GetFilteredItemsCount() == 0)
             crudObj!.EnableActionsBtn();
@@ -199,6 +229,7 @@
         crudObj!.EnableActionsBtn();
         crudObj!.RowClicked(_table!);
         SelectCurrentItem(clickedCategory.Item.Id);
+        // CategorySelected(clickedCategory.Item.Id); 
     }
 
 
@@ -207,9 +238,10 @@
     {
         if (crudObj is null)    // ? Not defined ?
             return;
-        if (selectedDiagnosticCategory.Id == 0)
+        if (selectedDiagnosticCategory.Id == 0 && crudObj.CurrentAction == ActionState.Add)
         {
             snackBar.Add("Nu este selectata o categorie", Severity.Error);  // nu ar trebui sa ajunga pe aici, dar nu poate salva fara o categorie
+            crudObj.CurrentAction = ActionState.Read;
             return;
         }
 
@@ -219,10 +251,16 @@
                 return;
             case ActionState.Add:
                 diagnostic.DiagnosticCategoryId = selectedDiagnosticCategory.Id;
+                diagnostic.Id = 0;
                 await diagnosticService.AddDiagnostic(diagnostic);
                 snackBar.Add("Inregistrare adaugata", Severity.Success);
                 break;
             case ActionState.Edit:
+                if (diagnostic.Id == diagnostic.ParentId)
+                {
+                    snackBar.Add("Un Diagnostic nu poate fi propriul parinte / detaliu", Severity.Success);
+                    diagnostic.ParentId = 0; //make it principal
+                }
                 await diagnosticService.UpdateDiagnostic(diagnostic);
                 snackBar.Add("Inregistrare modificata", Severity.Success);
                 break;
@@ -234,9 +272,10 @@
                 break;
         }
 
-        diagnostics = diagnosticService.Types;
-        SelectCurrentItem(diagnostic.Id);
-        crudObj.DisableEditableFields();
+        diagnostics = diagnosticService.Types;  //reload
+        CategorySelected(selectedDiagnosticCategory.Id);    // refilter
+        crudObj.Read();
+
         await Task.Delay(1); // let UI refresh
     }
 

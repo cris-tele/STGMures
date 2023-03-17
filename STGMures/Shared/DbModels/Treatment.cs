@@ -18,13 +18,16 @@ public partial class Treatment
     public string? Type { get; set; }
 
     /// <summary>
-    /// Defaul admin method (dosage, perfusion...) 
+    /// Default admin method (dosage, perfusion...) 
     /// </summary>
     public string? AdministrationMethod { get; set; }
 
     public string? ValueFormat { get; set; }
 
+    public string? MeasureUnit { get; set; }
+    /*
     public virtual ICollection<PatientTreatment> PatientTreatments { get; } = new List<PatientTreatment>();
 
     public virtual TreatmentCategory TreatmentCategory { get; set; } = null!;
+    */
 }

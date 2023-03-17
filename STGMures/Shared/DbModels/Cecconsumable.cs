@@ -22,7 +22,9 @@ public partial class CecConsumable
 
     public string? ShortNote { get; set; }
 
+    /*
     public virtual Cec Cec { get; set; } = null!;
 
     public virtual Consumable Consumable { get; set; } = null!;
+    */
 }

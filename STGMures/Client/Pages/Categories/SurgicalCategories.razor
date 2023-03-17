@@ -1,0 +1,178 @@
+﻿@page "/SurgicalCategories"
+
+@inject MudBlazor.ISnackbar snackBar
+@inject ISetAppMenuInfos AppMenu
+
+@inject StgMures.Client.Services.ISurgicalCategoryService categoryService
+
+<!--edit card-->
+<MudCard Elevation="5">
+    <!--    <MudCardHeader >  </MudCardHeader> --> <!--Nu stiu daca voi folosi-->
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="1">
+                <MudTextField Class="invisible" Disabled="true" @bind-Value="category.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="category.Name" HelperText="Denumire procedura chirurgicala" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            </MudItem>
+<!--
+            <MudItem xs="5">
+                <MudSelect Disabled="@_enabledOrDisabled" T="int" @bind-Value="category.ParentId" AnchorOrigin="Origin.BottomCenter" HelperText="Optiune pentru procedura" Variant="Variant.Text" Margin="Margin.None">
+                    <MudSelectItem Value="0"> </MudSelectItem>  
+                    @foreach (var _option in parentInfo)
+                    {
+                        // <MudSelectItem Value="@_option.Id">@_option.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+-->
+        </MudGrid>
+    </MudCardContent>
+
+    <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
+
+    <MudCardActions>
+        <AddUpdateDelete @ref="crudObj" OnValidate="@ValidateAction" ItemsCount="@GetTableItems()" @bind-CRUDStatus=_enabledOrDisabled />
+    </MudCardActions>
+</MudCard>
+<br />
+
+
+<!--table list-->
+<MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5"
+          Items="@categories" Filter="new Func<SurgicalCategory, bool>(Search)" @bind-customer="category" OnRowClick="@RowClicked" T="SurgicalCategory">
+    <ToolBarContent>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Cautati o procedura..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh Class="invisible">ID</MudTh>
+        <MudTh Class="col-11">Denumire Procedura Chirurgicala</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd Class="invisible" DataLabel="Id">@context.Id</MudTd>
+        <MudTd Class="col-11" DataLabel="Denumire procedura">@context.Name</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
+    </PagerContent>
+
+</MudTable>
+
+
+
+
+@code {
+    private bool _enabledOrDisabled = false;
+    private AddUpdateDelete? crudObj;
+
+    private MudTable<SurgicalCategory>? _table;
+
+    private SurgicalCategory category = new() { Id = 0, Name = string.Empty };
+    private List<SurgicalCategory> categories = new List<SurgicalCategory>();  // from database
+
+
+
+    // data
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            _table!.SetRowsPerPage(10);
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AppMenu.SetPageTitle("Categorii de proceduri chirurgicale");
+        await categoryService.LoadSurgicalCategoriesAsync();
+        InitializeLists();
+        if (_table!.GetFilteredItemsCount() == 0)
+            crudObj!.EnableActionsBtn();
+    }
+
+    private void InitializeLists()
+    {
+        categories = categoryService.SurgicalCategories;
+    }
+
+    private int GetTableItems()
+    {
+        if (category is null || category.Id == 0 || _table is null)
+            return 0;  // no selection
+        return _table.GetFilteredItemsCount();
+    }
+
+    protected void RowClicked(TableRowClickEventArgs<SurgicalCategory> clickedRow)
+    {
+        crudObj!.EnableActionsBtn();
+        crudObj!.RowClicked(_table!);
+        SelectCurrentItem(clickedRow.Item.Id);
+    }
+
+
+
+    private async Task ValidateAction()
+    {
+        if (crudObj is null)    // ? Not defined ?
+            return;
+
+
+        switch (crudObj.CurrentAction)
+        {
+            case ActionState.Read:
+                return;
+            case ActionState.Add:
+                await categoryService.AddSurgicalCategory(category);
+                snackBar.Add("Inregistrare adaugata", Severity.Success);
+                break;
+            case ActionState.Edit:
+                await categoryService.UpdateSurgicalCategory(category);
+                snackBar.Add("Inregistrare modificata", Severity.Success);
+                break;
+            case ActionState.Delete:
+                await categoryService.DeleteSurgicalCategory(category.Id);
+                snackBar.Add("Inregistrare stearsa", Severity.Success);
+                category.Id = 0;
+                break;
+        }
+
+        InitializeLists();
+
+        SelectCurrentItem(category.Id);
+        crudObj.CancelCrudActions();
+
+        await Task.Delay(1); // let UI refresh
+    }
+
+    // movers
+    private string searchString = "";
+
+    private void SelectCurrentItem(int id)
+    {
+        if (categories.Count == 0)
+            return;
+
+        var search = categories.FirstOrDefault(c => c.Id == id);
+        if (search is null)
+        {
+            Console.WriteLine("Not found");
+            category.Id = 0;
+        }
+        else
+            category = search;
+    }
+
+    private bool Search(SurgicalCategory category)
+    {
+        if (string.IsNullOrWhiteSpace(searchString)) return true;
+
+        if (category.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        return false;
+    }
+
+}

@@ -22,7 +22,9 @@ public partial class AnesthesiaConsumable
 
     public string? ShortNote { get; set; }
 
+    /*
     public virtual Consumable Consumable { get; set; } = null!;
 
     public virtual SurgeryAnesthesium SurgeryAnesthesia { get; set; } = null!;
+    */
 }

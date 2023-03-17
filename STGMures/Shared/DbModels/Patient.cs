@@ -50,6 +50,7 @@ public partial class Patient
     /// </summary>
     public string? Note { get; set; }
 
+    /*
     public virtual ICollection<MedicPatient> MedicPatients { get; } = new List<MedicPatient>();
 
     public virtual ICollection<PatientAssocDisease> PatientAssocDiseases { get; } = new List<PatientAssocDisease>();
@@ -57,4 +58,5 @@ public partial class Patient
     public virtual ICollection<PatientFile> PatientFiles { get; } = new List<PatientFile>();
 
     public virtual ICollection<PatientTreatment> PatientTreatments { get; } = new List<PatientTreatment>();
+    */
 }

@@ -35,7 +35,9 @@ namespace StgMures.Client.Services
 
         public async Task LoadPatientAssocDiseasesAsync()
         {
-            PatientAssocDiseases = await _http.GetFromJsonAsync<List<PatientAssocDisease>>("api/PatientAssoc");
+            var response = await _http.GetFromJsonAsync<List<PatientAssocDisease>>("api/PatientAssoc");
+            if (response is not null)
+                PatientAssocDiseases = response;
         }
 
 

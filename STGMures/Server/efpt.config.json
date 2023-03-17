@@ -91,7 +91,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[SurgicalProcedure]",
+         "Name": "[dbo].[SurgicalCategory]",
          "ObjectType": 0
       },
       {

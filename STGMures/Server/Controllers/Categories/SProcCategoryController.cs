@@ -19,14 +19,14 @@ namespace StgMures.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTreatmentCategories()
         {
-            var ret = await _context.SurgicalProcedures.ToListAsync();
+            var ret = await _context.SurgicalCategories.ToListAsync();
             return Ok(ret);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetSurgicalProcedure(int id)
+        public async Task<IActionResult> GetSurgicalCategory(int id)
         {
-            var dbSurgicalProcedure = await _context.SurgicalProcedures.FirstOrDefaultAsync(p => p.Id == id);
+            var dbSurgicalProcedure = await _context.SurgicalCategories.FirstOrDefaultAsync(p => p.Id == id);
             if (dbSurgicalProcedure == null)
             {
                 return NotFound("""Categoria nu exista.""");
@@ -36,10 +36,10 @@ namespace StgMures.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddSurgicalProcedure(SurgicalProcedure surgicalProcedure)
+        public async Task<IActionResult> AddSurgicalCategory(SurgicalCategory surgicalProcedure)
         {
             surgicalProcedure.Id = 0; // database generated
-            _context.SurgicalProcedures.Add(surgicalProcedure);
+            _context.SurgicalCategories.Add(surgicalProcedure);
             try
             {
                 await _context.SaveChangesAsync();
@@ -48,20 +48,19 @@ namespace StgMures.Server.Controllers
             {
                 return NotFound(ex.Message);
             }
-            return Ok(await _context.SurgicalProcedures.ToListAsync());
+            return Ok(await _context.SurgicalCategories.ToListAsync());
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSurgicalProcedure(SurgicalProcedure surgicalProcedure)
+        [HttpPut]
+        public async Task<IActionResult> UpdateSurgicalCategory(SurgicalCategory surgicalProcedure)
         {
-            var dbSurgicalProcedure = await _context.SurgicalProcedures.FirstOrDefaultAsync(p => p.Id == surgicalProcedure.Id);
+            var dbSurgicalProcedure = await _context.SurgicalCategories.FirstOrDefaultAsync(p => p.Id == surgicalProcedure.Id);
             if (dbSurgicalProcedure == null)
             {
                 return NotFound("""Categoria nu exista.""");
             }
 
             dbSurgicalProcedure.Name = surgicalProcedure.Name;
-            dbSurgicalProcedure.ParentId = surgicalProcedure.ParentId;
 
             await _context.SaveChangesAsync();
 
@@ -69,24 +68,24 @@ namespace StgMures.Server.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSurgicalProcedure(int id) // trebuie sa fac si una cu isDeleted
+        public async Task<IActionResult> DeleteSurgicalCategory(int id) // trebuie sa fac si una cu isDeleted
         {
-            var dbSurgicalProcedure = await _context.SurgicalProcedures.FirstOrDefaultAsync(p => p.Id == id);
+            var dbSurgicalProcedure = await _context.SurgicalCategories.FirstOrDefaultAsync(p => p.Id == id);
             if (dbSurgicalProcedure == null)
             {
                 return NotFound("""Categoria nu exista.""");
             }
 
-            _context.SurgicalProcedures.Remove(dbSurgicalProcedure);
+            _context.SurgicalCategories.Remove(dbSurgicalProcedure);
             await _context.SaveChangesAsync();
 
-            return Ok(await _context.SurgicalProcedures.ToListAsync());
+            return Ok(await _context.SurgicalCategories.ToListAsync());
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> SoftDeleteSurgicalProcedure(int id, SurgicalProcedure surgicalProcedure) //soft delete
+        public async Task<IActionResult> SoftDeleteSurgicalProcedure(int id, SurgicalCategory surgicalProcedure) //soft delete
         {
-            var dbSurgicalProcedure = await _context.SurgicalProcedures.FirstOrDefaultAsync(p => p.Id == surgicalProcedure.Id);
+            var dbSurgicalProcedure = await _context.SurgicalCategories.FirstOrDefaultAsync(p => p.Id == surgicalProcedure.Id);
             if (dbSurgicalProcedure == null)
             {
                 return NotFound("""Categoria nu exista.""");

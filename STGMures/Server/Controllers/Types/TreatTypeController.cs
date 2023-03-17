@@ -49,7 +49,7 @@ namespace StgMures.Server.Controllers
             return Ok(await _context.Treatments.ToListAsync());
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateTreatment(Treatment treatment)
         {
             var dbTreatment = await _context.Treatments.FirstOrDefaultAsync(p => p.Id == treatment.Id);

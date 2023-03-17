@@ -38,6 +38,12 @@ namespace StgMures.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> AddDiagnostic(Diagnostic diagnostic)
         {
+            if (diagnostic == null)
+                return NotFound();
+
+            if (diagnostic.Id != 0)
+                diagnostic.Id = 0;  // IDENTITY ISSUE
+
             _context.Diagnostics.Add(diagnostic);
             try
             {
@@ -50,7 +56,7 @@ namespace StgMures.Server.Controllers
             return Ok(await _context.Diagnostics.ToListAsync());
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateDiagnostic(Diagnostic diagnostic)
         {
             var dbDiagnostic = await _context.Diagnostics.FirstOrDefaultAsync(p => p.Id == diagnostic.Id);
@@ -60,6 +66,14 @@ namespace StgMures.Server.Controllers
             }
 
             dbDiagnostic.Name = diagnostic.Name;
+            dbDiagnostic.Note = diagnostic.Note;
+            dbDiagnostic.ValueFormat = diagnostic.ValueFormat;
+            dbDiagnostic.MinAlertValue = diagnostic.MinAlertValue;  
+            dbDiagnostic.DiagnosticCategoryId = diagnostic.DiagnosticCategoryId;
+            dbDiagnostic.MaxAlertValue = diagnostic.MaxAlertValue;  
+            dbDiagnostic.MeasureUnit= diagnostic.MeasureUnit;
+            dbDiagnostic.ParentId = diagnostic.ParentId;
+
 
             await _context.SaveChangesAsync();
 

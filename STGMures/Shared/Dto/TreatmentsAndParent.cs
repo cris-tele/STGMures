@@ -29,11 +29,13 @@ namespace StgMures.Shared.Dto
 
         public string? ValueFormat { get; set; } // cannot choose null
 
-        // Inca nu stiu cum e cu astea... 
-/*
-        public virtual ICollection<PatientTreatment> PatientTreatments { get; } = new List<PatientTreatment>();
+        public string? MeasureUnit { get; set; } // cannot choose null
 
-        public virtual TreatmentCategory TreatmentCategory { get; set; } = null!;
-*/
+        // Inca nu stiu cum e cu astea... 
+        /*
+                public virtual ICollection<PatientTreatment> PatientTreatments { get; } = new List<PatientTreatment>();
+
+                public virtual TreatmentCategory TreatmentCategory { get; set; } = null!;
+        */
     }
 }

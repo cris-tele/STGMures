@@ -34,7 +34,7 @@ namespace StgMures.Client
             builder.Services.AddScoped<ITreatmentCategoryService, TreatmentCategoryService>();
             builder.Services.AddScoped<IDiagnosticCategoryService, DiagnosticCategoryService>();
             builder.Services.AddScoped<IConsumableCategoryService, ConsumableCategoryService>();
-            builder.Services.AddScoped<ISurgicalProcedureService, SurgicalProcedureService>();
+            builder.Services.AddScoped<ISurgicalCategoryService, SurgicalCategoryService>();
             builder.Services.AddScoped<IConsumableCategoryService, ConsumableCategoryService>();
             
             //types

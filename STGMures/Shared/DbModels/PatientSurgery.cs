@@ -10,7 +10,8 @@ public partial class PatientSurgery
     public int Id { get; set; }
 
     public int PatientId { get; set; }
-
+    
+    public int SurgeryId { get; set; }
     public int PatientFileId { get; set; }
 
     /// <summary>
@@ -47,6 +48,7 @@ public partial class PatientSurgery
 
     public string? Complications { get; set; }
 
+    /*
     public virtual ICollection<Cec> Cecs { get; } = new List<Cec>();
 
     public virtual PatientFile PatientFile { get; set; } = null!;
@@ -54,4 +56,5 @@ public partial class PatientSurgery
     public virtual ICollection<Surgery> Surgeries { get; } = new List<Surgery>();
 
     public virtual ICollection<SurgeryAnesthesium> SurgeryAnesthesia { get; } = new List<SurgeryAnesthesium>();
+    */
 }

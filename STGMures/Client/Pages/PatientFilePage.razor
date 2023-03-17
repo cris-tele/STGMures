@@ -7,6 +7,9 @@
 
 <!--current pacient = selected patient in the patient list page-->
 @inject IPatientFileService patientFileService
+@inject IPatientListService patientListService
+<!-- tab pages: -->
+@inject StgMures.Client.Services.IDiagnosticCategoryService diagnosticCategoryService    
 
 @inject ISetAppMenuInfos AppMenu
 
@@ -57,11 +60,11 @@
             <MudItem xs ="1"> </MudItem>
 
             <MudItem xs="1">
-                <MudTextField Disabled="@_disabledField" @bind-Value="currentPatientFile.AtiTakeOverDate" HelperText="Internare ATI" Format="yyyy-MM-dd" InputType="InputType.Date" Variant="Variant.Text" Culture="@CultureInfo.GetCultureInfo("ro-RO")"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="currentPatientFile.AtiTakeOverDate" HelperText="Internare ATI" Format="yyyy-MM-dd" InputType="InputType.Date" Variant="Variant.Text" Culture="@roRo"></MudTextField>
             </MudItem>
 
             <MudItem xs="1">
-                <MudTextField Disabled="@_disabledField" @bind-Value="currentPatientFile.AtiRetakeOverDate" HelperText="ReInternare ATI" Format="yyyy-MM-dd" InputType="InputType.Date" Variant="Variant.Text" Culture="@CultureInfo.GetCultureInfo("ro-RO")"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="currentPatientFile.AtiRetakeOverDate" HelperText="ReInternare ATI" Format="yyyy-MM-dd" InputType="InputType.Date" Variant="Variant.Text" Culture="@roRo"></MudTextField>
             </MudItem>
 
             <MudItem xs="1">
@@ -144,47 +147,13 @@
 <br />
 
 <MudTabs Outlined="true">
-    <MudTabPanel Text="Diagnostic Primar">
-        <StgMures.Client.Pages.PatientDiagnosticsTabPage></StgMures.Client.Pages.PatientDiagnosticsTabPage>
+    @foreach  (DiagnosticCategory _option in tabPages)
+    {
+    <MudTabPanel Text="@_option.Name" >
+        <StgMures.Client.Pages.PatientDiagnosticsTabPage PatientId="@PatientId" TabDiagnosticCategory="@_option.Id"></StgMures.Client.Pages.PatientDiagnosticsTabPage>
     </MudTabPanel>
-    <MudTabPanel Text="Diagnostic Secundar">
-        <StgMures.Client.Pages.PatientDiagnosticsTabPage></StgMures.Client.Pages.PatientDiagnosticsTabPage>
-
-    </MudTabPanel>
+    }
 </MudTabs>
-
-
-<!--table list-->
-<!--<MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5" 
-          Items="@patientsFiles" @bind-customer="currentPatientFile" OnRowClick="@RowClicked" T="PatientFile"> -->
-
-          <!-- no filter: Items="@patientsFiles" Filter="new Func<PatientFile, bool>(Search)" @bind-customer="currentPatientFile" OnRowClick="@RowClicked" T="PatientFile"> -->
-
-<!-- NU e cazul, vor fi 2-3 fise max
-    <ToolBarContent>
-        <MudSpacer />
-        <MudTextField @bind-Value="searchString" Placeholder="Cautati o categorie..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.currentPatientFile" IconSize="Size.Small" Class="mt-0"></MudTextField>
-    </ToolBarContent>
-    <HeaderContent>
-        <MudTh>Nr.Fisa</MudTh>
-        <MudTh>Data Fisa</MudTh>
-        <MudTh>Data Internarii</MudTh>
-        <MudTh>Data Externarii</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd Class="col-1" DataLabel="Id">@context.FileNumber</MudTd>
-        <MudTd Class="col-2" DataLabel="Tip">@context.FileDate</MudTd>
-        <MudTd Class="col-9" DataLabel="Denumire">@context.HospitalAdmissionDate</MudTd>
-        <MudTd Class="col-9" DataLabel="Denumire">@context.DischargeDate</MudTd>
-    </RowTemplate>
--->
-<!--fara pager,ca nu sunt atat de multe-->
-    <!--
-    <PagerContent>
-        <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
-    </PagerContent>
-    -->
-<!--</MudTable>-->
 
 
 
@@ -197,12 +166,14 @@
     private Patient _currentPatient = new Patient();
     private PatientFile currentPatientFile = new PatientFile();
 
+    private List<DiagnosticCategory> tabPages = new ();  // se pot selecta fisele, daca sunt mai multe.
+
     // table design
     private MudTable<PatientFile>? _table;  // deocamdata afisez lista de fise ale pacientului; 
 
     private List<PatientFile> patientsFiles = new List<PatientFile>();  // se pot selecta fisele, daca sunt mai multe.
 
-    CultureInfo roRo = CultureInfo.GetCultureInfo("ro-RO");
+    CultureInfo roRo = CultureInfo.GetCultureInfo("de-DE");
 
     // data
     // Ar fi o idee sa afisez in fisa pacientului direct diagnosticele, dar in varianta 1 fac pagina separata.
@@ -212,15 +183,25 @@
 
     protected override async Task OnInitializedAsync()
     {
+        AppMenu.SetPageTitle("Fisa Pacient");
         if (PatientId is null || PatientId == 0)
         {
             snackBar.Add("Nici un pacient selectat", Severity.Warning);
             // ar trebui sa cer sa aleaga un pacient, dar probabil nu voi lasa doar navigarea din lista
         }
         else
+        {
+            // select patient
+            int id = (int)PatientId;
+            var _currentPatient = await patientListService.GetPatient(id);  
+            AppMenu.SetPatientName(_currentPatient!.FirstName + " " + _currentPatient!.LastName);   
+        }
 
-        AppMenu.SetPageTitle("Fisa Pacient");
-        AppMenu.SetPatientName(_currentPatient!.FirstName + " " + _currentPatient!.LastName);   // trebuie sa fie un pacient selectat. Daca nu e, ar trebui sa oblig alegerea unui pacient
+        await diagnosticCategoryService.LoadDiagnosticCategoriesAsync();
+        List<string> tabTypes = new() { "PRIMARY", "SECONDARY", "PRIMAR", "SECUNDAR" };
+        tabPages = diagnosticCategoryService.Categories.Where(tab => tabTypes.Contains(tab.Type.Trim())).ToList();
+
+        tabPages = diagnosticCategoryService.Categories;    // just for debug
 
         await patientFileService.LoadPatientFilesAsync();
         patientsFiles = patientFileService.PatientFiles;

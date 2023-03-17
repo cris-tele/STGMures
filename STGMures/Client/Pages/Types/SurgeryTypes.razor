@@ -6,7 +6,7 @@
 @inject MudBlazor.ISnackbar snackBar
 
 @inject StgMures.Client.Services.ISurgeryTypeService surgeryService
-@inject StgMures.Client.Services.ISurgicalProcedureService procedureService
+@inject StgMures.Client.Services.ISurgicalCategoryService categoryService
 @inject ISetAppMenuInfos AppMenu
 
 <!-- Basically it is an intersection table, will be used only for testing / debug purposes -->
@@ -14,21 +14,29 @@
 <!--edit card-->
 <MudCard Elevation="5">
     <MudCardContent>
+        <MudGrid>
+            <MudItem xs="3">
+                <!-- Se pune Disabled doar in timpul AddEditDelete-->
+                <MudSelect ValueChanged="@( id => CategorySelected(id) )"
+                           T="int" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Text" Margin="Margin.None" Dense="true">
+                    <MudSelectItem Value="0" Disabled="true">Selectati grupa/categoria:</MudSelectItem>
+                    @foreach (SurgicalCategory _option in surgicalCategories)
+                    {
+                        <MudSelectItem Value="@_option.Id">@_option.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+        </MudGrid>
 
         <MudGrid>
             <MudItem xs="1">
                 <MudTextField Class="invisible" Disabled="true" @bind-Value="surgery.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-<!--
-            <MudItem xs="2">
-                <MudTextField Disabled="true" @bind-Value="surgery.SurgicalProcedureId" HelperText="Procedura" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+            <MudItem xs="4">
+                <MudTextField Disabled="_enabledOrDisabled" @bind-Value="surgery.Name" HelperText="Denumire procedura" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="2">
-                <MudTextField Disabled="true" @bind-Value="surgery.PatientSurgeryId" HelperText="Op.pacient" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
-            </MudItem>
--->
             <MudItem xs="7">
-                <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="surgery.Description" HelperText="Descriere/Observatii" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="surgery.Description" HelperText="Descriere/Observatii" Variant="Variant.Text" Margin="Margin.None" Lines="3"></MudTextField>
             </MudItem>
         </MudGrid>
     </MudCardContent>
@@ -45,21 +53,10 @@
 <!--table list-->
 <MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5"
           Items="@surgeries" Filter="new Func<Surgery, bool>(Search)" @bind-customer="surgery" OnRowClick="@RowClicked" T="Surgery">
-
-    <HeaderContent>
-        <MudTh Class="invisible"></MudTh>
-        <MudTh Class="col-2"></MudTh>
-        <MudTh Class="col-2" ></MudTh>
-        <MudTh Class="col-7">Descriere</MudTh>
-    </HeaderContent>
-
     <RowTemplate>
-        <MudTd Class="invisible" >@context.Id</MudTd>
-        <MudTd Class="col-2" >@context.SurgicalProcedureId</MudTd>
-        <MudTd Class="col-2" >@context.PatientSurgeryId</MudTd>
-        <MudTd Class="col-7" >@context.Description
-            <MudIconButton @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small" />
-        </MudTd>
+        <MudTd Class="col-1 invisible" >@context.Id</MudTd>
+        <MudTd Class="col-4" >@context.Name</MudTd>
+        <MudTd Class="col-7" >@context.Description</MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
@@ -78,54 +75,35 @@
 
     private Surgery surgery = new () ;
     private List<Surgery> surgeries = new List<Surgery>();
-    private List<Surgery> filteredSurgeries = new();    // filtered from diagnosticsCategories ;
+    private List<Surgery> filteredSurgeries = new();    // filtered from surgicalCategories ;
 
-    private List<SurgicalProcedureAndParent> surgicalProcedures = new();    //
-
+    private List<SurgicalCategory> surgicalCategories = new();    //
+    private SurgicalCategory selectedCategory = new();          //
 
 
     // data
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            _table.SetRowsPerPage(10);
+            _table!.SetRowsPerPage(10);
         return base.OnAfterRenderAsync(firstRender);
     }
 
     protected override async Task OnInitializedAsync()
     {
-        AppMenu.SetPageTitle("Tipuri de proceduri chirurgicale / operatii");
+        AppMenu.SetPageTitle("Proceduri chirurgicale / operatii");
+
+        await categoryService.LoadSurgicalCategoriesAsync();
+        surgicalCategories = categoryService.SurgicalCategories;    //MudSelect - 
 
         await surgeryService.LoadSurgeryTypesAsync();
         surgeries = surgeryService.Types;
-        await procedureService.LoadSurgicalProceduresAsync();
+
+        if (surgeries.Count > 0)
+            CategorySelected(0);
 
         if (_table!.GetFilteredItemsCount() == 0)
             crudObj!.EnableActionsBtn();
-    }
-
-    private void InitializeLists()
-    {
-        var surgicalProcs = procedureService.SurgicalProcedures;
-
-        var parentInfo = surgicalProcs.Select(proc => new ParentProcInfo()     // just because circular table,
-                {
-                    Id = proc.Id,
-                    Name = proc.Name
-                }).ToList();
-
-//      parentInfo.Insert(0, new ParentProcInfo { Id = 0, Name = "-----------" });
-
-        surgicalProcedures = surgicalProcs.SelectMany(
-                proc => parentInfo.Where(pare => pare.Id == proc.ParentId).DefaultIfEmpty(),
-                (proc, pare) => new SurgicalProcedureAndParent()
-                    {
-                        Id = proc.Id,
-                        Name = proc.Name,
-                        ParentId = proc.ParentId,
-                        ParentName = pare!.Name
-                    }).ToList();
-
     }
 
 
@@ -140,11 +118,25 @@
 
     private async Task ValidateAction()
     {
+        if (crudObj is null)    // ? Not defined ?
+            return;
+
+        if (selectedCategory.Id == 0 && (crudObj.CurrentAction == ActionState.Add))
+        {
+            snackBar.Add("Nu este selectata o categorie", Severity.Error);  // nu poate adauga fara sa selecteze categoria
+            crudObj.CurrentAction = ActionState.Read;
+            return;
+        }
+
+
+        surgery.SurgicalCategoryId = selectedCategory.Id;
+
         switch (crudObj.CurrentAction)
         {
             case ActionState.Read:
                 return;
             case ActionState.Add:
+                surgery.Id = 0; //identity 
                 await surgeryService.AddSurgery(surgery);
                 snackBar.Add("Inregistrare adaugata", Severity.Success);
                 break;
@@ -160,12 +152,10 @@
                 break;
         }
 
-        InitializeLists();
 
-        SelectCurrentItem(surgery.Id);
-        crudObj.DisableEditableFields();
         surgeries = surgeryService.Types;
-
+        CategorySelected(selectedCategory.Id);    // refilter
+        crudObj.Read();
 
         await Task.Delay(1); // let UI refresh
     }
@@ -175,14 +165,34 @@
 
     private void SelectCurrentItem(int id)
     {
-        surgery = surgeries.FirstOrDefault(c => c.Id == id);
+        if (surgeries.Count == 0)
+            return;
+
+        var search = filteredSurgeries.FirstOrDefault(c => c.Id == id);
+
+        if (search is null)
+        {
+            Console.WriteLine("Not found");
+            search = surgeries.FirstOrDefault(c => c.Id == id);
+            if (search!.SurgicalCategoryId != selectedCategory.Id)
+            {
+                snackBar.Add("Procedura se regaseste la alta categorie", Severity.Warning);
+                Console.WriteLine("Wrong Category");
+            }
+            surgery.Id = 0;
+        }
+        else
+        {
+            surgery = search;
+        }
+
     }
 
     private bool Search(Surgery surgery)
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
 
-        if (surgery.Description.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        if (surgery.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
         {
             return true;
         }
@@ -193,6 +203,37 @@
         if (surgery is null || surgery.Id == 0 || _table is null)
             return 0;  // no selection
         return _table.GetFilteredItemsCount();
+    }
+
+    private async void CategorySelected(int id)   // mudselect category
+    {
+        if (id != 0)
+        {
+            filteredSurgeries = surgeries.Where(c => c.SurgicalCategoryId == id).ToList();
+            var selected = surgicalCategories.Where(c => c.Id == id).FirstOrDefault();
+            if (selected is not null)
+                selectedCategory = selected;
+            else
+                selectedCategory.Id = 0;
+
+        }
+        else
+            filteredSurgeries = surgeries; // .GetRange(0, surgeries.Count); // no filter, copy all or it can be the same list
+
+        // selection changes -> reinitialise editable fields
+        if (surgery is not null)
+        {
+            surgery.Id = 0;
+            surgery.SurgicalCategoryId= 0;
+            surgery.Name = string.Empty;
+            surgery.Description= string.Empty;
+        }
+        else
+        {
+            surgery = new();
+        }
+   
+        await InvokeAsync( ()=> StateHasChanged());
     }
 
 }

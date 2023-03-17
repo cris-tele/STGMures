@@ -30,7 +30,8 @@ namespace StgMures.Client.Services
 
         public async Task LoadDiagnosticsAsync() //GETALL
         {
-            Types = await _http.GetFromJsonAsync<List<Diagnostic>>("api/DiagType");
+            var _types = await _http.GetFromJsonAsync<List<Diagnostic>>("api/DiagType");
+            Types = _types.ToList();
         }
 
         public async Task<Diagnostic> GetDiagnostic(int id) //GET
@@ -40,9 +41,9 @@ namespace StgMures.Client.Services
             return response.Data;
         }
 
-        public async Task UpdateDiagnostic(Diagnostic Diagnostic) // PUT
+        public async Task UpdateDiagnostic(Diagnostic diagnostic) // PUT
         {
-            await _http.PutAsJsonAsync("api/DiagType", Diagnostic);
+            await _http.PutAsJsonAsync("api/DiagType", diagnostic);
             await LoadDiagnosticsAsync();
         }
 

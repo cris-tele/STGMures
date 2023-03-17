@@ -12,7 +12,7 @@ public partial class Surgery
 {
     public int Id { get; set; }
 
-    public int SurgicalProcedureId { get; set; }
+    public int SurgicalCategoryId { get; set; }
 
     public int PatientSurgeryId { get; set; }
 
@@ -20,7 +20,9 @@ public partial class Surgery
 
     public string? Description { get; set; }
 
+    /*
     public virtual PatientSurgery PatientSurgery { get; set; } = null!;
 
-    public virtual SurgicalProcedure SurgicalProcedure { get; set; } = null!;
+    public virtual SurgicalCategory SurgicalCategory { get; set; } = null!;
+    */
 }

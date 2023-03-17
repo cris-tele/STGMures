@@ -27,5 +27,7 @@ public partial class PatientDailyTreatment
     /// </summary>
     public string? Note { get; set; }
 
+    /*
     public virtual PatientTreatment Treatment { get; set; } = null!;
+    */
 }

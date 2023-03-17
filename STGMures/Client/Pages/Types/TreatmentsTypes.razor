@@ -4,7 +4,8 @@
 @using StgMures.Shared.DbModels
 @inherits PageBehavior
 
-@inject StgMures.Client.Services.ITreatmentTypeService treatmentService
+@inject ITreatmentCategoryService categoryService
+@inject ITreatmentTypeService treatmentService
 @inject MudBlazor.ISnackbar snackBar
 @inject ISetAppMenuInfos SetAppMenuInfos
 
@@ -12,9 +13,10 @@
 <MudCard Elevation="5">
     <MudCardContent>
         <MudGrid>
-            <MudItem xs="4">
-                <MudSelect Disabled="@(!_disabledField)" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.TreatmentCategoryId" HelperText="Tratament din categoria" Variant="Variant.Text" Margin="Margin.None">
-                    <MudSelectItem Value="0" Disabled="true">Selectati categoria:</MudSelectItem>
+            <MudItem xs="3">
+                <MudSelect ValueChanged="@( id => CategorySelected(id) )"
+                           T="int" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Text" Margin="Margin.None" Dense="true">
+                    <MudSelectItem Value="0" Disabled="true">Selectati grupa/categoria:</MudSelectItem>
 
                     @foreach (TreatmentCategory _option in categories)
                     {
@@ -22,7 +24,6 @@
                     }
                 </MudSelect>
             </MudItem>
-            <!--<MudSpacer /> -->
         </MudGrid>
 
         <MudGrid>
@@ -32,73 +33,60 @@
             </MudItem>
 
             <MudItem xs="3">
-                <MudTextField Disabled="@_disabledField" @bind-Value="treatment.Name" HelperText="Denumire tratament" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="treatment.Name" HelperText="Denumire tratament" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-            <MudItem xs="3">
-                <MudSelect Disabled="@_disabledField" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.ParentId" HelperText="Tratament principal" Variant="Variant.Text" Margin="Margin.None">
-                    <MudSelectItem Value="0">----------</MudSelectItem> <!-- id= 0 : inseamna ca este principal, nu are un parinte-->
+            <MudItem xs="2">
+                <MudSelect Disabled="@_enabledOrDisabled" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.ParentId" HelperText="Tratament principal" Variant="Variant.Text" Margin="Margin.None">
+                    <MudSelectItem Value="0">----------</MudSelectItem> 
                     @foreach (var _option in parentTreatments)
                     {
-                        <MudSelectItem Value="@_option.Name" />
+                        <MudSelectItem Value="@_option.Id">@_option.Name </MudSelectItem>
                     }
                 </MudSelect>
             </MudItem>
             <MudItem xs="1">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.ValueFormat" HelperText="Format" Variant="Variant.Text" Margin="Margin.None">
+                <MudSelect Disabled="@_enabledOrDisabled" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.ValueFormat" HelperText="Format" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in StaticParam.FieldFormat)
                     {
                         <MudSelectItem Value="@_option" />
                     }
                 </MudSelect>
             </MudItem>
+
             <MudItem xs="2">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.AdministrationMethod" HelperText="Mod Administrare" Variant="Variant.Text" Margin="Margin.None">
+                <MudSelect Disabled="@_enabledOrDisabled" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.AdministrationMethod" HelperText="Mod Administrare" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in StaticParam.TreatmentAdministrationMethod)
                     {
                         <MudSelectItem Value="@_option" />
                     }
                 </MudSelect>
             </MudItem>
-            
-            <MudItem xs="2">
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.Type" HelperText="Tip tratament / utilizare" Variant="Variant.Text" Margin="Margin.None">
+
+            <MudItem xs="1">
+                <MudSelect Disabled="@_enabledOrDisabled" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.MeasureUnit" HelperText="Unitate Masura" Variant="Variant.Text" Margin="Margin.None">
+                    @foreach (var _option in StaticParam.SubstanceMeasureUnit)
+                    {
+                         <MudSelectItem Value="@_option" />
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="1">
+                <MudSelect Disabled="@_enabledOrDisabled" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.Type" HelperText="Tip" Variant="Variant.Text" Margin="Margin.None">
                 @foreach (var _option in StaticParam.TreatmentType)
                 {
-                    <MudSelectItem Value="@_option" />
+                     <MudSelectItem Value="@_option" />
                 }
                 </MudSelect>
             </MudItem>
-            
+           
         </MudGrid>
     </MudCardContent>
 
     <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
 
     <MudCardActions>
-        <MudGrid>
-            <MudItem xs="1">
-                <MudTooltip Text="Adauga o noua inregistrare">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Add" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="AddNewRecord">Adauga</MudIconButton>
-                </MudTooltip>
-
-                <MudTooltip Text="Modifica inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Edit" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="UpdateRecord">Modifica</MudIconButton>
-                </MudTooltip>
-
-                <MudTooltip Text="Sterge inregistrarea selectata">
-                    <MudIconButton Disabled="@_disabledBtn" Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DeleteRecord">Sterge</MudIconButton>
-                </MudTooltip>
-            </MudItem>
-            <MudItem xs="1" />
-            <MudItem xs="1">
-                <MudTooltip Text="Validare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Save" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="ValidateAction">Ok</MudIconButton>
-                </MudTooltip>
-                <MudTooltip Text="Renuntare">
-                    <MudIconButton Disabled="@_disabledBtnValid" Icon="@Icons.Material.Filled.Cancel" Size="Size.Small" Variant="Variant.Text" Color="Color.Success" OnClick="DisableAll">Cancel</MudIconButton>
-                </MudTooltip>
-            </MudItem>
-        </MudGrid>
+        <AddUpdateDelete @ref="crudObj" OnValidate="@ValidateAction" ItemsCount="@GetTableItems()" @bind-CRUDStatus=_enabledOrDisabled />
     </MudCardActions>
 </MudCard>
 <br />
@@ -110,14 +98,6 @@
     <ToolBarContent>
         <!-- <MudTextField @bind-Value="searchString" Placeholder="Cautati un tratament..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField> -->
     </ToolBarContent>
-<!--
-    <HeaderContent>
-
-        <MudTh>ID</MudTh>
-        <MudTh>Denumire Categorie Tratamente</MudTh>
-        <MudTh>Actiuni</MudTh>
-    </HeaderContent>
--->
 
 
     <RowTemplate>
@@ -126,7 +106,8 @@
         <MudTd Class="col-3" DataLabel="Tip">@context.ParentName</MudTd>
         <MudTd Class="col-1" DataLabel="Tip">@context.ValueFormat</MudTd>
         <MudTd Class="col-2" DataLabel="Tip">@context.AdministrationMethod</MudTd>
-        <MudTd Class="col-2" DataLabel="Tip">@context.Type</MudTd>
+        <MudTd Class="col-1" DataLabel="Tip">@context.MeasureUnit</MudTd>
+        <MudTd Class="col-1" DataLabel="Tip">@context.Type</MudTd>
     </RowTemplate>
 
     <PagerContent>
@@ -139,7 +120,8 @@
 
 
 @code {
-    // card design
+    private bool _enabledOrDisabled = true;
+    private AddUpdateDelete? crudObj;
 
 
     // table design
@@ -152,9 +134,16 @@
         return base.OnAfterRenderAsync(firstRender);
     }
 
+    private int GetTableItems()
+    {
+        if (treatment is null || treatment.Id == 0 || _table is null)
+            return 0;  // no selection
+        var items = _table.GetFilteredItemsCount();
+        return items;
+    }
 
     // data
-    private Treatment treatment = new();                                    // current selected item
+    private Treatment treatment = new();                       // current selected item
     private List<Treatment> treatments = new List<Treatment>();          // all
     private List<Treatment> filteredTreatments = new List<Treatment>();    // parents
     private List<Treatment> parentTreatments = new List<Treatment>();    // parents
@@ -162,59 +151,82 @@
 
 
     private List<TreatmentCategory> categories = new List<TreatmentCategory>();
+    private TreatmentCategory selectedCategory = new ();
+
 
 
     protected override async Task OnInitializedAsync()
     {
         SetAppMenuInfos.SetPageTitle("Tipuri de tratamente");
+
+        await categoryService.LoadTreatmentCategoriesAsync();
+        categories = categoryService.Categories;
+        if (categories.Count == 0)
+            snackBar.Add("Definiti mai intai categoriile de tratamente", Severity.Error);
+
+
         await treatmentService.LoadTreatmentsAsync();
         treatments = treatmentService.Types;
-        if (treatments.Count == 0)
-            EnableAll();
+
+        if (treatments.Count > 0)
+            CategorySelected(0);
+
+        if (_table!.GetFilteredItemsCount() == 0)
+        {
+            crudObj!.EnableActionsBtn();
+        }
+
     }
 
 
 
     protected void RowClicked(TableRowClickEventArgs<TreatmentsAndParent> clickedCategory)
     {
-        if (_table!.GetFilteredItemsCount() == 0)
-            EnableAll();
-        if (_table!.SelectedItem == null)
-            return;
+        crudObj!.EnableActionsBtn();
+        crudObj!.RowClicked(_table!);
         SelectCurrentItem(clickedCategory.Item.Id);
-        EnableAll();
     }
 
 
 
     private async Task ValidateAction()
     {
-        switch (_currentAction)
+        if (crudObj is null || treatment is null)    // ? Not defined ?
+            return;
+        if (selectedCategory.Id == 0 && crudObj.CurrentAction == ActionState.Add)
         {
-            case (int)_actionbtn.None:
-                DisableAll();            // Invalid action, disable all
+            snackBar.Add("Nu este selectata o categorie de tratamente", Severity.Error);  // nu ar trebui sa ajunga pe aici, dar nu poate salva fara o categorie
+            crudObj.CurrentAction = ActionState.Read;
+            return;
+        }
+        treatment.TreatmentCategoryId = selectedCategory.Id;
+        switch (crudObj.CurrentAction)
+        {
+            case ActionState.Read:
                 return;
-            case (int)_actionbtn.Add:
+            case ActionState.Add:
+                treatment.Id = 0;
                 await treatmentService.AddTreatment(treatment);
                 snackBar.Add("Inregistrare adaugata", Severity.Success);
                 break;
-            case (int)_actionbtn.Edit:
+            case ActionState.Edit:
                 await treatmentService.UpdateTreatment(treatment);
                 snackBar.Add("Inregistrare modificata", Severity.Success);
                 break;
-            case (int)_actionbtn.Delete:
+            case ActionState.Delete:
                 if (treatment.Id == 0)               // Invalid selection
+                {
+                    snackBar.Add("Selectati inregistrarea de sters", Severity.Success);
                     return;
+                }
                 await treatmentService.DeleteTreatment(treatment.Id);
                 snackBar.Add("Inregistrare stearsa", Severity.Success);
                 break;
         }
 
-        _currentAction = 0;
         treatments = treatmentService.Types;
-
-        DisableAll();
-
+        CategorySelected(selectedCategory.Id);    // refilter
+        crudObj.Read();
         await Task.Delay(1); // let UI refresh
     }
 
@@ -242,27 +254,59 @@
         if (id != 0)
         {
             filteredTreatments = treatments.Where(c => c.TreatmentCategoryId == id).ToList();
-            // selectedDiagnosticCategory = categories.Where(c => c.Id == id).FirstOrDefault();
+            var selected = categories.Where(c => c.Id == id).FirstOrDefault();
+            if (selected is not null)
+                selectedCategory.Id = selected.Id;
+            else
+                selectedCategory.Id = 0;  // stearsa din baza de date ?
         }
         else
+        {
             filteredTreatments = treatments; // .GetRange(0, consumables.Count); // no filter, copy all; or same list
-        parentTreatments = filteredTreatments.GetRange(0, filteredTreatments.Count);
-        parentTreatments.Insert(0, new Treatment { Id = 0, ParentId = 0, Name = "-----------" });
+        }
 
-        tableList = filteredTreatments.SelectMany(
-                filt => parentTreatments.Where(pare => pare.Id == filt.ParentId).DefaultIfEmpty(),
-                (filt, pare) => new TreatmentsAndParent()
-                    {
-                        Id = filt.Id,
-                        Name = filt.Name,
-                        ParentId = filt.ParentId,
-                        TreatmentCategoryId = filt.TreatmentCategoryId,
-                        ValueFormat = filt.ValueFormat,
-                        Type = filt.Type,
-                        AdministrationMethod = filt.AdministrationMethod,
-                        ParentName = pare!.Name
+        parentTreatments = filteredTreatments.GetRange(0, filteredTreatments.Count);    // copy all
+        Treatment emptyT = new() { Id = 0, ParentId = 0, Name = " " };
+        parentTreatments.Insert(0, emptyT );
+        if (filteredTreatments.Count > 0)
+            try
+            {
 
-                    }).ToList();
+                tableList = filteredTreatments.SelectMany(
+                        filt => parentTreatments.Where(pare => pare.Id == filt.ParentId).DefaultIfEmpty(emptyT),
+                        (filt, pare) => new TreatmentsAndParent()
+                            {
+                                Id = filt.Id,
+                                Name = filt.Name,
+                                ParentId = filt.ParentId,
+                                TreatmentCategoryId = filt.TreatmentCategoryId,
+                                ValueFormat = filt.ValueFormat,
+                                Type = filt.Type,
+                                AdministrationMethod = filt.AdministrationMethod,
+                                MeasureUnit = filt.MeasureUnit,
+                                ParentName = pare?.Name
+
+                            }).ToList();
+            } catch { }
+
+        // selection changes -> reinitialise editable fields
+        if (treatment is not null)
+        {
+            treatment.Id = 0;
+            treatment.ParentId = 0;
+            treatment.TreatmentCategoryId = 0;
+            treatment.ValueFormat = string.Empty;
+            treatment.AdministrationMethod = string.Empty;
+            treatment.MeasureUnit = string.Empty;
+            treatment.Name = string.Empty;
+            treatment.Type = string.Empty;
+        }
+        else
+        {
+            treatment = new();
+        }
+
+                    
     }
 
 

@@ -51,7 +51,7 @@ namespace StgMures.Server.Controllers
             return Ok(await _context.ConsumableCategories.ToListAsync());
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> UpdateConsumableCategory(ConsumableCategory consumableCategory)
         {
             var dbConsumableCategory = await _context.ConsumableCategories.FirstOrDefaultAsync(p => p.Id == consumableCategory.Id);

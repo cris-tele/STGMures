@@ -18,6 +18,11 @@ namespace StgMures.Client.Services
 
         public async Task AddTreatment(Treatment treatment) // POST
         {
+            if (treatment == null)
+                return;
+            if (treatment.Id != 0)
+                treatment.Id = 0;   //identity
+
             var response = await _http.PostAsJsonAsync("api/TreatType", treatment);
             await LoadTreatmentsAsync();
         }

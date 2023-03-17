@@ -11,10 +11,10 @@
 <MudCard Elevation="5">
     <MudCardContent >
         <MudGrid>
-            <MudItem xs="2" >    <!-- Se pune Disabled doar in timpul AddEditDelete-->
-                <MudSelect Disabled="@(crudObj!.CurrentAction != 0)" ValueChanged="@( id => CategorySelected(id) )"
+            <MudItem xs="3" >    <!-- Se pune Disabled doar in timpul AddEditDelete-->
+                <MudSelect ValueChanged="@( id => CategorySelected(id) )"
                     T="int" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Text" Margin="Margin.None" Dense="true">
-                    <MudSelectItem Value="0" Disabled="true">Selectati categoria:</MudSelectItem>
+                    <MudSelectItem Value="0" Disabled="true">Selectati grupa/categoria:</MudSelectItem>
                     @foreach (ConsumableCategory _option in categories)
                     {
                         <MudSelectItem Value="@_option.Id">@_option.Name</MudSelectItem>
@@ -77,11 +77,12 @@
 
 <!--table list-->
 <MudTable @ref="@_table" Hover="true" Dense="true" Striped="true" Elevation="5"
-          Items="@selectedConsumables" Filter="new Func<Consumable, bool>(Search)" @bind-customer="consumable" OnRowClick="@RowClicked" T="Consumable">
+          Items="@filteredConsumables" Filter="new Func<Consumable, bool>(Search)" @bind-customer="consumable" OnRowClick="@RowClicked" T="Consumable">
     <ToolBarContent>
         <MudSpacer />
         <MudTextField @bind-Value="searchString" Placeholder="Cautati un tip de consumabil..." Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
     </ToolBarContent>
+<!--
     <HeaderContent>
         <MudTh Class="invisible xs=1">ID</MudTh>
         <MudTh Class="col-5">Denumire Tip Consumabil</MudTh>
@@ -90,15 +91,15 @@
         <MudTh Class="col-1">Valori de tip</MudTh>
         <MudTh Class="col-1">Unitate masura</MudTh>
     </HeaderContent>
+-->
+
     <RowTemplate>
         <MudTd Class="invisible xs=1" DataLabel="Id">@context.Id</MudTd>
         <MudTd Class="col-5" DataLabel="Tip">@context.Name</MudTd>
         <MudTd Class="col-2" DataLabel="Tip">@context.Type</MudTd>
         <MudTd Class="col-2" DataLabel="Tip">@context.Design</MudTd>
         <MudTd Class="col-1" DataLabel="Tip">@context.ValueFormat</MudTd>
-        <MudTd Class="col-1" DataLabel="">@context.MeasureUnit
-            <MudIconButton Class="invisible" @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small" />
-        </MudTd>
+        <MudTd Class="col-1" DataLabel="Unitate Masura">@context.MeasureUnit</MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 5, 10, 25, 50 , int.MaxValue})"> R</MudTablePager>
@@ -116,6 +117,7 @@
     // table design
     private MudTable<Consumable>? _table;
 
+
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -129,7 +131,7 @@
     private ConsumableCategory      selectedCategory = new();
 
     private List<Consumable> consumables = new ();          
-    private List<Consumable> selectedConsumables = new(); // filtered by diagnosticCategory
+    private List<Consumable> filteredConsumables = new(); // filtered by diagnosticCategory
 
     private Consumable consumable = new();
 
@@ -137,7 +139,7 @@
     {
         if (id != 0)
         {
-            selectedConsumables = consumables.Where(c => c.CategoryId == id).ToList();
+            filteredConsumables = consumables.Where(c => c.CategoryId == id).ToList();
             var selected = categories.Where(c => c.Id == id).FirstOrDefault();
             if (selected is not null)
                 selectedCategory = selected;
@@ -146,7 +148,24 @@
 
         }
         else
-            selectedConsumables = consumables ; // .GetRange(0, consumables.Count); // no filter, copy all or it can be the same list
+            filteredConsumables = consumables ; // .GetRange(0, consumables.Count); // no filter, copy all or it can be the same list
+
+        // selection changes -> reinitialise editable fields 
+        if (consumable is not null)
+        {
+            consumable.Id = 0;
+            consumable.CategoryId = 0;
+            consumable.ValueFormat = string.Empty;
+            consumable.Design = string.Empty;
+            consumable.MeasureUnit = string.Empty;
+            consumable.Name = string.Empty;
+            consumable.Type = string.Empty;
+        }
+        else
+        {
+            consumable = new();    
+        }
+
 
     }
 
@@ -161,7 +180,8 @@
         await consumableService.LoadConsumablesAsync();
         consumables = consumableService.Types;
 
-        CategorySelected( 0 );
+        if (consumables.Count >0)
+            CategorySelected(0);  // select first 
 
         if (_table!.GetFilteredItemsCount() == 0)
             crudObj!.EnableActionsBtn();
@@ -186,17 +206,20 @@
     {
         if (crudObj is null)    // ? Not defined ?
             return;
-        if (selectedCategory.Id == 0)
+        if (selectedCategory.Id == 0 && crudObj.CurrentAction == ActionState.Add)
         {
             snackBar.Add("Nu este selectata o categorie", Severity.Error);  // nu ar trebui sa ajunga pe aici, dar nu poate salva fara o categorie
+            crudObj.CurrentAction = ActionState.Read;
             return;
         }
+        consumable.CategoryId = selectedCategory.Id;
+
         switch (crudObj.CurrentAction)
         {
             case ActionState.Read:
                 return;
             case ActionState.Add:
-                consumable.CategoryId = selectedCategory.Id;
+                consumable.Id = 0;
                 await consumableService.AddConsumable(consumable);
                 snackBar.Add("Inregistrare adaugata", Severity.Success);
                 break;
@@ -205,15 +228,19 @@
                 snackBar.Add("Inregistrare modificata", Severity.Success);
                 break;
             case ActionState.Delete:
+                if (consumable.Id == 0)
+                    return;
                 await consumableService.DeleteConsumable(consumable.Id);
                 snackBar.Add("Inregistrare stearsa", Severity.Success);
                 consumable.Id = 0; 
                 break;
         }
 
-        consumables = consumableService.Types;
-        SelectCurrentItem(consumable.Id);
-        crudObj.DisableEditableFields();
+        consumables = consumableService.Types;  // reload items
+        CategorySelected(selectedCategory.Id);
+
+        crudObj.Read();
+
         await Task.Delay(1); // let UI refresh
     }
 
@@ -225,7 +252,8 @@
         if (consumables.Count == 0)
             return;
 
-        var search = selectedConsumables.FirstOrDefault(c => c.Id == id);
+        var search = filteredConsumables.FirstOrDefault(c => c.Id == id);
+
         if (search is null)
         {
             Console.WriteLine("Not found");

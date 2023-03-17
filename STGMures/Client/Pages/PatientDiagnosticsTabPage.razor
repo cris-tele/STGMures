@@ -1,8 +1,11 @@
 ﻿@page "/PatientDiagnosticsTabPage"
+@page "/PatientDiagnosticsTabPage/{PatientId:int}/{TabDiagnosticCategory:int?}"
 @using StgMures.Shared.DbModels;
 @inherits PageBehavior
 
 @inject IConsumableCategoryService categoryService
+@inject IDiagnosticTypeService  diagnosticService
+
 @inject MudBlazor.ISnackbar snackBar
 @inject ISetAppMenuInfos AppMenu
 
@@ -12,11 +15,14 @@
     <MudCardContent Class="gap-0 ">
         <MudGrid Class="gap-0 ">
             <MudItem xs="1">
-                <MudTextField Disabled="@_disabledField" @bind-Value="patientDiagnostic.Date" HelperText="Data diagnostic" Format="yyyy-MM-dd" InputType="InputType.Date" Variant="Variant.Text" Culture="@CultureInfo.GetCultureInfo("ro-RO")"></MudTextField>
+                <MudTextField Disabled="@_disabledField" @bind-Value="patientDiagnostic.Date" HelperText="Data diagnostic" Format="yyyy-MM-dd" InputType="InputType.Date" Variant="Variant.Text" Culture="@roRo"></MudTextField>
             </MudItem>
             <MudItem xs="2">
                 <!-- selectare diagnostic -->
-                <MudSelect Disabled="@_enabledOrDisabled" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="patientDiagnostic.DiagnosticId" HelperText="Diagnostic" Variant="Variant.Text" Margin="Margin.None">
+                <MudSelect T="int" ValueChanged="@( id => DiagnosticSelected(id) )" ToStringFunc="@(id => DisplayDiagnosticName(id))"
+                            AnchorOrigin="Origin.BottomCenter" Variant="Variant.Text" Margin="Margin.None" Dense="true">
+
+                <!-- <MudSelect Disabled="@_enabledOrDisabled" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="patientDiagnostic.DiagnosticId" HelperText="Diagnostic" Variant="Variant.Text" Margin="Margin.None"> -->
                     @foreach (var _option in diagnostics)
                     {
                         <MudSelectItem Value="@_option.Id">@_option.Name </MudSelectItem>
@@ -24,8 +30,7 @@
                 </MudSelect>
             </MudItem>
             <MudItem xs="2"> <!-- selectare diagnostic: face acelasi lucru ca si prima optiune, ajuta doar la detalierea primeia -->
-                <MudSelect Disabled="@_enabledOrDisabled" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="patientDiagnostic.DiagnosticId" HelperText="Optiune" Variant="Variant.Text" Margin="Margin.None">
-                    <MudSelectItem Value="0"> </MudSelectItem>  <!-- blanck -->
+                <MudSelect Disabled="@_enabledOrDisabled" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="diagnosticOption.Id" ToStringFunc="@(id => DisplayDiagnosticName(id))" HelperText="Optiune" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in diagnosticOptions)
                     {
                         <MudSelectItem Value="@_option.Id">@_option.Name </MudSelectItem>
@@ -36,10 +41,10 @@
                 <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="diagnostic.Name" HelperText="Denumire specifica" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="1">
-                 <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="diagnostic.Name" HelperText="Valoare" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                 <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="diagnostic.Value" HelperText="@_valueInfo" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="1">
-                <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="patientDiagnostic.ShortNote" HelperText="Unitate masura" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
+                <MudTextField Disabled="true" @bind-Value="@_measureUnit" HelperText="U.M." Variant="Variant.Text" Margin="Margin.None"></MudTextField> <!-- just display UM -->
             </MudItem>
             <MudItem xs="2">
                 <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="patientDiagnostic.ShortNote" HelperText="Observatii" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
@@ -104,10 +109,19 @@
 
 
 @code {
+    [Parameter]
+    public int? PatientId { get; set; }
+    [Parameter]
+    public int? TabDiagnosticCategory { get; set; }
+
     // table design
     private bool _enabledOrDisabled = false;
+    // private bool _enableOptions = false;
     private AddUpdateDelete? crudObj;
+    private string _measureUnit = string.Empty;
+    private string _valueInfo = string.Empty;
 
+    private CultureInfo roRo = CultureInfo.GetCultureInfo("ro-RO");
 
     private MudTable<PatientDiagnostic>? _table;
 
@@ -115,9 +129,10 @@
     private List<PatientDiagnostic> patientDiagnostics = new();
     private List<Diagnostic> diagnostics = new();
     private List<Diagnostic> diagnosticOptions = new(); 
-    
+
     private Diagnostic diagnostic = new();
-    
+    private Diagnostic diagnosticOption = new();
+
 
 
     protected override Task OnAfterRenderAsync(bool firstRender)
@@ -132,12 +147,55 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // AppMenu.SetPageTitle("Categorii de consumabile"); tab page-ul nu schimba denumirea paginii principale
-        await categoryService.LoadConsumableCategoriesAsync();
+
+        //         await categoryService.LoadConsumableCategoriesAsync();
+
+        await diagnosticService.LoadDiagnosticsAsync();
+        diagnostics = diagnosticService.Types;
+
         // categories = categoryService.Categories;
     }
 
 
+    private async void DiagnosticSelected(int id)
+    {
+        //_enableOptions = true;
+        _measureUnit = string.Empty;
+        _valueInfo = string.Empty;
+        var item = diagnostics.FirstOrDefault(i => i.Id == id);
+        if (item is not null && item.MeasureUnit is not null)
+        {
+            _measureUnit = item.MeasureUnit;
+            _valueInfo = item.ValueFormat;
+        }
+        if (id != 0)
+        {
+            diagnosticOptions=diagnostics.Where( d => d.ParentId == id).ToList();
+        }
+        else
+        {
+            diagnosticOptions = diagnostics;
+        }
+
+        if (diagnosticOptions.Count == 0)
+        {
+            diagnosticOption.Id = 0;
+            diagnosticOption.Name = string.Empty;
+          //  _enableOptions = false;
+        }
+        StateHasChanged();
+        await Task.Delay(1);
+    }
+
+    private string DisplayDiagnosticName(int id)
+    {
+        if (id == 0)
+            return string.Empty;
+        var item = diagnostics.FirstOrDefault(i => i.Id == id);
+        if (item is null)
+            return string.Empty;
+        return item.Name;
+    }
 
     protected void RowClicked(TableRowClickEventArgs<PatientDiagnostic> clickedCategory)
     {

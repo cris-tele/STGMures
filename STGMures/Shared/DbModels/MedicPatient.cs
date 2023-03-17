@@ -21,7 +21,9 @@ public partial class MedicPatient
     /// </summary>
     public DateTime? RegistrationDate { get; set; }
 
+    /*
     public virtual Medic Medic { get; set; } = null!;
 
     public virtual Patient Patient { get; set; } = null!;
+    */
 }

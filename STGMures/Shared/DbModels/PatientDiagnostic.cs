@@ -34,7 +34,9 @@ public partial class PatientDiagnostic
     /// </summary>
     public bool IntraSurgery { get; set; }
 
+    /*
     public virtual Diagnostic Diagnostic { get; set; } = null!;
 
     public virtual PatientFile PatientFile { get; set; } = null!;
+    */
 }

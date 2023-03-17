@@ -32,7 +32,8 @@ public partial class Diagnostic
     /// Determine the other fields usage: Note, MinAlert, MaxAlert 
     /// </summary>
     public string ValueFormat { get; set; } = null!;
-
+    public string? Value { get; set; } = null!;
+    public decimal? NumericValue { get; set; }
     /// <summary>
     /// Min alert value (normal values between min and max); NOT USED
     /// </summary>

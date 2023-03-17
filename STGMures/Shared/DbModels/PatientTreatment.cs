@@ -40,9 +40,11 @@ public partial class PatientTreatment
 
     public string? Note { get; set; }
 
+    /*
     public virtual Patient Patient { get; set; } = null!;
 
     public virtual ICollection<PatientDailyTreatment> PatientDailyTreatments { get; } = new List<PatientDailyTreatment>();
 
     public virtual Treatment Treatment { get; set; } = null!;
+    */
 }

@@ -105,13 +105,20 @@
         _validationBtnState = DISABLED;     // TOGGLE
     }
 
-    public void DisableActionsBtn() // EnableAll()
+    public void DisableActionsBtn() 
     {
         _actionBtnState = DISABLED;          // enable choices ADD/Edit/Delete butons
         _validationBtnState = DISABLED;       // TOGGLE
         if (CurrentAction > 0)
             _validationBtnState = ENABLED;       // TOGGLE
 
+    }
+
+    public void Read()  //  Go back to view mode data (no actions, no editable fields)
+    {
+        CurrentAction = ActionState.Read;
+        DisableEditableFields();
+        DisableActionsBtn();
     }
 
 
@@ -152,20 +159,23 @@
             return;
         }
 
-        CurrentAction = (int)ActionState.Delete;
 
         DisableEditableFields();            // NO need to enable fields, may try to modify
         _actionBtnState = DISABLED;         // disable future actions
         _validationBtnState = ENABLED;      // disable validations: a choice must be made
+
+        CurrentAction = (int)ActionState.Delete;
     }
 
     public void CancelCrudActions()
     {
-        CurrentAction = ActionState.Read;
         DisplayActionInfo();
         DisableEditableFields();            // NO need to enable fields, may try to modify
         EnableActionsBtn();                 // try again
+
+        CurrentAction = ActionState.Read;
     }
+
 
     public void RowClicked<T>(MudTable<T> t)
     {

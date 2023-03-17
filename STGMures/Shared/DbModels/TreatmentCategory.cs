@@ -14,5 +14,7 @@ public partial class TreatmentCategory
     /// </summary>
     public string Name { get; set; } = null!;
 
+    /*
     public virtual ICollection<Treatment> Treatments { get; } = new List<Treatment>();
+    */
 }
