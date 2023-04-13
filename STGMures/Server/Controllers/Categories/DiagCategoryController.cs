@@ -52,7 +52,7 @@ namespace StgMures.Server.Controllers
             return Ok(await _context.DiagnosticCategories.ToListAsync());
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateDiagnosticCategory(DiagnosticCategory diagnosticCategory)
         {
             var dbDiagnosticCategory = await _context.DiagnosticCategories.FirstOrDefaultAsync(p => p.Id == diagnosticCategory.Id);

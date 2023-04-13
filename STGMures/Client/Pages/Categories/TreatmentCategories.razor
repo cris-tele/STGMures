@@ -11,10 +11,20 @@
             <MudItem xs="1">
                 <MudTextField Class="invisible" Disabled="true" @bind-Value="category.Id" HelperText="ID" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
-        <MudItem xs="11">
+            <MudItem xs="9">
                 <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="category.Name" HelperText="Denumire categorie tratamente" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
+        <MudItem xs="2">
+                <MudSelect Disabled="@(_enabledOrDisabled)" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="category.Type" HelperText="Tip Tratament" Variant="Variant.Text" Margin="Margin.None">
+            @foreach (var _option in StaticParam.TreatmentType)
+            {
+                <MudSelectItem Value="@_option" />
+            }
+        </MudSelect>
+        </MudItem>
         </MudGrid>
+
+
     </MudCardContent>
 
     <MudDivider DividerType="DividerType.FullWidth" Class="border-3 border-solid mud-border-primary" />
@@ -39,9 +49,8 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd Class="invisible" DataLabel="Id">@context.Id</MudTd>
-        <MudTd Class="col-11" DataLabel="Denumire">@context.Name
-              <MudIconButton Class="invisible" @onclick="@(()=>SelectCurrentItem(@context.Id))" Color="Color.Primary" Icon="@Icons.Material.Filled.Sync" Size="Size.Small"  />
-        </MudTd>
+        <MudTd Class="col-9" DataLabel="Denumire">@context.Name</MudTd>
+        <MudTd Class="col-2" DataLabel="Denumire">@context.Type</MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager RowsPerPageString="Randuri pagina:" PageSizeOptions="@(new int[] { 10, 25, 50 , int.MaxValue})"> R</MudTablePager>

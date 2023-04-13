@@ -605,6 +605,8 @@ public partial class StgMuresContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(250)
                 .HasComment("description of treatment category");
+            entity.Property(e => e.Type).HasMaxLength(50);
+
         });
 
         OnModelCreatingGeneratedProcedures(modelBuilder);

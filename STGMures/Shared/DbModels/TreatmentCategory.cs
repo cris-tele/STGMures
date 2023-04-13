@@ -12,7 +12,8 @@ public partial class TreatmentCategory
     /// <summary>
     /// description of treatment category
     /// </summary>
-    public string Name { get; set; } = null!;
+    public string Name { get; set; } = string.Empty;
+    public string? Type { get; set; } = string.Empty;
 
     /*
     public virtual ICollection<Treatment> Treatments { get; } = new List<Treatment>();

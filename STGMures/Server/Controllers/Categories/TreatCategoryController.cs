@@ -51,7 +51,7 @@ namespace StgMures.Server.Controllers
             return Ok(await _context.TreatmentCategories.ToListAsync());
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTreatmentCategory(TreatmentCategory treatmentCategory)
         {
             var dbTreatmentCategory = await _context.TreatmentCategories.FirstOrDefaultAsync(p => p.Id == treatmentCategory.Id );
@@ -61,6 +61,7 @@ namespace StgMures.Server.Controllers
             }
 
             dbTreatmentCategory.Name = treatmentCategory.Name;
+            dbTreatmentCategory.Type = treatmentCategory.Type;
 
             await _context.SaveChangesAsync();
 

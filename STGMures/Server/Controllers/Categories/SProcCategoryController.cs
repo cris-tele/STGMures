@@ -51,7 +51,7 @@ namespace StgMures.Server.Controllers
             return Ok(await _context.SurgicalCategories.ToListAsync());
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSurgicalCategory(SurgicalCategory surgicalProcedure)
         {
             var dbSurgicalProcedure = await _context.SurgicalCategories.FirstOrDefaultAsync(p => p.Id == surgicalProcedure.Id);

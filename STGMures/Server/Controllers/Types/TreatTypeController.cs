@@ -59,6 +59,7 @@ namespace StgMures.Server.Controllers
             }
 
             dbTreatment.Name = treatment.Name;
+            dbTreatment.Type = treatment.Type;
 
             await _context.SaveChangesAsync();
 
