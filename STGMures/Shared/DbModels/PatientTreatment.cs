@@ -19,32 +19,51 @@ public partial class PatientTreatment
     public int? PatientDiagnosticId { get; set; }
 
     /// <summary>
-    /// Tratament (default); Anestezie;CEC;PRIMARY; SECONDARY; ATI; OTHER
+    /// obsolete; not used for now
     /// </summary>
     public string TreatmentType { get; set; } = null!;
 
     public int? NoOfDays { get; set; }
 
     /// <summary>
-    /// It represent a bit field: 1 or 0 for each day of the week 
+    /// It represent a bit field: 1 or 0 for each day of the week ; depends on treatment-&gt;Administration Mode
     /// </summary>
     public string? WeekSchema { get; set; }
 
-    public decimal Dosage { get; set; }
+    /// <summary>
+    /// List of possible routes; it can be a sublist from the Treatmnt-&gt;Administration Route 
+    /// </summary>
+    public string? AdministrationRoute { get; set; }
+
+    /// <summary>
+    /// List of possible routes; it can be a sublist from the Treatmnt-&gt;Administeringration Mode
+    /// </summary>
+    public string? AdministrationMode { get; set; }
+
+    public string Value { get; set; } = null!;
+
+    public decimal? NumericValue { get; set; }
+
+    /// <summary>
+    /// If interval, the second value will be stored here
+    /// </summary>
+    public decimal? ValueInterval { get; set; }
 
     public decimal? DosageQtty { get; set; }
 
-    public decimal? DosageTotal { get; set; }
+    public decimal? Total { get; set; }
 
-    public string? Administration { get; set; }
+    /// <summary>
+    /// Specific info about Dosage or values
+    /// </summary>
+    public string? ValueNote { get; set; }
 
+    /// <summary>
+    /// Medical observations, complications... any
+    /// </summary>
     public string? Note { get; set; }
 
-    /*
-    public virtual Patient Patient { get; set; } = null!;
+    public DateTime? StartDate { get; set; }
 
-    public virtual ICollection<PatientDailyTreatment> PatientDailyTreatments { get; } = new List<PatientDailyTreatment>();
-
-    public virtual Treatment Treatment { get; set; } = null!;
-    */
+    public DateTime? EndDate { get; set; }
 }

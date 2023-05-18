@@ -56,7 +56,7 @@ namespace StgMures.Server
             var token = Configuration.GetSection("AppSettings:Token").Value;
             if (string.IsNullOrEmpty(token))
             {
-                token = "Private token for Targu Mures Children Hospital";    // if cannot read for unknown reasons
+                token = "Private token for Targu Mures Children Hospital 8.0 preview version";    // if cannot read for unknown reasons
             }
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

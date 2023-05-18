@@ -36,7 +36,7 @@
                 <MudTextField Disabled="@_enabledOrDisabled" @bind-Value="treatment.Name" HelperText="Denumire tratament" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="2">
-                <MudSelect Disabled="@_enabledOrDisabled" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.ParentId" HelperText="Tratament principal" Variant="Variant.Text" Margin="Margin.None">
+                <MudSelect Disabled="@_enabledOrDisabled" T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.ClassId" HelperText="Tratament principal" Variant="Variant.Text" Margin="Margin.None">
                     <MudSelectItem Value="0">----------</MudSelectItem> 
                     @foreach (var _option in parentTreatments)
                     {
@@ -54,7 +54,7 @@
             </MudItem>
 
             <MudItem xs="2">
-                <MudSelect Disabled="@_enabledOrDisabled" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.AdministrationMethod" HelperText="Mod Administrare" Variant="Variant.Text" Margin="Margin.None">
+                <MudSelect Disabled="@_enabledOrDisabled" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="treatment.AdministrationMode" HelperText="Mod Administrare" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in StaticParam.TreatmentAdministrationMethod)
                     {
                         <MudSelectItem Value="@_option" />
@@ -199,7 +199,7 @@
             crudObj.CurrentAction = ActionState.Read;
             return;
         }
-        treatment.TreatmentCategoryId = selectedCategory.Id;
+        treatment.CategoryId = selectedCategory.Id;
         switch (crudObj.CurrentAction)
         {
             case ActionState.Read:
@@ -253,7 +253,7 @@
     {
         if (id != 0)
         {
-            filteredTreatments = treatments.Where(c => c.TreatmentCategoryId == id).ToList();
+            filteredTreatments = treatments.Where(c => c.CategoryId == id).ToList();
             var selected = categories.Where(c => c.Id == id).FirstOrDefault();
             if (selected is not null)
                 selectedCategory.Id = selected.Id;
@@ -266,23 +266,23 @@
         }
 
         parentTreatments = filteredTreatments.GetRange(0, filteredTreatments.Count);    // copy all
-        Treatment emptyT = new() { Id = 0, ParentId = 0, Name = " " };
+        Treatment emptyT = new() { Id = 0, ClassId = 0, Name = " " };
         parentTreatments.Insert(0, emptyT );
         if (filteredTreatments.Count > 0)
             try
             {
 
                 tableList = filteredTreatments.SelectMany(
-                        filt => parentTreatments.Where(pare => pare.Id == filt.ParentId).DefaultIfEmpty(emptyT),
+                        filt => parentTreatments.Where(pare => pare.Id == filt.ClassId).DefaultIfEmpty(emptyT),
                         (filt, pare) => new TreatmentsAndParent()
                             {
                                 Id = filt.Id,
                                 Name = filt.Name,
-                                ParentId = filt.ParentId,
-                                TreatmentCategoryId = filt.TreatmentCategoryId,
+                                ParentId = filt.ClassId,
+                                TreatmentCategoryId = filt.CategoryId,
                                 ValueFormat = filt.ValueFormat,
                                 Type = filt.Type,
-                                AdministrationMethod = filt.AdministrationMethod,
+                                AdministrationMethod = filt.AdministrationMode,
                                 MeasureUnit = filt.MeasureUnit,
                                 ParentName = pare?.Name
 
@@ -293,10 +293,10 @@
         if (treatment is not null)
         {
             treatment.Id = 0;
-            treatment.ParentId = 0;
-            treatment.TreatmentCategoryId = 0;
+            treatment.ClassId = 0;
+            treatment.CategoryId = 0;
             treatment.ValueFormat = string.Empty;
-            treatment.AdministrationMethod = string.Empty;
+            treatment.AdministrationMode = string.Empty;
             treatment.MeasureUnit = string.Empty;
             treatment.Name = string.Empty;
             treatment.Type = string.Empty;

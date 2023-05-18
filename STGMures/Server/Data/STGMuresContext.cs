@@ -246,6 +246,18 @@ public partial class StgMuresContext : DbContext
                 .HasComment("Values: PRIMARY; SECONDARY; ATI; ASOCIATEDDESEASE;OTHER");
         });
 
+        modelBuilder.Entity<MeasureUnit>(entity =>
+        {
+            entity.ToTable("MeasureUnit");
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd().HasColumnName("ID");
+            entity.Property(e => e.Name).HasMaxLength(250);
+            entity.Property(e => e.Type)
+                .HasMaxLength(50)
+                .HasDefaultValueSql("(N'SUBSTANCE')");
+        });
+
+
         modelBuilder.Entity<Medic>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_Doctor");
@@ -367,21 +379,17 @@ public partial class StgMuresContext : DbContext
 
             entity.Property(e => e.Id).ValueGeneratedOnAdd().HasColumnName("ID");
             entity.Property(e => e.AdministrationTime)
-                .HasComment("Date and Hour of administering the substances")
+                .HasComment("Date and Hour of administering the substances or treatment")
                 .HasColumnType("smalldatetime");
-            entity.Property(e => e.Dosage).HasMaxLength(50);
-            entity.Property(e => e.DosageNumeric).HasColumnType("decimal(10, 3)");
             entity.Property(e => e.DosageQtty).HasColumnType("decimal(10, 3)");
             entity.Property(e => e.Note)
                 .HasMaxLength(1000)
                 .HasComment("Medical observations due treatment administration if any");
+            entity.Property(e => e.NumericValue).HasColumnType("decimal(10, 3)");
             entity.Property(e => e.TreatmentId).HasColumnName("TreatmentID");
-/*
-            entity.HasOne(d => d.Treatment).WithMany(p => p.PatientDailyTreatments)
-                .HasForeignKey(d => d.TreatmentId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PatientDailyTreatment_PatientTreatment");
-*/
+            entity.Property(e => e.Value).HasMaxLength(50);
+            entity.Property(e => e.ValueInterval).HasColumnType("decimal(10, 3)");
+            entity.Property(e => e.ValueNote).HasMaxLength(150);
         });
 
         modelBuilder.Entity<PatientDiagnostic>(entity =>
@@ -481,6 +489,7 @@ public partial class StgMuresContext : DbContext
             */
         });
 
+
         modelBuilder.Entity<PatientTreatment>(entity =>
         {
             entity.ToTable("PatientTreatment");
@@ -488,38 +497,42 @@ public partial class StgMuresContext : DbContext
             entity.HasIndex(e => e.TreatmentId, "AK_PatientTreatment");
 
             entity.Property(e => e.Id).ValueGeneratedOnAdd().HasColumnName("ID");
-            entity.Property(e => e.Administration).HasMaxLength(50);
-            entity.Property(e => e.Dosage).HasColumnType("decimal(10, 3)");
+            entity.Property(e => e.AdministrationMode)
+                .HasMaxLength(250)
+                .HasComment("List of possible routes; it can be a sublist from the Treatmnt->Administeringration Mode");
+            entity.Property(e => e.AdministrationRoute)
+                .HasMaxLength(250)
+                .HasComment("List of possible routes; it can be a sublist from the Treatmnt->Administration Route ");
             entity.Property(e => e.DosageQtty)
                 .HasDefaultValueSql("((1))")
                 .HasColumnType("decimal(10, 3)");
-            entity.Property(e => e.DosageTotal).HasColumnType("decimal(10, 3)");
-            entity.Property(e => e.Note).HasMaxLength(1000);
+            entity.Property(e => e.EndDate).HasColumnType("smalldatetime");
+            entity.Property(e => e.Note)
+                .HasMaxLength(1000)
+                .HasComment("Medical observations, complications... any");
+            entity.Property(e => e.NumericValue).HasColumnType("decimal(10, 3)");
             entity.Property(e => e.PatientDiagnosticId)
                 .HasComment("The treatment may be related to a specific diagnostic. or not")
                 .HasColumnName("PatientDiagnosticID");
             entity.Property(e => e.PatientId).HasColumnName("PatientID");
+            entity.Property(e => e.StartDate).HasColumnType("smalldatetime");
+            entity.Property(e => e.Total).HasColumnType("decimal(10, 3)");
             entity.Property(e => e.TreatmentId).HasColumnName("TreatmentID");
             entity.Property(e => e.TreatmentType)
                 .HasMaxLength(50)
-                .HasComment("Tratament (default); Anestezie;CEC;PRIMARY; SECONDARY; ATI; OTHER");
+                .HasComment("obsolete; not used for now");
+            entity.Property(e => e.Value).HasMaxLength(50);
+            entity.Property(e => e.ValueInterval)
+                .HasComment("If interval, the second value will be stored here")
+                .HasColumnType("decimal(10, 3)");
+            entity.Property(e => e.ValueNote)
+                .HasMaxLength(150)
+                .HasComment("Specific info about Dosage or values");
             entity.Property(e => e.WeekSchema)
                 .HasMaxLength(7)
                 .HasDefaultValueSql("((1111111))")
                 .IsFixedLength()
-                .HasComment("It represent a bit field: 1 or 0 for each day of the week ");
-
-            /*
-            entity.HasOne(d => d.Patient).WithMany(p => p.PatientTreatments)
-                .HasForeignKey(d => d.PatientId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PatientTreatment_Patient");
-
-            entity.HasOne(d => d.Treatment).WithMany(p => p.PatientTreatments)
-                .HasForeignKey(d => d.TreatmentId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PatientTreatment_Treatment");
-            */
+                .HasComment("It represent a bit field: 1 or 0 for each day of the week ; depends on treatment->Administration Mode");
         });
 
         modelBuilder.Entity<Surgery>(entity =>
@@ -578,23 +591,32 @@ public partial class StgMuresContext : DbContext
             entity.ToTable("Treatment");
 
             entity.Property(e => e.Id).ValueGeneratedOnAdd().HasColumnName("ID");
-            entity.Property(e => e.AdministrationMethod)
-                .HasMaxLength(50)
-                .HasComment("Default admin method (dosage, perfusion...) ");
+            entity.Property(e => e.AdministrationMode)
+                .HasMaxLength(250)
+                .HasComment("Contains List of posibble administration mods, separated by ; A patient may receive the substance by more than ore mode, but selected from this specific list; ");
+            entity.Property(e => e.AdministrationRoute)
+                .HasMaxLength(250)
+                .HasComment("Contains List of posibble administration routes, separated by ; A patient may receive the substance by more than ore Route in the same time, but selected from this specific list; ");
+            entity.Property(e => e.CategoryId)
+                .HasComment("From TreatmentCategory")
+                .HasColumnName("CategoryID");
+            entity.Property(e => e.ClassId)
+                .HasComment("Parent ID")
+                .HasColumnName("ClassID");
+            entity.Property(e => e.MeasureUnit)
+                .HasMaxLength(250)
+                .HasComment("List of possible measure units for this treatment");
             entity.Property(e => e.Name).HasMaxLength(250);
-            entity.Property(e => e.ParentId).HasColumnName("ParentID");
-            entity.Property(e => e.TreatmentCategoryId).HasColumnName("TreatmentCategoryID");
+            entity.Property(e => e.Plugs)
+                .HasMaxLength(50)
+                .HasComment("List of possible plugs per day or week separated by ;");
+            entity.Property(e => e.SubstanceId)
+                .HasComment("Parent ID")
+                .HasColumnName("SubstanceID");
             entity.Property(e => e.Type).HasMaxLength(50);
-            entity.Property(e => e.ValueFormat).HasMaxLength(50);
-            entity.Property(e => e.MeasureUnit).HasMaxLength(50);
-
-
-            /*
-            entity.HasOne(d => d.TreatmentCategory).WithMany(p => p.Treatments)
-                .HasForeignKey(d => d.TreatmentCategoryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Treatment_TreatmentCategory");
-            */
+            entity.Property(e => e.ValueFormat)
+                .HasMaxLength(50)
+                .HasComment("Numeric or integer, it refers to a single value. Text refers to a description or an interval of values (treated as a note)");
         });
 
         modelBuilder.Entity<TreatmentCategory>(entity =>
@@ -605,7 +627,7 @@ public partial class StgMuresContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(250)
                 .HasComment("description of treatment category");
-            entity.Property(e => e.Type).HasMaxLength(50);
+            entity.Property(e => e.Type).HasMaxLength(50);  // MEDICAMENTOS / NEMEDICAMENTOS - predefined values
 
         });
 

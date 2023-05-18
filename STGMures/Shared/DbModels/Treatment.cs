@@ -9,25 +9,47 @@ public partial class Treatment
 {
     public int Id { get; set; }
 
-    public int TreatmentCategoryId { get; set; }
+    /// <summary>
+    /// From TreatmentCategory
+    /// </summary>
+    public int CategoryId { get; set; }
 
-    public int ParentId { get; set; }
+    /// <summary>
+    /// Parent ID
+    /// </summary>
+    public int ClassId { get; set; }
+
+    /// <summary>
+    /// Parent ID
+    /// </summary>
+    public int SubstanceId { get; set; }
 
     public string Name { get; set; } = null!;
 
     public string? Type { get; set; }
 
     /// <summary>
-    /// Default admin method (dosage, perfusion...) 
+    /// Contains List of posibble administration mods, separated by ; A patient may receive the substance by more than ore mode, but selected from this specific list; 
     /// </summary>
-    public string? AdministrationMethod { get; set; }
+    public string? AdministrationMode { get; set; }
 
-    public string? ValueFormat { get; set; }
+    /// <summary>
+    /// Contains List of posibble administration routes, separated by ; A patient may receive the substance by more than ore Route in the same time, but selected from this specific list; 
+    /// </summary>
+    public string? AdministrationRoute { get; set; }
 
+    /// <summary>
+    /// Numeric or integer, it refers to a single value. Text refers to a description or an interval of values (treated as a note)
+    /// </summary>
+    public string ValueFormat { get; set; } = null!;
+
+    /// <summary>
+    /// List of possible measure units for this treatment
+    /// </summary>
     public string? MeasureUnit { get; set; }
-    /*
-    public virtual ICollection<PatientTreatment> PatientTreatments { get; } = new List<PatientTreatment>();
 
-    public virtual TreatmentCategory TreatmentCategory { get; set; } = null!;
-    */
+    /// <summary>
+    /// List of possible plugs per day or week separated by ;
+    /// </summary>
+    public string? Plugs { get; set; }
 }

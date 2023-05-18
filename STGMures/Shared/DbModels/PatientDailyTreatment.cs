@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace StgMures.Shared.DbModels;
 
+ 
 public partial class PatientDailyTreatment
 {
     public int Id { get; set; }
@@ -12,22 +13,22 @@ public partial class PatientDailyTreatment
     public int TreatmentId { get; set; }
 
     /// <summary>
-    /// Date and Hour of administering the substances
+    /// Date and Hour of administering the substances or treatment
     /// </summary>
     public DateTime? AdministrationTime { get; set; }
 
-    public string Dosage { get; set; } = null!;
+    public string Value { get; set; } = null!;
 
-    public decimal? DosageNumeric { get; set; }
+    public decimal? NumericValue { get; set; }
+
+    public decimal? ValueInterval { get; set; }
 
     public decimal? DosageQtty { get; set; }
+
+    public string? ValueNote { get; set; }
 
     /// <summary>
     /// Medical observations due treatment administration if any
     /// </summary>
     public string? Note { get; set; }
-
-    /*
-    public virtual PatientTreatment Treatment { get; set; } = null!;
-    */
 }

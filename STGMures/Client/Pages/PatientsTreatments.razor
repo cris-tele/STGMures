@@ -38,16 +38,16 @@
                 <MudTextField Disabled="@_disabledField" @bind-Value="patienttreatment.WeekSchema" HelperText="Schema" Variant="Variant.Text" Margin="Margin.None"></MudTextField>
             </MudItem>
             <MudItem xs="1">
-                <MudNumericField Disabled="@_disabledField" HideSpinButtons="true" @bind-Value="patienttreatment.Dosage" HelperText="Dozaj" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
+                <MudNumericField Disabled="@_disabledField" HideSpinButtons="true" @bind-Value="patienttreatment.Value" HelperText="Dozaj" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
             </MudItem>
             <MudItem xs="1">
                 <MudNumericField Disabled="@_disabledField" HideSpinButtons="true" @bind-Value="patienttreatment.DosageQtty" HelperText="Nr.Doze" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
             </MudItem>
             <MudItem xs="1">
-                <MudNumericField Disabled="@_disabledField" HideSpinButtons="true" @bind-Value="patienttreatment.DosageTotal" HelperText="Dozaj Total" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
+                <MudNumericField Disabled="@_disabledField" HideSpinButtons="true" @bind-Value="patienttreatment.NumericValue" HelperText="Dozaj Total" Variant="Variant.Text" Margin="Margin.None"></MudNumericField>
             </MudItem>
             <MudItem xs="3">    <!-- se ia din tratament, se poate schimba ? -->
-                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="patienttreatment.Administration" HelperText="Mod administrare" Variant="Variant.Text" Margin="Margin.None">
+                <MudSelect Disabled="@_disabledField" T="string" AnchorOrigin="Origin.BottomCenter" @bind-Value="patienttreatment.AdministrationMode" HelperText="Mod administrare" Variant="Variant.Text" Margin="Margin.None">
                     @foreach (var _option in StaticParam.TreatmentAdministrationMethod)
                     {
                         <MudSelectItem Value="@_option" />
